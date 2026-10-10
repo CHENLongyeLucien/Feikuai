@@ -1,5 +1,9 @@
 # Secure Finance build status
 
+## Visual refinement — 11 October 2026
+
+Unified the main workspace and independent approver around the new sage/cream/forest references. Rebuilt the garden campus, mobile navigation, responsive payment cards and readable evidence outcomes. Validation: TypeScript, ESLint, 181 unit tests and production build passed. Across Chrome, Firefox and WebKit, 72 navigation/layout checks plus 18 saved-record checks passed at desktop/tablet/mobile sizes. Earlier failures and exact reruns are retained in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) and [design-acceptance.json](qa/design-acceptance.json). Default campus draw calls fell from 287 to 195. Fixed tablet overflow, mobile account naming, campus framing and import links. No payment fixtures were submitted; original environment/deployment hashes match and saved demo receipts remain available.
+
 ## Current update — 11 October 2026
 
 Read both supplied Track01 presentation slides and adapted the existing application to the user's multichannel intake and exception-review workflow. The original phase implementation remains below as historical evidence. The latest experience and its actual validation are described in [EXPERIENCE_TEST_REPORT.md](EXPERIENCE_TEST_REPORT.md), [EXPERIENCE_DEMO.md](EXPERIENCE_DEMO.md) and [TRACK_ALIGNMENT.md](TRACK_ALIGNMENT.md).

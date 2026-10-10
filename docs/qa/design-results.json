@@ -1,0 +1,1072 @@
+{
+  "runId": "2026-10-10T23:16:27.646Z",
+  "observedAt": "2026-10-10T23:19:42.006Z",
+  "scope": "Read-only interface checks; only local demo sign-in may create a session. No intake, invoice, approval, payment, cancellation or notification writes.",
+  "installedBrowsers": {
+    "chromiumBundled": false,
+    "chromiumSystemChrome": true,
+    "firefox": true,
+    "webkit": true
+  },
+  "unavailableBrowsers": [
+    "chromiumBundled"
+  ],
+  "results": [
+    {
+      "project": "chromium-system-chrome",
+      "title": "welcome and navigation fit desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 4428,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "workspace search works at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1730,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "payments add invoice opens an unsubmitted form at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 2156,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "settings toggles change the campus preference at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 3702,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "operations campus supports read-only controls at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 5137,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          18.56241577514163,
+          24.176032818753328,
+          25.97886671978549
+        ],
+        "zoom": 23.954725601023355,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "independent approver landing fits desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 801,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "welcome and navigation fit tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1332,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "workspace search works at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1060,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "payments add invoice opens an unsubmitted form at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1743,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "settings toggles change the campus preference at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 2454,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "operations campus supports read-only controls at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 3430,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          31.087615979693204,
+          30,
+          28.871441472484953
+        ],
+        "zoom": 12.323346689348687,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "independent approver landing fits tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 639,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "welcome and navigation fit mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 969,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "workspace search works at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1209,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "payments add invoice opens an unsubmitted form at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1236,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "settings toggles change the campus preference at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1338,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "operations campus supports read-only controls at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 2847,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          33.20994258589348,
+          30,
+          26.402645955314007
+        ],
+        "zoom": 5.921288369021101,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "independent approver landing fits mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 540,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "welcome and navigation fit narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 882,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "workspace search works at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1126,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "payments add invoice opens an unsubmitted form at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1207,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "settings toggles change the campus preference at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1309,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "operations campus supports read-only controls at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 2947,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          31.354656282923575,
+          30,
+          28.581209375737085
+        ],
+        "zoom": 4.804595267317755,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "chromium-system-chrome",
+      "title": "independent approver landing fits narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 518,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "welcome and navigation fit desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 890,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "workspace search works at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 678,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "payments add invoice opens an unsubmitted form at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 545,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "settings toggles change the campus preference at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 850,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "operations campus supports read-only controls at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1232,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          35.63262895179713,
+          29.992581991234626,
+          23.00018803300531
+        ],
+        "zoom": 18.197437919875668,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "firefox",
+      "title": "independent approver landing fits desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 316,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "welcome and navigation fit tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1821,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "workspace search works at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 670,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "payments add invoice opens an unsubmitted form at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 504,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "settings toggles change the campus preference at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 782,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "operations campus supports read-only controls at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1119,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          35.635255860263825,
+          29.985554191894067,
+          22.969175819224212
+        ],
+        "zoom": 13.070397916103104,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "firefox",
+      "title": "independent approver landing fits tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 271,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "welcome and navigation fit mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 402,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "workspace search works at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 674,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "payments add invoice opens an unsubmitted form at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 492,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "settings toggles change the campus preference at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 661,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "operations campus supports read-only controls at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1314,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          35.462134744112575,
+          29.981192939002295,
+          23.219194903312037
+        ],
+        "zoom": 6.136811559484908,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "firefox",
+      "title": "independent approver landing fits mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 273,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "welcome and navigation fit narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 451,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "workspace search works at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 794,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "payments add invoice opens an unsubmitted form at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 538,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "settings toggles change the campus preference at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 730,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "firefox",
+      "title": "operations campus supports read-only controls at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1199,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          35.18022365631907,
+          29.989352433111137,
+          23.674615929306125
+        ],
+        "zoom": 5.0364080594648115,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "firefox",
+      "title": "independent approver landing fits narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 256,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "welcome and navigation fit desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 676,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "workspace search works at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 798,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "payments add invoice opens an unsubmitted form at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 676,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "settings toggles change the campus preference at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1001,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "operations campus supports read-only controls at desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1260,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          35.92621720718704,
+          29.995237180232987,
+          22.549151141342673
+        ],
+        "zoom": 18.274565784726565,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "webkit",
+      "title": "independent approver landing fits desktop 1440px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 330,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "welcome and navigation fit tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 558,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "workspace search works at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 751,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "payments add invoice opens an unsubmitted form at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 643,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "settings toggles change the campus preference at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 863,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "operations campus supports read-only controls at tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1261,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          35.12444320005059,
+          30,
+          23.79650163125705
+        ],
+        "zoom": 13.130367284618586,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "webkit",
+      "title": "independent approver landing fits tablet 1024px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 296,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "welcome and navigation fit mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 491,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "workspace search works at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 712,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "payments add invoice opens an unsubmitted form at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 580,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "settings toggles change the campus preference at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 884,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "operations campus supports read-only controls at mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1286,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          35.96350511871346,
+          30,
+          22.508360659458763
+        ],
+        "zoom": 6.218832149600338,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "webkit",
+      "title": "independent approver landing fits mobile 390px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 350,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "welcome and navigation fit narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 497,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "workspace search works at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 684,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "payments add invoice opens an unsubmitted form at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 565,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "settings toggles change the campus preference at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 843,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    },
+    {
+      "project": "webkit",
+      "title": "operations campus supports read-only controls at narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 1269,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": [],
+      "camera": {
+        "position": [
+          34.29830224020551,
+          30,
+          24.972514159361562
+        ],
+        "zoom": 5.00914627676057,
+        "drawCalls": 196
+      },
+      "actualRenderer": "Browser WebGL using configured software-rendering flags"
+    },
+    {
+      "project": "webkit",
+      "title": "independent approver landing fits narrow 320px",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 286,
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "blockedMutationCount": 0,
+      "uncaughtErrorTypes": []
+    }
+  ]
+}

@@ -1,0 +1,734 @@
+{
+  "observedAt": "2026-10-10T23:22:51.585786+00:00",
+  "scope": "Read-only design acceptance against preserved isolated local demo. Only sign-in sessions created; no intake, authorization, cancellation or payment writes.",
+  "environment": {
+    "browsers": [
+      "Google Chrome 154.0.8037.98",
+      "Playwright Firefox 157",
+      "Playwright WebKit 27.2"
+    ],
+    "viewports": [
+      "1440x1000",
+      "1024x900",
+      "390x844",
+      "320x740"
+    ],
+    "physicalMobileDevicesTested": false,
+    "nativeSafariTested": false
+  },
+  "results": [
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 4670
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1994
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 2552
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 3911
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 5903
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 883
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit tablet 1024px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1463
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at tablet 1024px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1189
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at tablet 1024px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 2021
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at tablet 1024px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 2636
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at tablet 1024px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 3815
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits tablet 1024px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 730
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1004
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1266
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1295
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1379
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 3065
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 607
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit narrow 320px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 931
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at narrow 320px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1160
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at narrow 320px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1260
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at narrow 320px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1349
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at narrow 320px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 3146
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits narrow 320px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 569
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 924
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 718
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 579
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 875
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1276
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 345
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit tablet 1024px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1844
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at tablet 1024px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 694
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at tablet 1024px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 532
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at tablet 1024px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1132
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at tablet 1024px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1145
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits tablet 1024px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 288
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 416
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 689
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 514
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 673
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1331
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 287
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit narrow 320px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 464
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at narrow 320px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1131
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at narrow 320px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 553
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at narrow 320px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 746
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at narrow 320px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1212
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits narrow 320px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 272
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 737
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 854
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 741
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 1043
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 1322
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 365
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit tablet 1024px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 602
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at tablet 1024px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 794
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at tablet 1024px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 692
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at tablet 1024px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 894
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at tablet 1024px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 1298
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits tablet 1024px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 324
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 514
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 736
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 612
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 900
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 1308
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 366
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "welcome and navigation fit narrow 320px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 518
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "workspace search works at narrow 320px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 704
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "payments add invoice opens an unsubmitted form at narrow 320px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 589
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "settings toggles change the campus preference at narrow 320px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 858
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "operations campus supports read-only controls at narrow 320px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 1289
+    },
+    {
+      "file": "tests/e2e/design.spec.ts",
+      "title": "independent approver landing fits narrow 320px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 300
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved source stages and payment review fit desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 7262
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved JSON and ZIP evidence verify with invalid-file recovery at desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 2679
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved resolved approval remains readable and cannot sign at desktop 1440px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 3563
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved source stages and payment review fit mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 2797
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved JSON and ZIP evidence verify with invalid-file recovery at mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1423
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved resolved approval remains readable and cannot sign at mobile 390px",
+      "browser": "chromium-system-chrome",
+      "status": "passed",
+      "durationMs": 1601
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved source stages and payment review fit desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1762
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved JSON and ZIP evidence verify with invalid-file recovery at desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 676
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved resolved approval remains readable and cannot sign at desktop 1440px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 849
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved source stages and payment review fit mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 1215
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved JSON and ZIP evidence verify with invalid-file recovery at mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 585
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved resolved approval remains readable and cannot sign at mobile 390px",
+      "browser": "firefox",
+      "status": "passed",
+      "durationMs": 802
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved source stages and payment review fit desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 1827
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved JSON and ZIP evidence verify with invalid-file recovery at desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 899
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved resolved approval remains readable and cannot sign at desktop 1440px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 992
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved source stages and payment review fit mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 1535
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved JSON and ZIP evidence verify with invalid-file recovery at mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 701
+    },
+    {
+      "file": "tests/e2e/design-records.spec.ts",
+      "title": "saved resolved approval remains readable and cannot sign at mobile 390px",
+      "browser": "webkit",
+      "status": "passed",
+      "durationMs": 902
+    }
+  ],
+  "totals": {
+    "passed": 90,
+    "failed": 0,
+    "layoutNavigation": 72,
+    "savedRecords": 18
+  },
+  "runHistory": [
+    {
+      "run": "Initial iterative layout run",
+      "passed": 51,
+      "failed": 7,
+      "interrupted": 1,
+      "notRun": 13,
+      "note": "Caught mobile account accessible-name issue. One settings failure occurred during active hot reload; tablet campus test needed its visible-panel selector updated after responsive layout changed. Interrupted to test stable source."
+    },
+    {
+      "run": "Complete 90-check run",
+      "passed": 84,
+      "failed": 6,
+      "note": "All layout checks passed. Six approval checks incorrectly searched inside a closed cancellation disclosure; test now opens it before verifying disabled cancellation."
+    },
+    {
+      "run": "First saved-record recheck",
+      "passed": 14,
+      "failed": 4,
+      "note": "Repeated demo logins correctly hit the unchanged 12/minute limiter. Tests now reuse a valid session per browser worker."
+    },
+    {
+      "run": "Final saved-record recheck",
+      "passed": 18,
+      "failed": 0,
+      "note": "All saved-record, offline evidence and resolved-approval checks pass without changing application security policy."
+    }
+  ],
+  "checks": {
+    "typecheck": "passed",
+    "eslint": "passed",
+    "unitTestsPassed": 181,
+    "sceneTestsIncluded": 27,
+    "productionBuild": "passed",
+    "productionWarnings": [
+      "Existing Vite chunks above 500kB; no size warning suppressed."
+    ]
+  },
+  "rendering": {
+    "defaultDrawCalls": 195,
+    "firstRedesignDrawCalls": 287,
+    "fixtureCaseCount": 6,
+    "renderer": "Chrome with SwiftShader WebGL flags",
+    "fps": "unmeasured"
+  },
+  "additionalRouteAudit": {
+    "routes": 10,
+    "widths": [
+      1440,
+      1024,
+      768,
+      390,
+      320
+    ],
+    "initialFailures": [
+      {
+        "route": "/workspace",
+        "width": 768,
+        "documentWidth": 861
+      }
+    ],
+    "fix": "Position the scrolling table container so its visually hidden heading stays within it.",
+    "targetedRecheck": {
+      "width": 768,
+      "documentWidth": 768,
+      "status": "passed"
+    }
+  },
+  "preservation": {
+    "baselineEnvironmentAndDeploymentFiles": 8,
+    "allBaselineHashesMatch": true,
+    "envFilesIgnoredAndUntracked": true,
+    "envFujiMode": "600",
+    "savedCases": 6,
+    "confirmedPayments": 5,
+    "newPaymentTransactions": 0
+  }
+}

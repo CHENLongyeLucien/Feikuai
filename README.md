@@ -1,6 +1,6 @@
 # Secure Finance — Implementation README
 
-> Current experience (11 October 2026): start with the inbox, follow specialist checks, and review only the exceptions. [Demo and limitations](docs/EXPERIENCE_DEMO.md), [track alignment and response playbook](docs/TRACK_ALIGNMENT.md), [build log](docs/BUILD_STATUS.md). The original implementation specification below is retained as history; the latest user direction adds multichannel intake and a separate, explicitly registered automatic-payment policy. The 3D campus remains available under Operations.
+> Current experience (11 October 2026): start with the inbox, follow specialist checks, and review only the exceptions. [Demo and limitations](docs/EXPERIENCE_DEMO.md), [track alignment and response playbook](docs/TRACK_ALIGNMENT.md), [build log](docs/BUILD_STATUS.md), [unified design and browser checks](docs/DESIGN_SYSTEM.md). The original implementation specification below is retained as history; the latest user direction adds multichannel intake and a separate, explicitly registered automatic-payment policy. The 3D campus remains available under Operations.
 
 ```sh
 pnpm install --frozen-lockfile

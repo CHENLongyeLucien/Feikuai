@@ -1,0 +1,19 @@
+/* Shared visual language for the workspace and independent approval client. */
+:root {
+  --sf-ink: #173e34;
+  --sf-forest: #163f35;
+  --sf-muted: #58786c;
+  --sf-canvas: #e6eee8;
+  --sf-surface: #f7faf3;
+  --sf-accent: #d6f568;
+  --sf-border: rgba(54,90,71,.16);
+  --sf-glass: rgba(248,251,244,.86);
+  --sf-soft: #eaf1e4;
+  --sf-shadow: 0 16px 45px -30px rgba(24,61,46,.28);
+  --sf-radius: 30px;
+  --sf-radius-sm: 18px;
+  --sf-danger: #a33d39;
+  --sf-warning: #805c21;
+  --sf-focus: #397963;
+  --sf-font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
