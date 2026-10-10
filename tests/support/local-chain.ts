@@ -1,13 +1,19 @@
-import {readFileSync,writeFileSync} from 'node:fs';
+import {readFileSync,writeFileSync,realpathSync} from 'node:fs';
+import {dirname,resolve,sep} from 'node:path';
+import {tmpdir} from 'node:os';
 import {createPublicClient,createWalletClient,http,keccak256,type Address} from 'viem';
 import {foundry} from 'viem/chains';
 import {deploymentSchema,derivePolicy,paymentGuardAbi,demoTokenAbi,type Deployment} from '@secure-finance/chain';
 
 /** Isolated, valueless test deployments. Does not reset the demo or mutate its manifest. */
 export async function createTestDeployment(path:string):Promise<Deployment>{
- const template=deploymentSchema.parse(JSON.parse(readFileSync('deployments/local.json','utf8')));
- if(template.chainId!=='31337'||!['127.0.0.1','localhost'].includes(new URL(template.rpcUrl).hostname))throw new Error('Integration tests require loopback Anvil');
- const client=createPublicClient({chain:foundry,transport:http(template.rpcUrl)});if(await client.getChainId()!==31337)throw new Error('Integration test mainnet/public-chain guard');
+ const templatePath=process.env.SF_INTEGRATION_MANIFEST_PATH??'var/experience-demo/deployment.json';
+ const source=deploymentSchema.parse(JSON.parse(readFileSync(templatePath,'utf8')));
+ const template=deploymentSchema.parse({...source,rpcUrl:process.env.SF_INTEGRATION_RPC_URL??source.rpcUrl});
+ const rpc=new URL(template.rpcUrl);
+ if(template.environment!=='local'||template.chainId!=='31337'||rpc.protocol!=='http:'||!['127.0.0.1','localhost','[::1]'].includes(rpc.hostname)||rpc.username||rpc.password)throw new Error('Integration tests require an explicit loopback Anvil deployment');
+ if(!realpathSync(dirname(path)).startsWith(realpathSync(tmpdir())+sep)||resolve(path)===resolve(templatePath))throw new Error('Integration output must be a new manifest inside the temporary directory');
+ const client=createPublicClient({chain:foundry,transport:http(template.rpcUrl,{timeout:10000,retryCount:0})});if(await client.getChainId()!==31337)throw new Error('Integration test mainnet/public-chain guard');
  const wallet=createWalletClient({chain:foundry,transport:http(template.rpcUrl)}),account=template.roles.deployer;
  const tokenArtifact=JSON.parse(readFileSync('contracts/out/DemoToken.sol/DemoToken.json','utf8')),vaultArtifact=JSON.parse(readFileSync('contracts/out/PaymentGuard.sol/PaymentGuard.json','utf8'));
  const tokenTx=await wallet.deployContract({account,abi:demoTokenAbi,bytecode:tokenArtifact.bytecode.object,args:[account]});const tokenReceipt=await client.waitForTransactionReceipt({hash:tokenTx});if(tokenReceipt.status!=='success'||!tokenReceipt.contractAddress)throw new Error('Test token deployment failed');const token=tokenReceipt.contractAddress.toLowerCase() as Address;

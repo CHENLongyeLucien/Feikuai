@@ -1,0 +1,11 @@
+{
+  "observedAt": "2026-10-10T22:22:28.979Z",
+  "environment": "isolated local chain 31337",
+  "invoiceReference": "NS-2026-0047",
+  "transactionHash": "0x0f224153b9e9a6925e96c4a9872ad8976bbcb4dd221cc07e9d56f667b3490616",
+  "receiptStatus": "success",
+  "blockNumber": "1012",
+  "recipientDeltaAtomic": "48000000000",
+  "authorityModel": "EXACT_REGISTERED_POLICY",
+  "walletSignatureRequired": false
+}

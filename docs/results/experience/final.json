@@ -1,0 +1,67 @@
+{
+  "observedAt": "2026-10-10T22:24:34.169917+00:00",
+  "status": "PASS_AFTER_TARGETED_RECHECKS",
+  "environment": "isolated local inbox experience; synthetic data and fixture agents",
+  "initialAggregate": "acceptance.json",
+  "counts": {
+    "unit": 181,
+    "contracts": 45,
+    "integration": 5,
+    "inboxBrowser": 7,
+    "approvalBrowser": 1
+  },
+  "gates": [
+    {
+      "gate": "typecheck",
+      "status": "PASS",
+      "evidence": "typecheck-recheck.log"
+    },
+    {
+      "gate": "lint",
+      "status": "PASS",
+      "evidence": "lint-recheck.log"
+    },
+    {
+      "gate": "test",
+      "status": "PASS",
+      "evidence": "test.log"
+    },
+    {
+      "gate": "contracts:build",
+      "status": "PASS",
+      "evidence": "contracts-build.log"
+    },
+    {
+      "gate": "test:contracts",
+      "status": "PASS",
+      "evidence": "test-contracts.log"
+    },
+    {
+      "gate": "test:integration",
+      "status": "PASS",
+      "evidence": "test-integration.log"
+    },
+    {
+      "gate": "build",
+      "status": "PASS",
+      "evidence": "build-recheck.log"
+    },
+    {
+      "gate": "test:e2e",
+      "status": "PASS",
+      "evidence": "test-e2e-recheck.log + bridge-recheck.log"
+    }
+  ],
+  "rechecks": {
+    "browser": "Seven inbox tests passed together; approval test passed separately after correcting its evidence selector. No claim of one uninterrupted eight-test passing run.",
+    "eventStream": "29 existing backend tests plus successful browser connections after immediate SSE output."
+  },
+  "externalGates": {
+    "liveAgents": "NOT_RUN: provider credentials/model required",
+    "fuji": "NOT_RUN: existing deployment preserved; no Fuji transaction attempted by this run",
+    "manualWalletDisplay": "NOT_RUN: browser uses explicit local demonstration wallet",
+    "mailboxOAuth": "NOT_IMPLEMENTED",
+    "isolatedUrlScanner": "NOT_CONFIGURED"
+  },
+  "recoveryScope": "Automatic signed-outbox recovery is covered by unit tests. Legacy SIGKILL recovery results remain historical and are not rerun by this isolated suite."
+}

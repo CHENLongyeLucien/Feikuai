@@ -1,0 +1,66 @@
+
+Running 8 tests using 1 worker
+
+(node:63194) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [inbox] › tests/e2e/inbox.spec.ts:33:1 › inbox is the welcoming default, local demo needs no wallet, and navigation fits mobile (3.6s)
+  ✓  2 [inbox] › tests/e2e/inbox.spec.ts:60:1 › a synthetic invoice completes five checks and reports an actual registered-policy settlement (8.3s)
+  ✓  3 [inbox] › tests/e2e/inbox.spec.ts:107:1 › phishing is quarantined with evidence, no approval button, no fetched links and a durable alert (7.4s)
+  ✓  4 [inbox] › tests/e2e/inbox.spec.ts:132:1 › voice financial requests need human context and record requests for information without sending messages (7.2s)
+  ✓  5 [inbox] › tests/e2e/inbox.spec.ts:155:1 › email files import safely, modal close resets input and a failed attachment can be corrected (2.4s)
+  ✓  6 [inbox] › tests/e2e/inbox.spec.ts:180:1 › populated inbox, review and connections stay readable on desktop and mobile without wallet references (2.0s)
+  ✓  7 [inbox] › tests/e2e/inbox.spec.ts:198:1 › the optional operations campus keeps real geometry and clear overlays inside the new shell (4.7s)
+(node:63302) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  8 [guided-approval] › tests/e2e/bridge.spec.ts:7:1 › guided human approval returns its wallet signature across origins and settles the exact registered payable (9.2s)
+
+
+  1) [guided-approval] › tests/e2e/bridge.spec.ts:7:1 › guided human approval returns its wallet signature across origins and settles the exact registered payable 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('pre').filter({ hasText: 'NS-2026-0051' })
+    Expected: visible
+    Error: strict mode violation: locator('pre').filter({ hasText: 'NS-2026-0051' }) resolved to 6 elements:
+        1) <pre>Subject: Invoice with human payment review↵NORTHS…</pre> aka getByText('Subject: Invoice with human payment review NORTHSTAR LABS — SYNTHETIC INVOICE')
+        2) <pre>{"agent":"finance","createdAt":"2026-10-10T22:22:…</pre> aka getByText('{"agent":"finance","createdAt')
+        3) <pre>{"agent":"intake","createdAt":"2026-10-10T22:22:5…</pre> aka getByText('{"agent":"intake","createdAt')
+        4) <pre>{"amountAtomic":"48000000000","id":"1c6951cf-a746…</pre> aka getByText('{"amountAtomic":"48000000000').nth(1)
+        5) <pre>{"algorithm":"utf8-fatal-v1","pages":[{"page":1,"…</pre> aka getByText('{"algorithm":"utf8-fatal-v1')
+        6) <pre>{"arguments":{},"callId":"fixture-getCurrentPayab…</pre> aka getByText('{"arguments":{},"callId":"').nth(1)
+
+    Call log:
+      - Expect "toBeVisible" locator('pre').filter({ hasText: 'NS-2026-0051' }) with timeout 20000ms
+      - waiting for locator('pre').filter({ hasText: 'NS-2026-0051' })
+
+
+      59 |  await approval.getByText('All signed fields and payment policy',{exact:true}).click();
+      60 |  await approval.getByText('original.txt',{exact:true}).click();
+    > 61 |  await expect(approval.locator('pre').filter({hasText:payable.invoiceReference})).toBeVisible();
+         |                                                                                   ^
+      62 |  await approval.getByText('original.txt',{exact:true}).click();
+      63 |  await approval.getByRole('button',{name:'Use demo approval wallet',exact:true}).click();
+      64 |  await expect(approval.getByRole('button',{name:'Demo wallet selected',exact:true})).toBeDisabled();
+        at <project>/tests/e2e/bridge.spec.ts:61:83
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/trace.zip
+    Usage:
+
+        npx playwright show-trace var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [guided-approval] › tests/e2e/bridge.spec.ts:7:1 › guided human approval returns its wallet signature across origins and settles the exact registered payable 
+  7 passed (46.2s)

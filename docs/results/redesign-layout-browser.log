@@ -1,0 +1,9 @@
+
+Running 2 tests using 1 worker
+
+(node:62448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/inbox.spec.ts:164:1 › populated inbox, review and connections stay readable on desktop and mobile without wallet references (4.5s)
+  ✓  2 tests/e2e/inbox.spec.ts:182:1 › the optional operations campus keeps real geometry and clear overlays inside the new shell (4.7s)
+
+  2 passed (10.2s)

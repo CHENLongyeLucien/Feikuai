@@ -7,6 +7,7 @@ import {type Config,loadDeployment} from '../config.js';
 import {type Db,event} from '../db/database.js';
 import {fail,json,parsed,DomainError} from '../domain/errors.js';
 import {chainFailureCode} from './errors.js';
+import {usesStandingPolicy} from '../automation/policy.js';
 const zeroHash='0x'+'0'.repeat(64);
 export class ChainService{
  public client:any;public chain:any;
@@ -36,6 +37,7 @@ export class ChainService{
  }
  async submit(id:string){
   const e=this.execution(id);if(e.status==='CONFIRMED')return;await this.scan();if((this.db.prepare('SELECT status FROM execution_requests WHERE id=?').get(id) as any).status==='CONFIRMED')return;
+  const payable=(this.db.prepare('SELECT payable_id FROM cases WHERE id=?').get(e.case_id) as any).payable_id;if(usesStandingPolicy(this.config,payable,this.db))fail('STANDING_POLICY_REQUIRED','This invoice uses the standing payment policy; legacy payment submission is blocked.',409);
   const existing=this.db.prepare('SELECT * FROM tx_outbox WHERE execution_id=?').get(id) as any;
   if(existing?.raw_transaction){await this.reconcile(id);const fresh=this.execution(id);if(['CONFIRMED','REVERTED','INCONSISTENT'].includes(fresh.status))return;await this.broadcast(fresh,existing);return;}
   const caseRow=this.db.prepare('SELECT workflow_status,hold_reason,document_version FROM cases WHERE id=?').get(e.case_id) as any;const authorizationObservation=this.db.prepare('SELECT status FROM authorization_observations WHERE proposal_id=? ORDER BY rowid DESC LIMIT 1').get(e.proposal_id) as any;if(['CANCELLATION_PENDING','CANCELLED','EXPIRED'].includes(authorizationObservation?.status))fail('AUTHORIZATION_UNAVAILABLE','Cancellation or expiry observation prohibits new submission; reconciliation continues.',409);
@@ -60,6 +62,7 @@ export class ChainService{
   await this.broadcast(e,this.db.prepare('SELECT * FROM tx_outbox WHERE id=?').get(outboxId));
  }
  async broadcast(e:any,o:any){
+  const payable=(this.db.prepare('SELECT payable_id FROM cases WHERE id=?').get(e.case_id) as any).payable_id;if(usesStandingPolicy(this.config,payable,this.db)){this.setExecution(e,'UNKNOWN',{},'STANDING_POLICY_REQUIRED: legacy rebroadcast blocked; observation continues.');return;}
   const row=this.db.prepare('SELECT workflow_status,hold_reason,document_version FROM cases WHERE id=?').get(e.case_id) as any;
   const lifecycle=this.db.prepare('SELECT status FROM authorization_observations WHERE proposal_id=? ORDER BY rowid DESC LIMIT 1').get(e.proposal_id) as any;if(row.workflow_status!=='READY_FOR_REVIEW'||row.hold_reason||String(row.document_version)!==e.packet.manifest.recordVersions.documentVersion||['CANCELLATION_PENDING','CANCELLED','EXPIRED'].includes(lifecycle?.status)){this.setExecution(e,'UNKNOWN',{},'Application hold prohibits rebroadcast; chain observation continues.');return;}
   try{await this.assertEligible(e.packet.payment,0);}catch(error:any){await this.scan();if(this.execution(e.id).status!=='CONFIRMED')this.setExecution(e,'UNKNOWN',{},error.code??'ELIGIBILITY_UNAVAILABLE');return;}

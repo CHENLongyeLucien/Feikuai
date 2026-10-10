@@ -1,6 +1,15 @@
 # Secure Finance — Implementation README
 
-> Implementation handoff (10 October 2026): [run locally](docs/RUNBOOK.md), [phase status](docs/BUILD_STATUS.md), [actual acceptance results](docs/TEST_REPORT.md), and [screenshots/recording](docs/VISUAL_QA.md). Live OpenAI and Fuji gates remain explicitly blocked; the specification below is retained.
+> Current experience (11 October 2026): start with the inbox, follow specialist checks, and review only the exceptions. [Demo and limitations](docs/EXPERIENCE_DEMO.md), [track alignment and response playbook](docs/TRACK_ALIGNMENT.md), [build log](docs/BUILD_STATUS.md). The original implementation specification below is retained as history; the latest user direction adds multichannel intake and a separate, explicitly registered automatic-payment policy. The 3D campus remains available under Operations.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm demo:start
+```
+
+Open **http://localhost:5183**, choose **Explore demo**, then try an invoice, a suspicious email, or a voice transcript. This launcher uses its own local chain and saved directory (`var/experience-demo/`). It preserves `.env`, `.env.fuji`, the existing local demonstration, and Fuji deployments. Requires the pinned Node/pnpm runtime and installed Foundry tools; see [setup](docs/RUNBOOK.md).
+
+The demonstration uses synthetic data, deterministic rules and fixture agents. Its payment receipts come from actual local contract execution with valueless tokens. Live mailbox OAuth, isolated URL scanning and live AI/transcription have not been demonstrated. The launcher does not deploy to Fuji or ask for private keys.
 
 
 **Build specification · 10 October 2026 · Secure Horizons, Track 1: Guardians of Value**

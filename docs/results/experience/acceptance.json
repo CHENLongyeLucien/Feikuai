@@ -1,0 +1,64 @@
+{
+  "observedAt": "2026-10-10T22:21:26.796Z",
+  "runtime": "v24.14.0",
+  "environment": "isolated local inbox experience; synthetic data and fixture agents",
+  "integrationManifest": "var/experience-demo/deployment.json",
+  "results": [
+    {
+      "gate": "typecheck",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 2783
+    },
+    {
+      "gate": "lint",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 918
+    },
+    {
+      "gate": "test",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 3702
+    },
+    {
+      "gate": "contracts:build",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 268
+    },
+    {
+      "gate": "test:contracts",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 2391
+    },
+    {
+      "gate": "test:integration",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 29087
+    },
+    {
+      "gate": "build",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 786
+    },
+    {
+      "gate": "test:e2e",
+      "status": "FAIL",
+      "exitCode": 1,
+      "durationMs": 9979
+    }
+  ],
+  "externalGates": {
+    "liveAgents": "NOT_RUN: provider credentials/model required",
+    "fuji": "NOT_RUN: existing deployment preserved; no Fuji transaction attempted by this run",
+    "manualWalletDisplay": "NOT_RUN: browser uses explicit local demonstration wallet",
+    "mailboxOAuth": "NOT_IMPLEMENTED",
+    "isolatedUrlScanner": "NOT_CONFIGURED"
+  },
+  "recoveryScope": "Automatic signed-outbox recovery is covered by unit tests. Legacy SIGKILL recovery results remain historical and are not rerun by this isolated suite."
+}

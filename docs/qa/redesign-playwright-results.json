@@ -1,0 +1,244 @@
+{
+  "config": {
+    "argv": [
+      "/usr/local/bin/node",
+      "<project>/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "tests/e2e/inbox.config.ts",
+      "--grep",
+      "populated inbox|optional operations"
+    ],
+    "configFile": "<project>/tests/e2e/inbox.config.ts",
+    "rootDir": "<project>/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "<project>/var/redesign-playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "<project>/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "inbox.spec.ts"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "<project>/var/redesign-playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "<project>/tests/e2e",
+        "snapshotDir": "<project>/tests/e2e",
+        "testIgnore": [],
+        "testMatch": "inbox.spec.ts",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://localhost:5183",
+          "channel": "chrome",
+          "headless": true,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "video": "on",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-webgl",
+              "--ignore-gpu-blocklist"
+            ]
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "<project>/docs/qa/redesign-playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "inbox.spec.ts",
+      "file": "inbox.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "populated inbox, review and connections stay readable on desktop and mobile without wallet references",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4525,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:16:54.386Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/redesign-playwright-artifacts/inbox-populated-inbox-revi-9d481-e-without-wallet-references/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-acf79ca0e29b6a7b2725",
+          "file": "inbox.spec.ts",
+          "line": 164,
+          "column": 1
+        },
+        {
+          "title": "the optional operations campus keeps real geometry and clear overlays inside the new shell",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4695,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:16:59.521Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/redesign-playwright-artifacts/inbox-the-optional-operati-b0e82-erlays-inside-the-new-shell/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-12f83790c2aa52b4f1a9",
+          "file": "inbox.spec.ts",
+          "line": 182,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-10T22:16:54.115Z",
+    "duration": 10160.894999999999,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

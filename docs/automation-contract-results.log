@@ -1,0 +1,85 @@
+No files changed, compilation skipped
+2026-10-10T22:05:02.837806Z  WARN forge::test: failed calling "targetArtifactSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838064Z  WARN forge::test: failed calling "targetArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838371Z  WARN forge::test: failed calling "excludeArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838402Z  WARN forge::test: failed calling "targetSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838410Z  WARN forge::test: failed calling "excludeSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838472Z  WARN forge::test: failed calling "excludeContracts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838485Z  WARN forge::test: failed calling "targetInterfaces()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838491Z  WARN forge::test: failed calling "targetSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838496Z  WARN forge::test: failed calling "excludeSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838763Z  WARN forge::test: failed calling "targetArtifactSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838774Z  WARN forge::test: failed calling "targetArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838782Z  WARN forge::test: failed calling "excludeArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838793Z  WARN forge::test: failed calling "targetSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838798Z  WARN forge::test: failed calling "excludeSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838808Z  WARN forge::test: failed calling "excludeContracts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838819Z  WARN forge::test: failed calling "targetInterfaces()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838824Z  WARN forge::test: failed calling "targetSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:05:02.838829Z  WARN forge::test: failed calling "excludeSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+
+Ran 15 tests for test/AutomationGuard.t.sol:AutomationGuardTest
+[PASS] testBatchSizeBounds() (gas: 85623)
+[PASS] testConstructorRejectsUnsafeRegistry() (gas: 11721)
+[PASS] testConstructorRejectsUnsafeRolesTokenAndCaps() (gas: 13982)
+[PASS] testDuplicateInBatchRollsBackWholeBatch() (gas: 145000)
+[PASS] testDuplicateRegistrationCannotReplaceAmountOrRecipient() (gas: 302776)
+[PASS] testExactExecutionConsumesOnceAndCannotReregister() (gas: 372047)
+[PASS] testExecutorCannotRegisterAndOwnerCannotExecute() (gas: 256394)
+[PASS] testFuzzRegisteredAmountIsExactAndCannotRepeat(uint256) (runs: 256, μ: 333333, ~: 333341)
+[PASS] testInsufficientLiquidityPreservesAuthorityForRetry() (gas: 425577)
+[PASS] testReentrantTokenCallbackBlocked() (gas: 1191663)
+[PASS] testRegistrationBudgetAndBatchAtomicity() (gas: 1866760)
+[PASS] testRegistrationDoesNotTransferAndBindsExactTerms() (gas: 182064)
+[PASS] testRegistrationRejectsInvalidTerms() (gas: 174659)
+[PASS] testTransferFailuresRollbackCommitmentAndBudget() (gas: 3258408)
+[PASS] testUnknownObligationAndEmptyCommitmentCannotPay() (gas: 224247)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 13.02ms (13.90ms CPU time)
+
+Ran 29 tests for test/PaymentGuard.t.sol:PaymentGuardTest
+[PASS] testCancelBeforePayment() (gas: 166140)
+[PASS] testConstructorInvalidConfigurations() (gas: 16461)
+[PASS] testDeadlineMinusOneValid() (gas: 146673)
+[PASS] testEverySignedFieldBinding() (gas: 600659)
+[PASS] testExactDeadlineExpired() (gas: 79113)
+[PASS] testExactTransferAndReplay() (gas: 226458)
+[PASS] testExecutionWinsCancellationRace() (gas: 178478)
+[PASS] testFutureIssuance() (gas: 75685)
+[PASS] testFuzzAmountExact(uint256) (runs: 256, μ: 156319, ~: 156329)
+[PASS] testInsufficientLiquidityRollback() (gas: 139981)
+[PASS] testInvalidTimeWindows() (gas: 200754)
+[PASS] testMalformedECDSASignatures() (gas: 122376)
+[PASS] testReentrantCallbackBlocked() (gas: 1580915)
+[PASS] testRegistryOrderingAndInvalidEntries() (gas: 9331)
+[PASS] testRegistryRejectsVaultAsRecipient() (gas: 15097)
+[PASS] testSignedInvalidPolicy() (gas: 71912)
+[PASS] testSignedInvalidToken() (gas: 72735)
+[PASS] testSignedOversizedAmount() (gas: 75159)
+[PASS] testSignedUnknownSupplier() (gas: 74656)
+[PASS] testSignedWrongRecipient() (gas: 75225)
+[PASS] testSignedZeroAmount() (gas: 75196)
+[PASS] testTokenAndPolicy() (gas: 40451)
+[PASS] testTransferFailuresRollback() (gas: 4478794)
+[PASS] testTwoNoncesSameInvoiceOnlyOnePays() (gas: 210682)
+[PASS] testUnauthorizedAndZeroCancellation() (gas: 55444)
+[PASS] testUnsignedAndWrongSigner() (gas: 98299)
+[PASS] testWrongChainAndVaultDomain() (gas: 117744)
+[PASS] testWrongDomainNameAndVersion() (gas: 103620)
+[PASS] testZeroInvoiceNonceEvidence() (gas: 202169)
+Suite result: ok. 29 passed; 0 failed; 0 skipped; finished in 13.02ms (32.97ms CPU time)
+
+Ran 1 test for test/PaymentGuard.t.sol:PaymentGuardInvariantTest
+[PASS] invariant_oneSettlementPerInvoiceAndExactConservation() (runs: 64, calls: 2048, reverts: 0)
+
+╭----------------+----------+-------+---------+----------╮
+| Contract       | Selector | Calls | Reverts | Discards |
++========================================================+
+| PaymentHandler | attempt  | 1009  | 0       | 0        |
+|----------------+----------+-------+---------+----------|
+| PaymentHandler | cancel   | 1039  | 0       | 0        |
+╰----------------+----------+-------+---------+----------╯
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 2.09s (2.09s CPU time)
+
+Ran 3 test suites in 2.09s (2.11s CPU time): 45 tests passed, 0 failed, 0 skipped (45 total tests)
+2026-10-10T22:05:04.923470Z  WARN evm::traces: failed to flush signature cache err=failed to create file "<home>/.foundry/cache/signatures": Operation not permitted (os error 1)

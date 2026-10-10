@@ -1,0 +1,57 @@
+
+Running 7 tests using 1 worker
+
+(node:62305) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/inbox.spec.ts:30:1 › inbox is the welcoming default, local demo needs no wallet, and navigation fits mobile (4.0s)
+  ✓  2 tests/e2e/inbox.spec.ts:57:1 › a synthetic invoice completes five checks and reports an actual registered-policy settlement (8.3s)
+  ✓  3 tests/e2e/inbox.spec.ts:91:1 › phishing is quarantined with evidence, no approval button, no fetched links and a durable alert (7.4s)
+  ✓  4 tests/e2e/inbox.spec.ts:116:1 › voice financial requests need human context and record requests for information without sending messages (7.2s)
+  ✓  5 tests/e2e/inbox.spec.ts:139:1 › email files import safely, modal close resets input and a failed attachment can be corrected (3.2s)
+  ✘  6 tests/e2e/inbox.spec.ts:164:1 › populated inbox, review and connections stay readable on desktop and mobile without wallet references (22.0s)
+  -  7 tests/e2e/inbox.spec.ts:182:1 › the optional operations campus keeps real geometry and clear overlays inside the new shell
+
+
+  1) tests/e2e/inbox.spec.ts:164:1 › populated inbox, review and connections stay readable on desktop and mobile without wallet references 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText('Not configured', { exact: true })
+    Expected: 2
+    Received: 3
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText('Not configured', { exact: true }) with timeout 20000ms
+      - waiting for getByText('Not configured', { exact: true })
+        44 × locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      176 |   await capture(page,'docs/qa/redesign-mobile-review.png',false);
+      177 |   await page.getByRole('button', {name:'Open navigation'}).click(); await page.getByRole('link',{name:'Connections',exact:true}).click();
+    > 178 |   await noHorizontalOverflow(page); await expect(page.getByText('Not configured',{exact:true})).toHaveCount(2);
+          |                                                                                                 ^
+      179 |   expect(errors).toEqual([]);
+      180 | });
+      181 |
+        at <project>/tests/e2e/inbox.spec.ts:178:97
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    var/redesign-playwright-artifacts/inbox-populated-inbox-revi-9d481-e-without-wallet-references/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: var/redesign-playwright-artifacts/inbox-populated-inbox-revi-9d481-e-without-wallet-references/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    var/redesign-playwright-artifacts/inbox-populated-inbox-revi-9d481-e-without-wallet-references/trace.zip
+    Usage:
+
+        npx playwright show-trace var/redesign-playwright-artifacts/inbox-populated-inbox-revi-9d481-e-without-wallet-references/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/inbox.spec.ts:164:1 › populated inbox, review and connections stay readable on desktop and mobile without wallet references 
+  1 did not run
+  5 passed (53.0s)

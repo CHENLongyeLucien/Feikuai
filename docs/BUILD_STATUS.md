@@ -1,6 +1,20 @@
 # Secure Finance build status
 
-Final update:10 October 2026. The complete 1,932-line README was read before implementation. Initially the repository contained only README.md, with no Git metadata or unfinished source changes. Supplied warehouse images/movie guided appearance; embedded document text never became payment authority.
+## Current update — 11 October 2026
+
+Read both supplied Track01 presentation slides and adapted the existing application to the user's multichannel intake and exception-review workflow. The original phase implementation remains below as historical evidence. The latest experience and its actual validation are described in [EXPERIENCE_TEST_REPORT.md](EXPERIENCE_TEST_REPORT.md), [EXPERIENCE_DEMO.md](EXPERIENCE_DEMO.md) and [TRACK_ALIGNMENT.md](TRACK_ALIGNMENT.md).
+
+- Replaced the default technical campus dashboard with a responsive forest/lime inbox inspired by SYMPTOO. Added working import dialogs, source filters/search, stage inspection, review decisions, activity/read state, downloads, honest integration status and guided payment approval. Technical wallet references are collapsed. The animated campus remains accessible under Operations.
+- Added durable multichannel intake, five recorded specialist stages, security quarantine, human review, independent final audit, source provenance and a signed internal-system webhook. Existing live intake/finance adapters remain available; current demonstrations use fixture agents and deterministic rules.
+- Added a separate local AutomationGuard for exact obligations previously registered by its owner. It has restricted roles, suppliers, per-payment/budget caps and replay protection. The executor uses durable signed transaction storage, receipt verification and cross-vault authority exclusions. No Fuji automation or new Fuji transaction is claimed.
+- Preserved `.env`, `.env.fuji`, existing local state, deployment/registry files and the user's Fuji deployment-script edit. Private environments and demo runtime data remain ignored by Git; `.env.fuji` remains mode 600. New demonstration state lives separately in `var/experience-demo/` and resumes without resetting settlements.
+- Current checks: **181 unit, 45 contract, 5 live local-chain integration, 7 inbox/campus browser and 1 guided-approval browser tests passed**. Typecheck, lint and production build pass. The browser results come from the seven passing inbox tests plus a targeted passing approval rerun; the earlier failures remain in the logs.
+- Actual local transfers: automatic policy and guided human approval each produced successful receipts and exactly 48,000 DEMO recipient increases. Screenshots were inspected at desktop and mobile sizes. Fixed the mobile drawer transition, delayed SSE establishment through the development proxy, and campus displays that previously omitted automatic settlements.
+- Measured synthetic rule benchmark:8/12 authored attacks flagged; 3/12 benign examples held. This is a small rule-only corpus, not production fraud accuracy. Live mailbox OAuth, isolated URL scanning, speaker authenticity, malware scanning and live provider outputs remain outside demonstrated coverage.
+
+## Original release — 10 October 2026 (historical)
+
+The complete 1,932-line README was read before original implementation. Initially the repository contained only README.md, with no Git metadata or unfinished source changes. Supplied warehouse images/movie guided appearance; embedded document text never became payment authority.
 
 | Phase | Final status | Evidence / remaining gate |
 | --- | --- | --- |

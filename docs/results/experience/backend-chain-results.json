@@ -1,0 +1,33 @@
+{
+  "environment": "isolated local Anvil",
+  "rpcUrl": "http://127.0.0.1:18545",
+  "testVault": "0x610178da211fef7d417bc0e6fed39f05609ad788",
+  "testToken": "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
+  "agentMode": "fixture",
+  "measurementTime": "2026-10-10T22:21:16.007Z",
+  "measurements": [
+    {
+      "scenario": "external-direct-execution",
+      "txHash": "0x9987f52914c5a5a6f4314e07857c26e02d74ff6930badbc1f69e5d8e3f7e858d",
+      "invoiceKey": "0x90b10db0e461a39b0708c2fa086816790528fd1f518bc56efcdc337c7a19dff4",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "amountAtomic": "48000000000",
+      "recipientDeltaAtomic": "48000000000",
+      "gasUsed": "121699",
+      "blockNumber": "939"
+    },
+    {
+      "scenario": "cancellation-before-import",
+      "txHash": "0x4e1073cf81cf96f36c05a681d64469c9cf9f39cf9fe88ce941ed7792412566b3",
+      "invoiceKey": "0x211e35f5c712aa71a0aa42a62ff057860ea719087f8f5d4f56f0aea00c6987de",
+      "nonce": "25772700515963101899992346493908122396624349994684583526371597666889904547299",
+      "blockNumber": "943"
+    },
+    {
+      "scenario": "execution-wins-cancellation",
+      "paymentTxHash": "0x3c630a2973e7620fa03b25ff31cdabaf405b796c64f6d0ce4adf3a111001a140",
+      "revertedCancellationTxHash": "0x66664bb193be9183b474a1b305396b00d8684ab7c8e4fdcddb38cd8260da0da3",
+      "invoiceKey": "0x1895b5811be4c918187028f9f9bbf6d15f9f751c86f6cbaeca8bde0d62ef90f0"
+    }
+  ]
+}

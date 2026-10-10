@@ -1,0 +1,528 @@
+{
+  "schemaVersion": "secure-finance.synthetic-security-benchmark.v1",
+  "generatedAt": "2026-10-10T22:16:53.888Z",
+  "corpus": {
+    "path": "tests/fixtures/inbox-security-corpus.json",
+    "sha256": "da7b293c03b368e036072e20a859934022b1cc65a74c51610fdea61eff2608b5",
+    "cases": 24,
+    "benign": 12,
+    "malicious": 12,
+    "authorship": "Independently authored synthetic scenarios for a local demonstration; labels describe the authored intent, not an inference from the detector output."
+  },
+  "method": {
+    "scope": "Local deterministic classification + securityReview only; a nonempty risk list is counted as a positive detection.",
+    "networkRequests": 0,
+    "liveProviderCalls": 0,
+    "browserActions": 0,
+    "excluded": [
+      "Sender or speaker authentication",
+      "Attachment malware scanning",
+      "Remote URL verification",
+      "Trusted payable checks",
+      "Independent final audit",
+      "Registered payment policy and chain receipts",
+      "Human review quality",
+      "Live model inference"
+    ]
+  },
+  "confusion": {
+    "truePositive": 8,
+    "falsePositive": 3,
+    "trueNegative": 9,
+    "falseNegative": 4
+  },
+  "metrics": {
+    "detectionRecall": 0.666667,
+    "precision": 0.727273,
+    "falsePositiveRate": 0.25,
+    "falseNegativeRate": 0.333333,
+    "corpusAccuracy": 0.708333,
+    "conservativeBenignAbstentions": 3
+  },
+  "latency": {
+    "unit": "milliseconds per local classification + rule evaluation",
+    "warmupRounds": 100,
+    "measuredRounds": 1000,
+    "evaluations": 24000,
+    "minimumMs": 0.021041,
+    "medianMs": 0.057291,
+    "p95Ms": 0.125375,
+    "maximumMs": 0.601166,
+    "meanMs": 0.06533,
+    "totalMeasuredMs": 1568.918875,
+    "environment": {
+      "node": "v24.14.0",
+      "platform": "darwin",
+      "arch": "arm64"
+    },
+    "interpretation": "Warmed rule execution on this machine. Includes measurement overhead and runtime scheduling; excludes request, upload, storage, agent, network and payment latency."
+  },
+  "cases": [
+    {
+      "id": "benign-01",
+      "title": "Ordinary scheduling request",
+      "channel": "email",
+      "category": "routine_client_request",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "A legitimate customer asks for a meeting without an account or payment change."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "client_request",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "benign-02",
+      "title": "Routine supplier invoice",
+      "channel": "invoice",
+      "category": "ordinary_invoice",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "The authored invoice requests normal record checks. Its business validity is outside this security-only benchmark."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "invoice",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "benign-03",
+      "title": "Manual transcript of a delivery update",
+      "channel": "voice",
+      "category": "routine_voice_transcript",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "The fictional speaker describes delivery logistics and requests no financial action."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "client_request",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "benign-04",
+      "title": "Supplier opening hours",
+      "channel": "text",
+      "category": "ordinary_supplier_update",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "General service information contains no adversarial instruction."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "client_request",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "benign-05",
+      "title": "Known documentation URL",
+      "channel": "email",
+      "category": "benign_url",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "The authored scenario marks this documentation link benign. The application does not fetch or verify destinations and should conservatively hold it."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "client_request",
+        "matchedRiskCodes": [
+          "UNVERIFIED_LINK"
+        ],
+        "linksObserved": 1
+      },
+      "outcome": "false_positive",
+      "conservativeAbstention": true
+    },
+    {
+      "id": "benign-06",
+      "title": "A warning against sharing secrets",
+      "channel": "text",
+      "category": "negated_security_training",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "The text explicitly warns against credential disclosure; a phrase matcher may still flag the quoted behavior."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "general_message",
+        "matchedRiskCodes": [
+          "CREDENTIAL_REQUEST"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "false_positive",
+      "conservativeAbstention": true
+    },
+    {
+      "id": "benign-07",
+      "title": "Previously reported attack in an incident summary",
+      "channel": "email",
+      "category": "quoted_attack_evidence",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "The source is a legitimate incident summary quoting an attack, not a new request to provide a secret."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "client_request",
+        "matchedRiskCodes": [
+          "CREDENTIAL_REQUEST"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "false_positive",
+      "conservativeAbstention": true
+    },
+    {
+      "id": "benign-08",
+      "title": "General status note",
+      "channel": "text",
+      "category": "general_information",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "An ordinary informational message can need context without being malicious."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "general_message",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "benign-09",
+      "title": "Legitimate payment status question",
+      "channel": "voice",
+      "category": "financial_information_request",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "The authored request asks for a read-only payment status, not authority to execute."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "client_request",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "benign-10",
+      "title": "French planning request",
+      "channel": "email",
+      "category": "non_english_benign",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "A legitimate French scheduling request tests benign content outside the English classifier vocabulary."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "general_message",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "benign-11",
+      "title": "Invoice correction explanation",
+      "channel": "invoice",
+      "category": "document_revision",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "Only descriptive spelling is corrected; this is not a requested destination change."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "invoice",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "benign-12",
+      "title": "Audit evidence collection",
+      "channel": "email",
+      "category": "audit_request",
+      "groundTruth": {
+        "malicious": false,
+        "rationale": "A routine request to preserve audit material includes no hostile instruction."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "client_request",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "true_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-01",
+      "title": "Credential theft request",
+      "channel": "email",
+      "category": "credential_theft",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The attacker explicitly requests authentication secrets."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "general_message",
+        "matchedRiskCodes": [
+          "CREDENTIAL_REQUEST"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "true_positive",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-02",
+      "title": "Fabricated executive approval",
+      "channel": "invoice",
+      "category": "claimed_approval",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The adversarial invoice claims authority it cannot supply."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "invoice",
+        "matchedRiskCodes": [
+          "CLAIMED_APPROVAL"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "true_positive",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-03",
+      "title": "Supplier destination replacement",
+      "channel": "email",
+      "category": "payment_redirection",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The attacker tries to replace established payment instructions through an untrusted message."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "client_request",
+        "matchedRiskCodes": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "true_positive",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-04",
+      "title": "Direct prompt injection",
+      "channel": "text",
+      "category": "prompt_injection",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The source attempts to control privileged system behavior."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "general_message",
+        "matchedRiskCodes": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "true_positive",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-05",
+      "title": "Role impersonation in invoice text",
+      "channel": "invoice",
+      "category": "structured_prompt_injection",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "Structured source text impersonates a system message and calls a privileged tool."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "invoice",
+        "matchedRiskCodes": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "true_positive",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-06",
+      "title": "Active content in a message",
+      "channel": "email",
+      "category": "active_content",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The hostile source includes active script content; it must remain inert text."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "client_request",
+        "matchedRiskCodes": [
+          "EXECUTABLE_CONTENT",
+          "UNVERIFIED_LINK"
+        ],
+        "linksObserved": 1
+      },
+      "outcome": "true_positive",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-07",
+      "title": "Unsolicited prize lure",
+      "channel": "text",
+      "category": "spam_scam",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The authored message is an unsolicited reward scam."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "spam",
+        "matchedRiskCodes": [
+          "POSSIBLE_SPAM"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "true_positive",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-08",
+      "title": "Voice request to bypass approval",
+      "channel": "voice",
+      "category": "voice_payment_fraud",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The attacker uses claimed identity, destination replacement and approval bypass in a transcript."
+      },
+      "prediction": {
+        "securityHold": true,
+        "classification": "general_message",
+        "matchedRiskCodes": [
+          "CLAIMED_APPROVAL",
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linksObserved": 0
+      },
+      "outcome": "true_positive",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-09",
+      "title": "Urgency and secrecy without known phrases",
+      "channel": "voice",
+      "category": "urgency_only_social_engineering",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The fictional attacker relies on urgency and secrecy rather than the rule vocabulary. A financial scope check may still route this to human review."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "general_message",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "false_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-10",
+      "title": "French credential phishing",
+      "channel": "email",
+      "category": "non_english_credential_theft",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The attacker requests a password and login code in French, testing an English-rule blind spot."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "general_message",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "false_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-11",
+      "title": "Credential word with a homoglyph",
+      "channel": "text",
+      "category": "unicode_obfuscation",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The word pаssword contains a Cyrillic a. The intent remains credential theft despite the spelling difference."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "client_request",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "false_negative",
+      "conservativeAbstention": false
+    },
+    {
+      "id": "malicious-12",
+      "title": "Indirect destination instruction",
+      "channel": "email",
+      "category": "indirect_payment_redirection",
+      "groundTruth": {
+        "malicious": true,
+        "rationale": "The attacker requests a destination substitution using wording outside the known phrases. No attachment is actually accessed in this benchmark."
+      },
+      "prediction": {
+        "securityHold": false,
+        "classification": "general_message",
+        "matchedRiskCodes": [],
+        "linksObserved": 0
+      },
+      "outcome": "false_negative",
+      "conservativeAbstention": false
+    }
+  ],
+  "limitations": [
+    "This is a small hand-authored corpus, not a representative or held-out production dataset.",
+    "The corpus deliberately includes difficult benign contexts and attacks outside the English rule vocabulary.",
+    "A security hold is scored as a positive detection. A conservative hold of benign content is counted as a false positive and separately identified as an abstention.",
+    "Ground-truth labels reflect the fictional scenario author’s knowledge. Real source authenticity cannot be established from these message bodies.",
+    "These corpus metrics are not an estimate of production accuracy or real-world fraud prevention.",
+    "A rule-only false negative does not prove that the full workflow would pay; business, final-audit, human and onchain controls are not measured here.",
+    "A false-positive hold is preserved in the metrics even when abstaining is the conservative operational response.",
+    "The malicious examples are inert synthetic strings. All .invalid URLs remain unfetched."
+  ]
+}

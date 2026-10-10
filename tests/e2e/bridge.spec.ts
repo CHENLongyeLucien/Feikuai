@@ -1,0 +1,89 @@
+import {test,expect} from '@playwright/test';
+import {mkdirSync,readFileSync,writeFileSync} from 'node:fs';
+import {createPublicClient,http,decodeEventLog,type Address,type Hex} from 'viem';
+import {deploymentSchema,paymentGuardAbi,demoTokenAbi,automationGuardAbi} from '../../packages/chain/src/index';
+import {fixtureText} from '../../apps/api/src/db/seed';
+
+test('guided human approval returns its wallet signature across origins and settles the exact registered payable',async({page},testInfo)=>{
+ const deployment=deploymentSchema.parse(JSON.parse(readFileSync('var/experience-demo/deployment.json','utf8')));
+ const registry=JSON.parse(readFileSync('var/experience-demo/registry.json','utf8')) as {payables:Array<{id:string;scenarioId:string;invoiceKey:Hex;recipient:Address;supplierKey:Hex;supplierName:string;invoiceReference:string;amountAtomic:string}>};
+ const automation=JSON.parse(readFileSync('var/experience-demo/automation.json','utf8')) as {vault:Address;rpcUrl:string;approvedPayableIds:string[]};
+ const rpc=createPublicClient({transport:http('http://127.0.0.1:18545')});
+ expect(deployment.rpcUrl).toBe('http://127.0.0.1:18545');expect(await rpc.getChainId()).toBe(31337);
+ expect(automation.rpcUrl).toBe(deployment.rpcUrl);
+ const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+ mkdirSync('docs/qa',{recursive:true});
+ await page.goto('/');await page.getByRole('button',{name:'Explore the demo',exact:true}).click();
+ await expect(page.getByRole('button',{name:/Northstar team/})).toBeVisible();
+ const casesResponse=await page.request.get('/api/v1/cases');expect(casesResponse.ok()).toBe(true);
+ const existingCases=(await casesResponse.json()).cases as Array<{invoiceKey:string}>;
+ const usedInvoices=new Set(existingCases.map(entry=>entry.invoiceKey));
+ const candidates=registry.payables.filter(entry=>/^BENIGN-/.test(entry.scenarioId)&&!/^BENIGN-0[1-5]$/.test(entry.scenarioId)&&!automation.approvedPayableIds.includes(entry.id)&&!usedInvoices.has(entry.invoiceKey));
+ let payable:typeof registry.payables[number]|undefined;
+ for(const candidate of candidates){
+  const [consumed,registered]=await Promise.all([
+   rpc.readContract({address:deployment.vault,abi:paymentGuardAbi,functionName:'invoiceSettlementDigest',args:[candidate.invoiceKey]}),
+   rpc.readContract({address:automation.vault,abi:automationGuardAbi,functionName:'obligations',args:[candidate.invoiceKey]})
+  ]);
+  if(consumed==='0x'+'0'.repeat(64)&&registered[3]==='0x'+'0'.repeat(64)){payable=candidate;break;}
+ }
+ if(!payable)throw new Error('No unused benign human-payment fixture remains in the preserved isolated demo. All candidates already have cases, settlements or registered automatic authority. Prepare another reviewed synthetic payable; this test will not reset state or replay a paid invoice.');
+ expect(payable.amountAtomic,'The approval scenario must transfer exactly 48,000 DEMO').toBe('48000000000');
+ await page.getByRole('button',{name:'Invoice',exact:true}).click();
+ const intake=page.getByRole('dialog');
+ await intake.getByLabel('Title',{exact:false}).fill('Invoice with human payment review');
+ await intake.getByLabel('Match to a registered invoice',{exact:false}).selectOption(payable.id);
+ await intake.getByRole('textbox',{name:'Source text',exact:false}).fill(fixtureText(payable));
+ await intake.getByRole('button',{name:'Add & review'}).click();
+ await expect(page).toHaveURL(/\/inbox\/[a-f0-9-]+$/);
+ const inboxId=new URL(page.url()).pathname.split('/')[2]!;
+ const item=()=>page.request.get(`/api/v1/inbox/${inboxId}`).then(response=>response.json());
+ await expect.poll(async()=>(await item()).stages.map((stage:{status:string})=>stage.status),{timeout:60000}).toEqual(['passed','passed','passed','passed','passed']);
+ expect((await item()).payment.requiresWalletSignature).toBe(true);
+ await page.getByRole('button',{name:'Open payment review',exact:true}).click();
+ await expect(page.getByTestId('case-workspace')).toBeVisible();
+ const caseId=new URL(page.url()).pathname.split('/').at(-1)!;
+ await page.getByRole('button',{name:'Review & approval',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Request execution',exact:true})).toBeDisabled();
+ const popup=page.waitForEvent('popup');
+ await page.getByRole('button',{name:'Review payment',exact:true}).click();
+ const approval=await popup;approval.on('pageerror',error=>errors.push(error.message));
+ await expect(approval).toHaveURL(/^http:\/\/localhost:5184\/#review=[a-f0-9-]+$/);
+ await expect(approval.getByRole('heading',{name:'Exact payment terms',exact:true})).toBeVisible();
+ await expect(approval.getByText('Evidence verified',{exact:true})).toBeVisible();
+ await expect(approval.locator('.supplier-name')).toHaveText(payable.supplierName);
+ await expect(approval.locator('.essential-terms')).toContainText(`${payable.amountAtomic} atomic units`);
+ await approval.getByText('All signed fields and payment policy',{exact:true}).click();
+ await expect(approval.locator('.payment-review')).toContainText(deployment.vault);
+ await expect(approval.locator('.payment-review')).toContainText(payable.recipient);
+ await approval.getByText('All signed fields and payment policy',{exact:true}).click();
+ await approval.getByText('original.txt',{exact:true}).click();
+ await expect(approval.locator('pre:visible').filter({hasText:payable.invoiceReference})).toBeVisible();
+ await approval.getByText('original.txt',{exact:true}).click();
+ await approval.getByRole('button',{name:'Use demo approval wallet',exact:true}).click();
+ await expect(approval.getByRole('button',{name:'Demo wallet selected',exact:true})).toBeDisabled();
+ await expect(approval.getByRole('button',{name:'Sign exact payment',exact:true})).toBeDisabled();
+ await approval.getByRole('checkbox').check();
+ await approval.screenshot({path:'docs/qa/guided-approval-before-signing.png',fullPage:true});
+ await approval.getByRole('button',{name:'Sign exact payment',exact:true}).click();
+ await expect(approval.getByRole('status')).toContainText('received and verified');
+ await expect(page.getByRole('button',{name:'Request execution',exact:true})).toBeEnabled();
+ const before=await rpc.readContract({address:deployment.token,abi:demoTokenAbi,functionName:'balanceOf',args:[payable.recipient]});
+ await approval.getByRole('button',{name:'Return to case',exact:true}).click();
+ await page.getByRole('button',{name:'Request execution',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Verified onchain settlement',exact:true})).toBeVisible({timeout:60000});
+ const current=await page.request.get(`/api/v1/cases/${caseId}`).then(response=>response.json());
+ const receipt=await rpc.getTransactionReceipt({hash:current.settlement.txHash});expect(receipt.status).toBe('success');
+ const decoded=receipt.logs.filter(log=>log.address.toLowerCase()===deployment.vault).map(log=>decodeEventLog({abi:paymentGuardAbi,data:log.data,topics:log.topics}));
+ const payment=decoded.find(log=>log.eventName==='PaymentExecuted');expect(payment).toBeTruthy();
+ if(payment?.eventName!=='PaymentExecuted')throw new Error('Verified receipt lacks payment event');
+ expect(payment.args.invoiceKey).toBe(payable.invoiceKey);expect(payment.args.recipient.toLowerCase()).toBe(payable.recipient);
+ expect(payment.args.amountAtomic).toBe(BigInt(payable.amountAtomic));
+ const after=await rpc.readContract({address:deployment.token,abi:demoTokenAbi,functionName:'balanceOf',args:[payable.recipient]});
+ expect(after-before).toBe(BigInt(payable.amountAtomic));
+ await page.screenshot({path:'docs/qa/guided-approval-settled.png',fullPage:true});
+ const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download evidence bundle',exact:true}).click();
+ await (await downloadPromise).saveAs(testInfo.outputPath('guided-payment-evidence.zip'));
+ expect(errors).toEqual([]);
+ writeFileSync('docs/qa/guided-payment-result.json',JSON.stringify({inboxId,caseId,invoiceReference:payable.invoiceReference,scenarioId:payable.scenarioId,transactionHash:receipt.transactionHash,recipientDeltaAtomic:String(after-before),receiptStatus:receipt.status,bridgeOrigins:['http://localhost:5183','http://localhost:5184'],walletSignatureReturned:true,errors},null,2));
+});

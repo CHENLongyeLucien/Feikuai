@@ -1,0 +1,15 @@
+{
+  "inboxId": "9cf2f251-a28e-468c-9bc7-87fb189c87c7",
+  "caseId": "02405af3-81e7-4462-a450-81974c46c7b4",
+  "invoiceReference": "NS-2026-0052",
+  "scenarioId": "BENIGN-08",
+  "transactionHash": "0x93568880e9d3a26cd825149394a7595d9f4b635d3e931c52805e605df2b26408",
+  "recipientDeltaAtomic": "48000000000",
+  "receiptStatus": "success",
+  "bridgeOrigins": [
+    "http://localhost:5183",
+    "http://localhost:5184"
+  ],
+  "walletSignatureReturned": true,
+  "errors": []
+}

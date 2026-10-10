@@ -1,0 +1,88 @@
+
+> secure-finance@0.1.0 test:contracts <project>
+> node scripts/foundry.mjs forge test --root contracts -vv
+
+No files changed, compilation skipped
+2026-10-10T22:20:44.784244Z  WARN forge::test: failed calling "targetArtifactSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.784691Z  WARN forge::test: failed calling "targetArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.784697Z  WARN forge::test: failed calling "excludeArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.784970Z  WARN forge::test: failed calling "targetSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.784987Z  WARN forge::test: failed calling "excludeSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785147Z  WARN forge::test: failed calling "excludeContracts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785170Z  WARN forge::test: failed calling "targetInterfaces()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785180Z  WARN forge::test: failed calling "targetSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785188Z  WARN forge::test: failed calling "excludeSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785586Z  WARN forge::test: failed calling "targetArtifactSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785594Z  WARN forge::test: failed calling "targetArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785598Z  WARN forge::test: failed calling "excludeArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785608Z  WARN forge::test: failed calling "targetSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785612Z  WARN forge::test: failed calling "excludeSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785621Z  WARN forge::test: failed calling "excludeContracts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785689Z  WARN forge::test: failed calling "targetInterfaces()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785695Z  WARN forge::test: failed calling "targetSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T22:20:44.785699Z  WARN forge::test: failed calling "excludeSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+
+Ran 15 tests for test/AutomationGuard.t.sol:AutomationGuardTest
+[PASS] testBatchSizeBounds() (gas: 85623)
+[PASS] testConstructorRejectsUnsafeRegistry() (gas: 11721)
+[PASS] testConstructorRejectsUnsafeRolesTokenAndCaps() (gas: 13982)
+[PASS] testDuplicateInBatchRollsBackWholeBatch() (gas: 145000)
+[PASS] testDuplicateRegistrationCannotReplaceAmountOrRecipient() (gas: 302776)
+[PASS] testExactExecutionConsumesOnceAndCannotReregister() (gas: 372047)
+[PASS] testExecutorCannotRegisterAndOwnerCannotExecute() (gas: 256394)
+[PASS] testFuzzRegisteredAmountIsExactAndCannotRepeat(uint256) (runs: 256, μ: 333335, ~: 333341)
+[PASS] testInsufficientLiquidityPreservesAuthorityForRetry() (gas: 425577)
+[PASS] testReentrantTokenCallbackBlocked() (gas: 1191663)
+[PASS] testRegistrationBudgetAndBatchAtomicity() (gas: 1866760)
+[PASS] testRegistrationDoesNotTransferAndBindsExactTerms() (gas: 182064)
+[PASS] testRegistrationRejectsInvalidTerms() (gas: 174659)
+[PASS] testTransferFailuresRollbackCommitmentAndBudget() (gas: 3258408)
+[PASS] testUnknownObligationAndEmptyCommitmentCannotPay() (gas: 224247)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 15.51ms (15.68ms CPU time)
+
+Ran 29 tests for test/PaymentGuard.t.sol:PaymentGuardTest
+[PASS] testCancelBeforePayment() (gas: 166140)
+[PASS] testConstructorInvalidConfigurations() (gas: 16461)
+[PASS] testDeadlineMinusOneValid() (gas: 146673)
+[PASS] testEverySignedFieldBinding() (gas: 600659)
+[PASS] testExactDeadlineExpired() (gas: 79113)
+[PASS] testExactTransferAndReplay() (gas: 226458)
+[PASS] testExecutionWinsCancellationRace() (gas: 178478)
+[PASS] testFutureIssuance() (gas: 75685)
+[PASS] testFuzzAmountExact(uint256) (runs: 256, μ: 156320, ~: 156329)
+[PASS] testInsufficientLiquidityRollback() (gas: 139981)
+[PASS] testInvalidTimeWindows() (gas: 200754)
+[PASS] testMalformedECDSASignatures() (gas: 122376)
+[PASS] testReentrantCallbackBlocked() (gas: 1580915)
+[PASS] testRegistryOrderingAndInvalidEntries() (gas: 9331)
+[PASS] testRegistryRejectsVaultAsRecipient() (gas: 15097)
+[PASS] testSignedInvalidPolicy() (gas: 71912)
+[PASS] testSignedInvalidToken() (gas: 72735)
+[PASS] testSignedOversizedAmount() (gas: 75159)
+[PASS] testSignedUnknownSupplier() (gas: 74656)
+[PASS] testSignedWrongRecipient() (gas: 75225)
+[PASS] testSignedZeroAmount() (gas: 75196)
+[PASS] testTokenAndPolicy() (gas: 40451)
+[PASS] testTransferFailuresRollback() (gas: 4478794)
+[PASS] testTwoNoncesSameInvoiceOnlyOnePays() (gas: 210682)
+[PASS] testUnauthorizedAndZeroCancellation() (gas: 55444)
+[PASS] testUnsignedAndWrongSigner() (gas: 98299)
+[PASS] testWrongChainAndVaultDomain() (gas: 117744)
+[PASS] testWrongDomainNameAndVersion() (gas: 103620)
+[PASS] testZeroInvoiceNonceEvidence() (gas: 202169)
+Suite result: ok. 29 passed; 0 failed; 0 skipped; finished in 17.37ms (34.51ms CPU time)
+
+Ran 1 test for test/PaymentGuard.t.sol:PaymentGuardInvariantTest
+[PASS] invariant_oneSettlementPerInvoiceAndExactConservation() (runs: 64, calls: 2048, reverts: 0)
+
+╭----------------+----------+-------+---------+----------╮
+| Contract       | Selector | Calls | Reverts | Discards |
++========================================================+
+| PaymentHandler | attempt  | 1024  | 0       | 0        |
+|----------------+----------+-------+---------+----------|
+| PaymentHandler | cancel   | 1024  | 0       | 0        |
+╰----------------+----------+-------+---------+----------╯
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 2.16s (2.15s CPU time)
+
+Ran 3 test suites in 2.16s (2.19s CPU time): 45 tests passed, 0 failed, 0 skipped (45 total tests)

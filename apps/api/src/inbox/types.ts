@@ -1,0 +1,21 @@
+import {z} from 'zod';
+
+export const inboxChannelSchema=z.enum(['invoice','email','voice','text']);
+export const inboxStatusSchema=z.enum(['processing','quarantined','needs_review','approved','rejected']);
+export const inboxInputSchema=z.object({channel:inboxChannelSchema,title:z.string().trim().max(160).optional(),sender:z.string().trim().max(254).optional(),text:z.string().min(1).max(40000),payableId:z.string().uuid().optional()}).strict();
+export const reviewSchema=z.object({expectedVersion:z.number().int().positive(),decision:z.enum(['approve','reject','request_information']),note:z.string().trim().min(5).max(1000)}).strict();
+export type InboxInput=z.infer<typeof inboxInputSchema>;
+export type InboxChannel=z.infer<typeof inboxChannelSchema>;
+export type InboxStatus=z.infer<typeof inboxStatusSchema>;
+export type Evidence={kind:'source'|'record'|'rule';label:string;quote?:string;start?:number;end?:number;reference?:string};
+export type Risk={code:string;severity:'info'|'medium'|'high';title:string;detail:string;evidence:Evidence[]};
+export type LinkObservation={url:string;status:'unverified';reason:string};
+export type Classification={category:'invoice'|'client_request'|'spam'|'general_message';label:string;confidence:'rule_match'|'needs_context';summary:string};
+export type InboxStageId='classification'|'security'|'client_finance'|'policy'|'final_audit';
+export type InboxStage={id:InboxStageId;name:string;status:'pending'|'running'|'passed'|'held'|'failed'|'not_applicable';summary:string;mode:'deterministic_rules'|'fixture_agents'|'live_agents';sourceHash:string;evidence:Evidence[];startedAt:string|null;completedAt:string|null};
+export type ApprovalDecision={scope:'WORKFLOW_ONLY';decision:'pending'|'automatic'|'human'|'held'|'rejected';reason:string};
+export type InboxNotification={id:string;itemId:string;kind:'security_hold'|'human_review'|'workflow_approved'|'rejected'|'payment_confirmed'|'payment_attention';title:string;message:string;read:boolean;createdAt:string};
+export type NextAction={id:'review'|'open_case'|'provide_information'|'replace_source'|'view_evidence';label:string;href?:string};
+export type InboxPayment={authorizationStatus:string|null;executionStatus:string;settlementStatus:string;txHash:string|null;requiresWalletSignature:boolean;authorityModel?:string;error?:string|null};
+export type InboxDTO={id:string;version:number;channel:InboxChannel;title:string;sender:string|null;preview:string;text:string;status:InboxStatus;classification:Classification|null;stages:InboxStage[];risks:Risk[];links:LinkObservation[];notifications:InboxNotification[];nextActions:NextAction[];linkedCaseId:string|null;payableId:string|null;approval:ApprovalDecision;payment:InboxPayment|null;source:{sha256:string;textHash:string;sizeBytes:number;filename:string|null;mimeType:string;extraction:string;senderAuthentication:'not_verified'|'not_applicable';transcription:{mode:'manual'|'openai'|'not_applicable'|'awaiting_configuration';model:string|null}};mode:'fixture'|'live';createdAt:string;updatedAt:string;reviewHistory:Array<{decision:string;note:string;reviewer:string;createdAt:string}>};
+export const stageNames:Record<InboxStageId,string>={classification:'Classification',security:'Security review',client_finance:'Client & finance',policy:'Approval policy',final_audit:'Independent final audit'};

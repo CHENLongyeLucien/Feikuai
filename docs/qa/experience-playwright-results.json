@@ -1,0 +1,674 @@
+{
+  "config": {
+    "argv": [
+      "/usr/local/bin/node",
+      "<project>/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "tests/e2e/experience.config.ts"
+    ],
+    "configFile": "<project>/tests/e2e/experience.config.ts",
+    "rootDir": "<project>/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "<project>/var/experience-playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "inbox",
+        "name": "inbox",
+        "testDir": "<project>/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "inbox.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "<project>/var/experience-playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "guided-approval",
+        "name": "guided-approval",
+        "testDir": "<project>/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "bridge.spec.ts"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "<project>/var/experience-playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "inbox",
+        "testDir": "<project>/tests/e2e",
+        "snapshotDir": "<project>/tests/e2e",
+        "testIgnore": [],
+        "testMatch": "inbox.spec.ts",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://localhost:5183",
+          "channel": "chrome",
+          "headless": true,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "video": "on",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-webgl",
+              "--ignore-gpu-blocklist"
+            ]
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "inbox"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "<project>/var/experience-playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "guided-approval",
+        "testDir": "<project>/tests/e2e",
+        "snapshotDir": "<project>/tests/e2e",
+        "testIgnore": [],
+        "testMatch": "bridge.spec.ts",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://localhost:5183",
+          "channel": "chrome",
+          "headless": true,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "video": "on",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-webgl",
+              "--ignore-gpu-blocklist"
+            ]
+          }
+        },
+        "dependencies": [
+          "inbox"
+        ],
+        "ignoreSnapshots": false,
+        "__projectId": "guided-approval"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "<project>/docs/qa/experience-playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "inbox.spec.ts",
+      "file": "inbox.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "inbox is the welcoming default, local demo needs no wallet, and navigation fits mobile",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "inbox",
+              "projectName": "inbox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3552,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:22:19.079Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/inbox-inbox-is-the-welcomi-9a20b--and-navigation-fits-mobile-inbox/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-5b7d72dc9cccf06ef349",
+          "file": "inbox.spec.ts",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "a synthetic invoice completes five checks and reports an actual registered-policy settlement",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "inbox",
+              "projectName": "inbox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8307,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:22:22.851Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/inbox-a-synthetic-invoice--5b6fe-egistered-policy-settlement-inbox/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-af119dd8cfe81ad33e2b",
+          "file": "inbox.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "phishing is quarantined with evidence, no approval button, no fetched links and a durable alert",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "inbox",
+              "projectName": "inbox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7425,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:22:31.166Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/inbox-phishing-is-quaranti-d8cc6-d-links-and-a-durable-alert-inbox/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-5bb2590f05e9814c34de",
+          "file": "inbox.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "voice financial requests need human context and record requests for information without sending messages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "inbox",
+              "projectName": "inbox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7236,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:22:38.597Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/inbox-voice-financial-requ-be9d2-on-without-sending-messages-inbox/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-c1f6a6296195b53c0dd5",
+          "file": "inbox.spec.ts",
+          "line": 132,
+          "column": 1
+        },
+        {
+          "title": "email files import safely, modal close resets input and a failed attachment can be corrected",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "inbox",
+              "projectName": "inbox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2435,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:22:45.841Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/inbox-email-files-import-s-bfb5e-attachment-can-be-corrected-inbox/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-eaa496a00315e901431e",
+          "file": "inbox.spec.ts",
+          "line": 155,
+          "column": 1
+        },
+        {
+          "title": "populated inbox, review and connections stay readable on desktop and mobile without wallet references",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "inbox",
+              "projectName": "inbox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1970,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:22:48.282Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/inbox-populated-inbox-revi-9d481-e-without-wallet-references-inbox/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-f7462d8d634b47c3e2df",
+          "file": "inbox.spec.ts",
+          "line": 180,
+          "column": 1
+        },
+        {
+          "title": "the optional operations campus keeps real geometry and clear overlays inside the new shell",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "serial",
+                  "location": {
+                    "file": "<project>/tests/e2e/inbox.spec.ts",
+                    "line": 0,
+                    "column": 0
+                  }
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "inbox",
+              "projectName": "inbox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4739,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:22:50.258Z",
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "<project>/tests/e2e/inbox.spec.ts",
+                        "line": 0,
+                        "column": 0
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/inbox-the-optional-operati-b0e82-erlays-inside-the-new-shell-inbox/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c9086cbe786fc8171a5a-972d8a159f39bafdf717",
+          "file": "inbox.spec.ts",
+          "line": 198,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "bridge.spec.ts",
+      "file": "bridge.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "guided human approval returns its wallet signature across origins and settles the exact registered payable",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "guided-approval",
+              "projectName": "guided-approval",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 9197,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('pre').filter({ hasText: 'NS-2026-0051' })\nExpected: visible\nError: strict mode violation: locator('pre').filter({ hasText: 'NS-2026-0051' }) resolved to 6 elements:\n    1) <pre>Subject: Invoice with human payment review↵NORTHS…</pre> aka getByText('Subject: Invoice with human payment review NORTHSTAR LABS — SYNTHETIC INVOICE')\n    2) <pre>{\"agent\":\"finance\",\"createdAt\":\"2026-10-10T22:22:…</pre> aka getByText('{\"agent\":\"finance\",\"createdAt')\n    3) <pre>{\"agent\":\"intake\",\"createdAt\":\"2026-10-10T22:22:5…</pre> aka getByText('{\"agent\":\"intake\",\"createdAt')\n    4) <pre>{\"amountAtomic\":\"48000000000\",\"id\":\"1c6951cf-a746…</pre> aka getByText('{\"amountAtomic\":\"48000000000').nth(1)\n    5) <pre>{\"algorithm\":\"utf8-fatal-v1\",\"pages\":[{\"page\":1,\"…</pre> aka getByText('{\"algorithm\":\"utf8-fatal-v1')\n    6) <pre>{\"arguments\":{},\"callId\":\"fixture-getCurrentPayab…</pre> aka getByText('{\"arguments\":{},\"callId\":\"').nth(1)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('pre').filter({ hasText: 'NS-2026-0051' }) with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for locator('pre').filter({ hasText: 'NS-2026-0051' })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('pre').filter({ hasText: 'NS-2026-0051' })\nExpected: visible\nError: strict mode violation: locator('pre').filter({ hasText: 'NS-2026-0051' }) resolved to 6 elements:\n    1) <pre>Subject: Invoice with human payment review↵NORTHS…</pre> aka getByText('Subject: Invoice with human payment review NORTHSTAR LABS — SYNTHETIC INVOICE')\n    2) <pre>{\"agent\":\"finance\",\"createdAt\":\"2026-10-10T22:22:…</pre> aka getByText('{\"agent\":\"finance\",\"createdAt')\n    3) <pre>{\"agent\":\"intake\",\"createdAt\":\"2026-10-10T22:22:5…</pre> aka getByText('{\"agent\":\"intake\",\"createdAt')\n    4) <pre>{\"amountAtomic\":\"48000000000\",\"id\":\"1c6951cf-a746…</pre> aka getByText('{\"amountAtomic\":\"48000000000').nth(1)\n    5) <pre>{\"algorithm\":\"utf8-fatal-v1\",\"pages\":[{\"page\":1,\"…</pre> aka getByText('{\"algorithm\":\"utf8-fatal-v1')\n    6) <pre>{\"arguments\":{},\"callId\":\"fixture-getCurrentPayab…</pre> aka getByText('{\"arguments\":{},\"callId\":\"').nth(1)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('pre').filter({ hasText: 'NS-2026-0051' }) with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for locator('pre').filter({ hasText: 'NS-2026-0051' })\u001b[22m\n\n    at <project>/tests/e2e/bridge.spec.ts:61:83",
+                    "location": {
+                      "file": "<project>/tests/e2e/bridge.spec.ts",
+                      "column": 83,
+                      "line": 61
+                    },
+                    "snippet": "  59 |  await approval.getByText('All signed fields and payment policy',{exact:true}).click();\n  60 |  await approval.getByText('original.txt',{exact:true}).click();\n> 61 |  await expect(approval.locator('pre').filter({hasText:payable.invoiceReference})).toBeVisible();\n     |                                                                                   ^\n  62 |  await approval.getByText('original.txt',{exact:true}).click();\n  63 |  await approval.getByRole('button',{name:'Use demo approval wallet',exact:true}).click();\n  64 |  await expect(approval.getByRole('button',{name:'Demo wallet selected',exact:true})).toBeDisabled();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "<project>/tests/e2e/bridge.spec.ts",
+                        "column": 83,
+                        "line": 61
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('pre').filter({ hasText: 'NS-2026-0051' })\nExpected: visible\nError: strict mode violation: locator('pre').filter({ hasText: 'NS-2026-0051' }) resolved to 6 elements:\n    1) <pre>Subject: Invoice with human payment review↵NORTHS…</pre> aka getByText('Subject: Invoice with human payment review NORTHSTAR LABS — SYNTHETIC INVOICE')\n    2) <pre>{\"agent\":\"finance\",\"createdAt\":\"2026-10-10T22:22:…</pre> aka getByText('{\"agent\":\"finance\",\"createdAt')\n    3) <pre>{\"agent\":\"intake\",\"createdAt\":\"2026-10-10T22:22:5…</pre> aka getByText('{\"agent\":\"intake\",\"createdAt')\n    4) <pre>{\"amountAtomic\":\"48000000000\",\"id\":\"1c6951cf-a746…</pre> aka getByText('{\"amountAtomic\":\"48000000000').nth(1)\n    5) <pre>{\"algorithm\":\"utf8-fatal-v1\",\"pages\":[{\"page\":1,\"…</pre> aka getByText('{\"algorithm\":\"utf8-fatal-v1')\n    6) <pre>{\"arguments\":{},\"callId\":\"fixture-getCurrentPayab…</pre> aka getByText('{\"arguments\":{},\"callId\":\"').nth(1)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('pre').filter({ hasText: 'NS-2026-0051' }) with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for locator('pre').filter({ hasText: 'NS-2026-0051' })\u001b[22m\n\n\n  59 |  await approval.getByText('All signed fields and payment policy',{exact:true}).click();\n  60 |  await approval.getByText('original.txt',{exact:true}).click();\n> 61 |  await expect(approval.locator('pre').filter({hasText:payable.invoiceReference})).toBeVisible();\n     |                                                                                   ^\n  62 |  await approval.getByText('original.txt',{exact:true}).click();\n  63 |  await approval.getByRole('button',{name:'Use demo approval wallet',exact:true}).click();\n  64 |  await expect(approval.getByRole('button',{name:'Demo wallet selected',exact:true})).toBeDisabled();\n    at <project>/tests/e2e/bridge.spec.ts:61:83"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T22:22:55.323Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/video-1.webm"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "<project>/var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "<project>/var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "<project>/var/experience-playwright-artifacts/bridge-guided-human-approv-5dafd-he-exact-registered-payable-guided-approval/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "<project>/tests/e2e/bridge.spec.ts",
+                    "column": 83,
+                    "line": 61
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "459df8fa6088979958bc-42bc62efdee0acb4756c",
+          "file": "bridge.spec.ts",
+          "line": 7,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-10T22:22:18.768Z",
+    "duration": 46153.742,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

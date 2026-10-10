@@ -7,6 +7,10 @@ import {loadConfig,type Config} from './config.js';
 import {openDatabase} from './db/database.js';
 import {seed} from './db/seed.js';
 import {registerAuth} from './security/auth.js';
+import {registerDemoAuth} from './security/demo.js';
+import {registerInbox} from './inbox/index.js';
+import {AutomationService} from './automation/index.js';
+import {registerInboxWebhook} from './integrations/webhook.js';
 import {registerApi} from './routes/api.js';
 import {Service} from './domain/service.js';
 import {ChainService} from './jobs/chain.js';
@@ -18,5 +22,10 @@ export async function buildApp(options:{config?:Config;worker?:boolean;logger?:b
  app.setErrorHandler((error,req,reply)=>{if(error instanceof DomainError)return reply.code(error.statusCode).send({error:{code:error.code,message:error.message}});if(error instanceof ZodError)return reply.code(400).send({error:{code:'SCHEMA_INVALID',message:'Request does not match the required schema.',fields:error.issues.map(i=>i.path.join('.'))}});const status=(error as any).statusCode;return reply.code(status&&status<500?status:500).send({error:{code:status===413?'UPLOAD_TOO_LARGE':'INTERNAL_ERROR',message:status===413?'Upload exceeds the permitted size.':'Request failed. Inspect the protected server diagnostics.'}});});
  app.addHook('onSend',async(req,reply,payload)=>{reply.header('X-Content-Type-Options','nosniff').header('Cache-Control','no-store');return payload;});
  if(config.SEED_ON_START)seed(db,config);
- const chain=new ChainService(db,config),service=new Service(db,config,chain),worker=new WorkerLoop(db,service,chain);await registerAuth(app,db,config);await registerApi(app,service,db,config);if(options.worker!==false)worker.start();app.addHook('onClose',async()=>{await worker.stop();db.close();});return {app,db,orm,service,chain,worker,config};
+ const chain=new ChainService(db,config),service=new Service(db,config,chain),worker=new WorkerLoop(db,service,chain);await registerAuth(app,db,config);await registerDemoAuth(app,db,config);await registerApi(app,service,db,config,{automationAvailable:()=>automation.available});
+ const inbox=await registerInbox(app,service,db,config,{startWorker:options.worker!==false});
+ await registerInboxWebhook(app,db,config,inbox.service);
+ const automation=new AutomationService(db,config,inbox.service,service);inbox.service.options.paymentFor=(itemId,tenantId)=>automation.project(itemId,tenantId);
+ app.addHook('preClose',async()=>automation.stop());
+ if(options.worker!==false){worker.start();automation.start();}app.addHook('onClose',async()=>{await worker.stop();db.close();});return {app,db,orm,service,chain,worker,inbox,automation,config};
 }

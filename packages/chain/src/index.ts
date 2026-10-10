@@ -1,3 +1,4 @@
+export { automationGuardAbi } from './automation-abi.js';
 import { encodeAbiParameters, keccak256, toHex, type Hex } from 'viem';
 import { z } from 'zod';
 import { paymentSchema, domainSchema, type PaymentWire, type DomainWire } from '@secure-finance/shared';

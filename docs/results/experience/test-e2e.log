@@ -1,0 +1,62 @@
+
+> secure-finance@0.1.0 test:e2e <project>
+> playwright test --config tests/e2e/experience.config.ts
+
+
+Running 8 tests using 1 worker
+
+(node:63055) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [inbox] › tests/e2e/inbox.spec.ts:33:1 › inbox is the welcoming default, local demo needs no wallet, and navigation fits mobile (8.8s)
+  -  2 [inbox] › tests/e2e/inbox.spec.ts:60:1 › a synthetic invoice completes five checks and reports an actual registered-policy settlement
+  -  3 [inbox] › tests/e2e/inbox.spec.ts:107:1 › phishing is quarantined with evidence, no approval button, no fetched links and a durable alert
+  -  4 [inbox] › tests/e2e/inbox.spec.ts:132:1 › voice financial requests need human context and record requests for information without sending messages
+  -  5 [inbox] › tests/e2e/inbox.spec.ts:155:1 › email files import safely, modal close resets input and a failed attachment can be corrected
+  -  6 [inbox] › tests/e2e/inbox.spec.ts:180:1 › populated inbox, review and connections stay readable on desktop and mobile without wallet references
+  -  7 [inbox] › tests/e2e/inbox.spec.ts:198:1 › the optional operations campus keeps real geometry and clear overlays inside the new shell
+
+
+  1) [inbox] › tests/e2e/inbox.spec.ts:33:1 › inbox is the welcoming default, local demo needs no wallet, and navigation fits mobile 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText('Reconnecting to live updates. We are checking for changes in the background.', { exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText('Reconnecting to live updates. We are checking for changes in the background.', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Reconnecting to live updates. We are checking for changes in the background.', { exact: true })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      10 |   await page.getByRole('button', {name: 'Explore the demo', exact: true}).click();
+      11 |   await expect(page.getByRole('button', {name: /Northstar team/})).toBeVisible();
+    > 12 |   await expect(page.getByText('Reconnecting to live updates. We are checking for changes in the background.',{exact:true})).toHaveCount(0,{timeout:5000});
+         |                                                                                                                             ^
+      13 | }
+      14 | async function submitText(page: Page, channel: 'Email' | 'Voice' | 'Text', title: string, text: string) {
+      15 |   await page.getByRole('button', {name: channel, exact: true}).click();
+        at enterDemo (<project>/tests/e2e/inbox.spec.ts:12:125)
+        at <project>/tests/e2e/inbox.spec.ts:54:3
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    var/experience-playwright-artifacts/inbox-inbox-is-the-welcomi-9a20b--and-navigation-fits-mobile-inbox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: var/experience-playwright-artifacts/inbox-inbox-is-the-welcomi-9a20b--and-navigation-fits-mobile-inbox/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    var/experience-playwright-artifacts/inbox-inbox-is-the-welcomi-9a20b--and-navigation-fits-mobile-inbox/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace var/experience-playwright-artifacts/inbox-inbox-is-the-welcomi-9a20b--and-navigation-fits-mobile-inbox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [inbox] › tests/e2e/inbox.spec.ts:33:1 › inbox is the welcoming default, local demo needs no wallet, and navigation fits mobile 
+  7 did not run
+ ELIFECYCLE  Command failed with exit code 1.
