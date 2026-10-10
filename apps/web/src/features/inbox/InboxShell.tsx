@@ -18,7 +18,6 @@ export function InboxShell({children, path, navigate, authenticated, localDemo, 
   const go = (url: string) => {navigate(url); setMoreOpen(false); setAccountOpen(false);};
   const links = [
     {url: '/', label: 'Inbox', short: 'Inbox', icon: Inbox, match: path === '/' || path.startsWith('/inbox')},
-    {url: '/review', label: 'Needs review', short: 'Review', icon: ShieldCheck, match: path === '/review'},
     {url: '/workspace', label: 'Payments', short: 'Payments', icon: Landmark, match: path === '/workspace' || path.startsWith('/cases') || path === '/payments'},
     {url: '/notifications', label: 'Activity', short: 'Activity', icon: Bell, match: path === '/notifications'},
     {url: '/evidence', label: 'Audit trail', short: 'Audit', icon: FileCheck2, match: path === '/evidence'},

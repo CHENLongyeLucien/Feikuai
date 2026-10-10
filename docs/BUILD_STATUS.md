@@ -1,5 +1,11 @@
 # Secure Finance build status
 
+## Inbox consolidation — 11 October 2026
+
+Removed the duplicate Needs review landing page and navigation item. Inbox now owns all four filters, with accessible selected states and shareable URLs. Legacy `/review` bookmarks open `/?filter=review`, preserving other query parameters and composition requests. Mobile navigation now shows Inbox, Payments, Activity, Audit and More.
+
+Validation: TypeScript and ESLint passed. Six focused browser runs passed in Chrome, Firefox and WebKit at 1440px and 390px: filter results, reloads, back/forward, navigation reset, old links, composition parameters and overflow. API responses were intercepted with temporary sample records; these were UI checks, not new backend/payment acceptance runs. No application writes or uncaught browser errors occurred. Local screenshots and results are retained in ignored `var/inbox-merge-qa/`. Existing environments, Fuji work and saved demonstration data were not modified.
+
 ## Visual refinement — 11 October 2026
 
 Unified the main workspace and independent approver around the new sage/cream/forest references. Rebuilt the garden campus, mobile navigation, responsive payment cards and readable evidence outcomes. Validation: TypeScript, ESLint, 181 unit tests and production build passed. Across Chrome, Firefox and WebKit, 72 navigation/layout checks plus 18 saved-record checks passed at desktop/tablet/mobile sizes. Earlier failures and exact reruns are retained in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) and [design-acceptance.json](qa/design-acceptance.json). Default campus draw calls fell from 287 to 195. Fixed tablet overflow, mobile account naming, campus framing and import links. No payment fixtures were submitted; original environment/deployment hashes match and saved demo receipts remain available.

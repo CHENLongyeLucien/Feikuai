@@ -183,8 +183,8 @@ test('populated inbox, review and connections stay readable on desktop and mobil
   await expect(page.locator('.sf-inbox-row').first()).toBeVisible();
   expect(await page.locator('body').innerText()).not.toMatch(/0x[a-fA-F0-9]{40}/);
   await noHorizontalOverflow(page); await capture(page,'docs/qa/redesign-inbox.png');
-  await page.getByRole('link', {name:'Needs review',exact:true}).click();
-  await expect(page.getByRole('heading', {name:/Your review desk/})).toBeVisible();
+  await page.getByRole('button', {name:'Needs review',exact:true}).click();
+  await expect(page.getByRole('button', {name:'Needs review',exact:true})).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('.sf-inbox-row').filter({hasText:'Synthetic invoice ready to check'})).toHaveCount(0);
   await page.setViewportSize({width:390,height:844}); await expect.poll(async () => {const box=await page.locator('.sf-sidebar').boundingBox();return box!.x+box!.width;}).toBeLessThanOrEqual(0); await noHorizontalOverflow(page);
   await page.locator('.sf-inbox-row').filter({hasText:'Recorded supplier question'}).first().click();
