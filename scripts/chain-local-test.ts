@@ -1,0 +1,32 @@
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { createPublicClient, createWalletClient, http, hashTypedData, keccak256, toHex, decodeEventLog, type Hex } from 'viem';
+import { foundry } from 'viem/chains';
+import { deploymentSchema, deploymentDomain, paymentTypedData, toViemPayment, paymentGuardAbi, demoTokenAbi, derivePolicy } from '../packages/chain/src/index.js';
+import { type PaymentWire } from '../packages/shared/src/index.js';
+const m=deploymentSchema.parse(JSON.parse(await readFile('deployments/local.json','utf8')));
+if(m.chainId!=='31337'||!['127.0.0.1','localhost'].includes(new URL(m.rpcUrl).hostname))throw new Error('Isolated local chain only');
+const client=createPublicClient({chain:foundry,transport:http(m.rpcUrl)});if(await client.getChainId()!==31337)throw new Error('Chain mismatch');
+const wallet=createWalletClient({chain:foundry,transport:http(m.rpcUrl)});
+const domain=deploymentDomain(m),row=m.registry[0]!;
+const goldenPayment:PaymentWire={invoiceKey:keccak256(toHex('cross-language-golden-invoice')),supplierKey:row.supplierKey,recipient:row.recipient,token:m.token,amountAtomic:'48000000000',authorizationNonce:'123456789',issuedAt:'1800000000',deadline:'1800000600',evidenceCommitment:keccak256(toHex('golden-evidence')),policyId:m.policyId};
+const typedDigest=hashTypedData(paymentTypedData(domain,goldenPayment));const chainDigest=await client.readContract({address:m.vault,abi:paymentGuardAbi,functionName:'hashPayment',args:[toViemPayment(goldenPayment)]});
+if(chainDigest!==typedDigest)throw new Error('Solidity / viem digest mismatch');
+const policy=derivePolicy(m);if(policy.policyId!==(await client.readContract({address:m.vault,abi:paymentGuardAbi,functionName:'policyId'})))throw new Error('Policy mismatch');
+await mkdir('fixtures',{recursive:true});await writeFile('fixtures/chain-golden.local.json',JSON.stringify({schemaVersion:'secure-finance.chain-golden.v1',domain,payment:goldenPayment,typedDigest,policy,provenance:{chainId:m.chainId,vault:m.vault,blockNumber:(await client.getBlockNumber()).toString()}},null,2)+'\n');
+if(process.argv.includes('--golden-only')){console.log('PASS actual Solidity/viem digest and policy comparison; fixtures/chain-golden.local.json');process.exit(0);}
+const block=await client.getBlock();const payment:PaymentWire={...goldenPayment,invoiceKey:keccak256(toHex('isolated-local-chain-assurance:'+randomUUID())),amountAtomic:'1000000',authorizationNonce:BigInt(keccak256(toHex(randomUUID()))).toString(),issuedAt:block.timestamp.toString(),deadline:(block.timestamp+600n).toString()};
+const recipientBefore=await client.readContract({address:m.token,abi:demoTokenAbi,functionName:'balanceOf',args:[row.recipient]});
+const vaultBefore=await client.readContract({address:m.token,abi:demoTokenAbi,functionName:'balanceOf',args:[m.vault]});
+const signature=await wallet.signTypedData({account:m.approver,...paymentTypedData(domain,payment)});const digest=hashTypedData(paymentTypedData(domain,payment));
+const started=performance.now();const hash=await wallet.writeContract({account:m.roles.relayer,address:m.vault,abi:paymentGuardAbi,functionName:'executePayment',args:[toViemPayment(payment),signature]});const receipt=await client.waitForTransactionReceipt({hash});const submissionToReceiptMs=performance.now()-started;
+if(receipt.status!=='success')throw new Error('Expected successful actual local transfer');
+const event=receipt.logs.filter(l=>l.address.toLowerCase()===m.vault).map(l=>{try{return decodeEventLog({abi:paymentGuardAbi,data:l.data,topics:l.topics});}catch{return null;}}).find(e=>e?.eventName==='PaymentExecuted');
+if(!event||event.eventName!=='PaymentExecuted'||event.args.digest!==digest||event.args.amountAtomic!==1000000n)throw new Error('Missing matching PaymentExecuted');
+const recipientAfter=await client.readContract({address:m.token,abi:demoTokenAbi,functionName:'balanceOf',args:[row.recipient]});const vaultAfter=await client.readContract({address:m.token,abi:demoTokenAbi,functionName:'balanceOf',args:[m.vault]});
+if(recipientAfter-recipientBefore!==1000000n||vaultBefore-vaultAfter!==1000000n)throw new Error('Inexact deltas');
+async function reject(sig:Hex,label:string){const negative=await wallet.writeContract({account:m.roles.relayer,address:m.vault,abi:paymentGuardAbi,functionName:'executePayment',args:[toViemPayment(payment),sig],gas:200000n});const r=await client.waitForTransactionReceipt({hash:negative});if(r.status!=='reverted')throw new Error(`${label} did not revert`);return {kind:'ACTUAL_LOCAL_REVERT',label,hash:negative,blockNumber:r.blockNumber.toString(),gasUsed:r.gasUsed.toString()};}
+const replay=await reject(signature,'same authorization replay'),unsigned=await reject('0x','unsigned request');
+if(await client.readContract({address:m.token,abi:demoTokenAbi,functionName:'balanceOf',args:[row.recipient]})!==recipientAfter)throw new Error('Negative request changed recipient balance');
+const report={kind:'ACTUAL_LOCAL_EXECUTION',signatureSource:'Anvil unlocked isolated development wallet; automated protocol test, not human review',runId:randomUUID(),chainId:m.chainId,vault:m.vault,token:m.token,payment,digest,hash,blockNumber:receipt.blockNumber.toString(),gasUsed:receipt.gasUsed.toString(),effectiveGasPrice:receipt.effectiveGasPrice.toString(),feeWei:(receipt.gasUsed*receipt.effectiveGasPrice).toString(),submissionToReceiptMs,recipientDeltaAtomic:(recipientAfter-recipientBefore).toString(),vaultDeltaAtomic:(vaultAfter-vaultBefore).toString(),negativeTransactions:[replay,unsigned]};
+await writeFile('docs/local-chain-results.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

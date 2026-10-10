@@ -1,0 +1,13 @@
+
+> secure-finance@0.1.0 test <project-root>
+> vitest run
+
+
+ RUN  v5.0.3 <project-root>
+
+
+ Test Files  7 passed (7)
+      Tests  104 passed (104)
+   Start at  19:36:21
+   Duration  2.42s (tests 68%, import 23%, transform 9%)
+

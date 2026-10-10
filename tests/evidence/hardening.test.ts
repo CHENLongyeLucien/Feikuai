@@ -1,0 +1,62 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { zipSync } from 'fflate';
+import { randomUUID } from 'node:crypto';
+import { keccak256, type Hex } from 'viem';
+import { buildApprovalRequest, canonicalBytes, encodeBase64, readBundle, sha256 } from '@secure-finance/evidence';
+import { deploymentDomain, deploymentSchema, derivePolicy } from '@secure-finance/chain';
+import { inspectPacket, type Registry } from '../../apps/approver/src/verify.js';
+import { verifyOnlineSettlement } from '../../packages/evidence/src/online.js';
+
+const rpc = vi.hoisted(() => ({ getChainId:vi.fn(),getCode:vi.fn(),getBlock:vi.fn(),getBlockNumber:vi.fn(),readContract:vi.fn(),getLogs:vi.fn(),getTransactionReceipt:vi.fn() }));
+vi.mock('viem',async original => ({...await original<typeof import('viem')>(),createPublicClient:()=>rpc}));
+const address=(n:number)=>`0x${n.toString(16).padStart(40,'0')}` as Hex;
+const hash=(n:number)=>`0x${n.toString(16).padStart(64,'0')}` as Hex;
+const vaultCode='0x6000' as const,tokenCode='0x6001' as const;
+const policy={token:address(16),approver:address(12),maxPerPaymentAtomic:'50000000000',maxAuthorizationTTL:'600',registry:[{supplierKey:hash(1),recipient:address(14)}]};
+const derived=derivePolicy(policy);
+const deployment=deploymentSchema.parse({schemaVersion:'secure-finance.deployment.v1',environment:'local',chainId:'31337',rpcUrl:'http://127.0.0.1:8545',vault:address(15),...policy,roles:{deployer:address(11),approver:address(12),relayer:address(13),suppliers:[address(14)]},registryHash:derived.registryHash,policyId:derived.policyId,runtimeCodeHash:keccak256(vaultCode),tokenRuntimeCodeHash:keccak256(tokenCode),deploymentBlock:'1',transactions:{token:hash(1),vault:hash(2),funding:hash(3)},build:{solidity:'0.8.37',openzeppelin:'5.7.0',evmVersion:'cancun',optimizerRuns:200,viaIR:true,foundry:'1.8.1'}});
+const registry:Registry={schemaVersion:'trusted-registry.v1',chainId:'31337',vault:deployment.vault,token:deployment.token,suppliers:[{id:'supplier',supplierKey:hash(1),recipient:address(14),version:'1',name:'Synthetic supplier'}],payables:[{id:'payable',invoiceKey:hash(42),invoiceReference:'AP-42',supplierId:'supplier',supplierKey:hash(1),recipient:address(14),amountAtomic:'48000000000',token:deployment.token,version:'1'}]};
+async function packet(times={issuedAt:'1000',deadline:'1600'}){
+ const source=canonicalBytes({invoiceReference:'AP-42',amount:'48000'});
+ return buildApprovalRequest({schemaVersion:'secure-finance.evidence.v1',caseId:randomUUID(),proposalId:randomUUID(),proposalVersion:'1',caseSalt:hash(99),domain:deploymentDomain(deployment),payment:{invoiceKey:hash(42),supplierKey:hash(1),recipient:address(14),token:deployment.token,amountAtomic:'48000000000',authorizationNonce:'123',...times,policyId:deployment.policyId},deployment:{runtimeCodeHash:deployment.runtimeCodeHash,registryHash:deployment.registryHash,deploymentBlock:'1'},recordVersions:{payableId:'payable',payableVersion:'1',supplierId:'supplier',supplierVersion:'1',documentVersion:'1'},artifacts:[{path:'source.json',kind:'SOURCE',mediaType:'application/json',sizeBytes:String(source.length),sha256:await sha256(source)}]},[{path:'source.json',bytesBase64:encodeBase64(source)}]);
+}
+beforeEach(()=>{
+ vi.resetAllMocks();rpc.getChainId.mockResolvedValue(31337);rpc.getCode.mockImplementation(async({address:a}:{address:string})=>a===deployment.token?tokenCode:vaultCode);rpc.getBlock.mockResolvedValue({timestamp:1000n,number:10n,hash:hash(10)});rpc.getBlockNumber.mockResolvedValue(10n);rpc.getLogs.mockResolvedValue([]);
+ rpc.readContract.mockImplementation(async({functionName}:{functionName:string})=>({policyId:deployment.policyId,token:deployment.token,approver:deployment.approver,registryHash:deployment.registryHash,maxPerPaymentAtomic:50000000000n,maxAuthorizationTTL:600n,supplierRecipient:address(14),nonceState:0,invoiceSettlementDigest:hash(0),decimals:6} as Record<string,unknown>)[functionName]);
+});
+
+describe('approval hardening regression',()=>{
+ it('validates both pinned runtime codes before enabling the eligible wallet',async()=>{const result=await inspectPacket(await packet(),deployment,registry);expect(result.integrityValid).toBe(true);expect(result.canSign).toBe(true);expect(result.canCancel).toBe(true);expect(rpc.getCode).toHaveBeenCalledWith({address:deployment.token});});
+ it('blocks signing and cancellation when token code differs at the pinned address',async()=>{rpc.getCode.mockImplementation(async({address:a}:{address:string})=>a===deployment.token?'0x6002':vaultCode);const result=await inspectPacket(await packet(),deployment,registry);expect(result.integrityValid).toBe(true);expect(result.canSign).toBe(false);expect(result.canCancel).toBe(false);expect(result.eligibilityErrors.join()).toContain('WRONG_DEPLOYMENT');});
+ it('blocks unsupported token decimals even with matching code observations',async()=>{const read=rpc.readContract.getMockImplementation()!;rpc.readContract.mockImplementation(async(args:{functionName:string})=>args.functionName==='decimals'?18:read(args));const result=await inspectPacket(await packet(),deployment,registry);expect(result.canSign).toBe(false);expect(result.canCancel).toBe(false);});
+ it('leaves an expired package inspectable and cancellable',async()=>{const result=await inspectPacket(await packet({issuedAt:'300',deadline:'900'}),deployment,registry);expect(result.integrityValid).toBe(true);expect(result.canSign).toBe(false);expect(result.canCancel).toBe(true);expect(result.eligibilityErrors).toContain('APPROVAL_EXPIRED');});
+ it('keeps cancellation available with a short signing window',async()=>{const result=await inspectPacket(await packet({issuedAt:'450',deadline:'1049'}),deployment,registry);expect(result.canSign).toBe(false);expect(result.canCancel).toBe(true);expect(result.eligibilityErrors).toContain('LESS_THAN_60_SECONDS_REMAINING');});
+ it('blocks changed independent payable facts while preserving nonce cancellation',async()=>{const changed=structuredClone(registry);changed.payables[0]!.amountAtomic='1';const result=await inspectPacket(await packet(),deployment,changed);expect(result.canSign).toBe(false);expect(result.canCancel).toBe(true);expect(result.eligibilityErrors.join()).toContain('BUSINESS_FACTS_MISMATCH');});
+ it('blocks consumed nonce and paid invoice from signing',async()=>{const read=rpc.readContract.getMockImplementation()!;rpc.readContract.mockImplementation(async(args:{functionName:string})=>args.functionName==='nonceState'?1:args.functionName==='invoiceSettlementDigest'?hash(101):read(args));const result=await inspectPacket(await packet(),deployment,registry);expect(result.canSign).toBe(false);expect(result.canCancel).toBe(false);expect(result.eligibilityErrors).toContain('INVOICE_ALREADY_SETTLED');});
+ it('blocks mainnet RPC despite local build pins',async()=>{rpc.getChainId.mockResolvedValue(43114);const result=await inspectPacket(await packet(),deployment,registry);expect(result.canSign).toBe(false);expect(result.canCancel).toBe(false);});
+ it('retains uint64 timestamps as exact strings when outside calendar range',async()=>{const result=await inspectPacket(await packet({issuedAt:'18446744073709551015',deadline:'18446744073709551615'}),deployment,registry);expect(result.integrityValid).toBe(true);expect(result.payment?.deadline).toBe('18446744073709551615');expect(result.canSign).toBe(false);expect(result.canCancel).toBe(true);expect(result.eligibilityErrors).toContain('FUTURE_ISSUANCE');});
+});
+
+describe('online verifier trust boundary',()=>{
+ it('rejects a mutated signed time before consulting the chain',async()=>{const p=await packet();p.payment.deadline='1599';const result=await verifyOnlineSettlement(p,deployment);expect(result.settlement).toBe('MISMATCH');expect(rpc.getChainId).not.toHaveBeenCalled();});
+ it('rejects a forged digest before consulting the chain',async()=>{const p=await packet();p.typedDigest=hash(1234);const result=await verifyOnlineSettlement(p,deployment);expect(result.settlement).toBe('MISMATCH');expect(rpc.getChainId).not.toHaveBeenCalled();});
+ it('rejects missing covered evidence rather than promoting an old receipt',async()=>{const p=await packet();p.artifacts=[];expect((await verifyOnlineSettlement(p,deployment)).settlement).toBe('MISMATCH');expect(rpc.getChainId).not.toHaveBeenCalled();});
+ it('reports no current settlement when no matching events exist',async()=>{expect((await verifyOnlineSettlement(await packet(),deployment)).settlement).toBe('NOT_FOUND');expect(rpc.getLogs).toHaveBeenCalled();});
+ it('rejects a receipt addressed to a different vault',async()=>{rpc.getLogs.mockResolvedValue([{transactionHash:hash(200),blockHash:hash(10),removed:false,logIndex:0}]);rpc.getTransactionReceipt.mockResolvedValue({status:'success',to:address(200),blockNumber:10n,blockHash:hash(10),transactionHash:hash(200),logs:[]});expect((await verifyOnlineSettlement(await packet(),deployment)).settlement).toBe('MISMATCH');});
+});
+
+function zipParts(bytes:Uint8Array){const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);let end=bytes.length-22;while(end>=0&&v.getUint32(end,true)!==0x06054b50)end--;if(end<0)throw new Error('fixture ZIP missing EOCD');return {v,end,central:v.getUint32(end+16,true)};}
+describe('bounded ZIP input',()=>{
+ it('streams a valid compressed artifact without altering its bytes',()=>{const content=new Uint8Array(256*1024).fill(65);expect(readBundle(zipSync({'large.txt':content},{level:9}))['large.txt']).toEqual(content);});
+ it('rejects an underdeclared compressed payload using actual output size',()=>{const zip=zipSync({'payload.txt':new Uint8Array(1024*1024).fill(65)},{level:9});const {v,central}=zipParts(zip);v.setUint32(22,1,true);v.setUint32(central+24,1,true);expect(()=>readBundle(zip)).toThrow(/decoded|size|bounds/i);});
+ it('rejects inconsistent EOCD entry counts',()=>{const zip=zipSync({'one.txt':new Uint8Array([1])});const {v,end}=zipParts(zip);v.setUint16(end+8,2,true);expect(()=>readBundle(zip)).toThrow(/count mismatch/i);});
+ it('rejects symlink metadata',()=>{const zip=zipSync({'link.txt':new Uint8Array([1])});const {v,central}=zipParts(zip);v.setUint32(central+38,0o120777<<16,true);expect(()=>readBundle(zip)).toThrow(/symlink/i);});
+ it('rejects encrypted entries and multidisk entry metadata',()=>{for(const mutation of ['encryption','disk']){const zip=zipSync({'one.txt':new Uint8Array([1])});const {v,central}=zipParts(zip);if(mutation==='encryption')v.setUint16(central+8,1,true);else v.setUint16(central+34,1,true);expect(()=>readBundle(zip)).toThrow(/unsupported/i);}});
+ it('rejects per-entry decoded sizes above the bound before inflating',()=>{const zip=zipSync({'one.txt':new Uint8Array([1])});const {v,central}=zipParts(zip);v.setUint32(central+24,32*1024*1024+1,true);expect(()=>readBundle(zip)).toThrow(/decoded size/i);});
+ it('rejects a truncated stream',()=>{const zip=zipSync({'one.txt':new Uint8Array([1])});expect(()=>readBundle(zip.subarray(0,zip.length-10))).toThrow();});
+ it('rejects unsafe local headers even when the central name is safe',()=>{const zip=zipSync({'aaa.txt':new Uint8Array([1])});zip.set(new TextEncoder().encode('../evil'),30);expect(()=>readBundle(zip)).toThrow();});
+ it('rejects safe local names that differ from the validated directory',()=>{const zip=zipSync({'one.txt':new Uint8Array([1])});zip.set(new TextEncoder().encode('two.txt'),30);expect(()=>readBundle(zip)).toThrow(/directory|metadata|entry/i);});
+ it('rejects a local entry omitted from a smaller otherwise consistent directory',()=>{const zip=zipSync({'one.txt':new Uint8Array([1]),'two.txt':new Uint8Array([2])});const {v,end,central}=zipParts(zip);const firstLength=46+v.getUint16(central+28,true)+v.getUint16(central+30,true)+v.getUint16(central+32,true);v.setUint16(end+8,1,true);v.setUint16(end+10,1,true);v.setUint32(end+12,firstLength,true);expect(()=>readBundle(zip)).toThrow(/directory|metadata|entry/i);});
+ it('rejects disagreement between local and central original sizes',()=>{const zip=zipSync({'one.txt':new Uint8Array([1])});const {v}=zipParts(zip);v.setUint32(22,2,true);expect(()=>readBundle(zip)).toThrow(/directory|metadata|size/i);});
+ it('rejects disagreement between local and central compression methods',()=>{const zip=zipSync({'one.txt':new Uint8Array(100).fill(65)},{level:9});const {v}=zipParts(zip);v.setUint16(8,0,true);expect(()=>readBundle(zip)).toThrow(/directory|metadata|compression/i);});
+});

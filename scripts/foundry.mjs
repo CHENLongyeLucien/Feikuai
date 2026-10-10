@@ -1,0 +1,12 @@
+import {spawn} from 'node:child_process';
+import {existsSync,mkdirSync} from 'node:fs';
+import {homedir} from 'node:os';
+import {join,dirname} from 'node:path';
+const [tool,...args]=process.argv.slice(2);
+if(!['forge','anvil','cast'].includes(tool))throw new Error('Expected forge, anvil or cast');
+if(tool==='anvil'&&args.includes('--state'))mkdirSync(dirname(args[args.indexOf('--state')+1]),{recursive:true});
+const local=join(homedir(),'.foundry','bin',tool);
+const child=spawn(existsSync(local)?local:tool,args,{stdio:'inherit',env:process.env});
+child.on('error',e=>{console.error(`Foundry unavailable: ${e.message}`);process.exitCode=1;});
+child.on('exit',code=>{process.exitCode=code??1;});
+for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>child.kill(signal));

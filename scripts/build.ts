@@ -1,0 +1,10 @@
+import {build as viteBuild} from 'vite';
+import {build} from 'esbuild';
+import {mkdirSync,copyFileSync,existsSync} from 'node:fs';
+await viteBuild({configFile:'apps/web/vite.config.ts'});
+await viteBuild({configFile:'apps/approver/vite.config.ts'});
+await build({entryPoints:['apps/api/src/index.ts'],outfile:'apps/api/dist/index.js',bundle:true,platform:'node',format:'esm',packages:'external',tsconfig:'tsconfig.json',sourcemap:true});
+for(const name of ['shared','chain','evidence'])await build({entryPoints:[`packages/${name}/src/index.ts`],outfile:`packages/${name}/dist/index.js`,bundle:true,platform:'neutral',format:'esm',packages:'external',tsconfig:'tsconfig.json'});
+mkdirSync('apps/api/dist/db',{recursive:true});
+if(existsSync('apps/api/src/db/migrations'))console.log('SQL migrations retained with application source for runtime');
+console.log('Built web, approver, API and shared packages.');

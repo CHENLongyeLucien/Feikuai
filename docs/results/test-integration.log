@@ -1,0 +1,13 @@
+
+> secure-finance@0.1.0 test:integration <project-root>
+> vitest run --config vitest.integration.config.ts
+
+
+ RUN  v5.0.3 <project-root>
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  19:36:26
+   Duration  52.59s (tests 98%, import 2%)
+

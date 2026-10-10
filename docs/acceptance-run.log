@@ -1,0 +1,1589 @@
+
+Running acceptance gate: typecheck
+
+> secure-finance@0.1.0 typecheck <project-root>
+> tsc --noEmit
+
+
+Running acceptance gate: lint
+
+> secure-finance@0.1.0 lint <project-root>
+> eslint .
+
+
+Running acceptance gate: test
+
+> secure-finance@0.1.0 test <project-root>
+> vitest run
+
+
+ RUN  v5.0.3 <project-root>
+
+
+ Test Files  7 passed (7)
+      Tests  104 passed (104)
+   Start at  19:36:21
+   Duration  2.42s (tests 68%, import 23%, transform 9%)
+
+
+Running acceptance gate: contracts:build
+
+> secure-finance@0.1.0 contracts:build <project-root>
+> node scripts/foundry.mjs forge build --root contracts
+
+No files changed, compilation skipped
+note[interface-naming]: interface names should be prefixed with 'I'
+  ╭▸ contracts/script/DeployFuji.s.sol:6:11
+  │
+6 │ interface ScriptVm {
+  │           ━━━━━━━━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/interface-naming
+
+note[interface-naming]: interface names should be prefixed with 'I'
+  ╭▸ contracts/test/PaymentGuard.t.sol:8:11
+  │
+8 │ interface Vm {
+  │           ━━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/interface-naming
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+  ╭▸ contracts/src/DemoToken.sol:9:41
+  │
+9 │         _mint(funder, 1_000_000 * 10 ** 6);
+  │                                         ━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/src/DemoToken.sol:13:16
+   │
+13 │         return 6;
+   │                ━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[screaming-snake-case-const]: constants should use SCREAMING_SNAKE_CASE
+   ╭▸ contracts/test/PaymentGuard.t.sol:21:26
+   │
+21 │     Vm internal constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
+   │                          ━━ help: consider using: `VM`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-const
+
+note[screaming-snake-case-const]: constants should use SCREAMING_SNAKE_CASE
+   ╭▸ contracts/script/DeployFuji.s.sol:13:23
+   │
+13 │     ScriptVm constant vm=ScriptVm(address(uint160(uint256(keccak256("hevm cheat code")))));
+   │                       ━━ help: consider using: `VM`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-const
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ contracts/src/PaymentGuard.sol:50:30
+   │
+50 │     address public immutable token;
+   │                              ━━━━━ help: consider using: `TOKEN`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ contracts/src/PaymentGuard.sol:51:30
+   │
+51 │     address public immutable approver;
+   │                              ━━━━━━━━ help: consider using: `APPROVER`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ contracts/src/PaymentGuard.sol:52:30
+   │
+52 │     uint256 public immutable maxPerPaymentAtomic;
+   │                              ━━━━━━━━━━━━━━━━━━━ help: consider using: `MAX_PER_PAYMENT_ATOMIC`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+  ╭▸ contracts/script/DeployFuji.s.sol:6:11
+  │
+6 │ interface ScriptVm {
+  │           ━━━━━━━━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+   ╭▸ contracts/script/DeployFuji.s.sol:12:10
+   │
+12 │ contract DeployFuji {
+   │          ━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ contracts/src/PaymentGuard.sol:53:29
+   │
+53 │     uint64 public immutable maxAuthorizationTTL;
+   │                             ━━━━━━━━━━━━━━━━━━━ help: consider using: `MAX_AUTHORIZATION_TTL`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ contracts/src/PaymentGuard.sol:54:30
+   │
+54 │     bytes32 public immutable registryHash;
+   │                              ━━━━━━━━━━━━ help: consider using: `REGISTRY_HASH`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ contracts/src/PaymentGuard.sol:55:30
+   │
+55 │     bytes32 public immutable policyId;
+   │                              ━━━━━━━━ help: consider using: `POLICY_ID`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[mixed-case-variable]: mutable variables should use mixedCase
+   ╭▸ contracts/src/PaymentGuard.sol:64:45
+   │
+64 │         uint256 maxPerPaymentAtomic, uint64 maxAuthorizationTTL, bytes32 registryHash);
+   │                                             ━━━━━━━━━━━━━━━━━━━ help: consider using: `maxAuthorizationTtl`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/mixed-case-variable
+
+note[mixed-case-variable]: mutable variables should use mixedCase
+   ╭▸ contracts/src/PaymentGuard.sol:66:89
+   │
+66 │     constructor(address token_, address approver_, uint256 maxPerPaymentAtomic_, uint64 maxAuthorizationTTL_,
+   │                                                                                         ━━━━━━━━━━━━━━━━━━━━ help: consider using: `maxAuthorizationTtl_`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/mixed-case-variable
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+  ╭▸ contracts/test/PaymentGuard.t.sol:8:11
+  │
+8 │ interface Vm {
+  │           ━━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+   ╭▸ contracts/test/PaymentGuard.t.sol:20:10
+   │
+20 │ contract TestBase {
+   │          ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+   ╭▸ contracts/test/PaymentGuard.t.sol:30:10
+   │
+30 │ contract AdversarialToken is ERC20 {
+   │          ━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+   ╭▸ contracts/test/PaymentGuard.t.sol:53:10
+   │
+53 │ contract WrongDecimals is ERC20 { constructor() ERC20("Wrong", "WRONG") {} }
+   │          ━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+   ╭▸ contracts/test/PaymentGuard.t.sol:55:10
+   │
+55 │ contract PaymentGuardTest is TestBase {
+   │          ━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+    ╭▸ contracts/test/PaymentGuard.t.sol:237:10
+    │
+237 │ contract PaymentHandler is TestBase {
+    │          ━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+    ╭▸ contracts/test/PaymentGuard.t.sol:255:10
+    │
+255 │ contract PaymentGuardInvariantTest is TestBase {
+    │          ━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+warning[uninitialized-local]: local variable is read before being initialized
+   ╭▸ contracts/src/PaymentGuard.sol:77:37
+   │
+77 │ …     if (supplierKeys_[i] <= previous || recipients_[i] == address(0) || recipients_[i] == address(this)) revert InvalidRegistry();
+   │                               ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[uninitialized-local]: local variable is read before being initialized
+   ╭▸ contracts/src/PaymentGuard.sol:76:25
+   │
+76 │         for (uint256 i; i < count; ++i) {
+   │                         ━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+   ╭▸ contracts/src/PaymentGuard.sol:77:114
+   │
+77 │ …[i] == address(0) || recipients_[i] == address(this)) revert InvalidRegistry();
+   │                                                        ━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[uninitialized-local]: local variable is read before being initialized
+   ╭▸ contracts/script/DeployFuji.s.sol:19:99
+   │
+19 │ …     for(uint256 i;i<roles.length;++i){require(roles[i]!=address(0),"zero role");for(uint256 j;j<i;++j)require(roles[i]!=roles[j],"ro…
+   │                                                                                                 ━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[uninitialized-local]: local variable is read before being initialized
+   ╭▸ contracts/script/DeployFuji.s.sol:19:23
+   │
+19 │ …     for(uint256 i;i<roles.length;++i){require(roles[i]!=address(0),"zero role");for(uint256 j;j<i;++j)require(roles[i]!=roles[j],"ro…
+   │                     ━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+   ╭▸ contracts/script/DeployFuji.s.sol:19:43
+   │
+19 │ …     for(uint256 i;i<roles.length;++i){require(roles[i]!=address(0),"zero role");for(uint256 j;j<i;++j)require(roles[i]!=roles[j],"ro…
+   │                                         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+   ╭▸ contracts/script/DeployFuji.s.sol:19:107
+   │
+19 │ …dress(0),"zero role");for(uint256 j;j<i;++j)require(roles[i]!=roles[j],"role collision");}
+   │                                              ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+note[costly-loop]: storage write inside a loop
+   ╭▸ contracts/src/PaymentGuard.sol:79:13
+   │
+79 │             supplierRecipient[supplierKeys_[i]] = recipients_[i];
+   │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/costly-loop
+
+warning[erc20-unchecked-transfer]: ERC20 'transfer' and 'transferFrom' calls should check the return value
+   ╭▸ contracts/script/DeployFuji.s.sol:26:9
+   │
+26 │         token.transfer(address(guard),300_000e6);
+   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/erc20-unchecked-transfer
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:45:25
+   │
+45 │         if (behavior == 4) {
+   │                         ━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:47:78
+   │
+47 │ …     catch (bytes memory reason) { callbackBlocked = reason.length >= 4 && bytes4(reason) == bytes4(keccak256("ReentrancyGuardReentra…
+   │                                                                        ━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ contracts/src/PaymentGuard.sol:110:13
+    │
+110 │         if (payment.issuedAt > block.timestamp) revert FutureIssuance();
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ contracts/src/PaymentGuard.sol:111:13
+    │
+111 │         if (block.timestamp >= payment.deadline) revert ApprovalExpired();
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[unsafe-typecast]: typecasts that can truncate values should be checked
+   ╭▸ contracts/test/PaymentGuard.t.sol:47:83
+   │
+47 │ …     catch (bytes memory reason) { callbackBlocked = reason.length >= 4 && bytes4(reason) == bytes4(keccak256("ReentrancyGuardReentra…
+   │                                                                             ━━━━━━━━━━━━━━
+   │
+   ├ note: consider disabling this lint if you're certain the cast is safe
+   │       
+   │       // casting to 'bytes4' is safe because [explain why]
+   │       // forge-lint: disable-next-line(unsafe-typecast)
+   │       
+   │       
+   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+note[cyclomatic-complexity]: this function has a cyclomatic complexity above 11; consider splitting it into smaller functions
+   ╭▸ contracts/src/PaymentGuard.sol:97:5
+   │
+97 │     function executePayment(Payment calldata payment, bytes calldata signature) external nonReentrant returns (bytes32 digest) {
+   │     ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/cyclomatic-complexity
+
+warning[unsafe-typecast]: typecasts that can truncate values should be checked
+   ╭▸ contracts/test/PaymentGuard.t.sol:47:101
+   │
+47 │ … reason.length >= 4 && bytes4(reason) == bytes4(keccak256("ReentrancyGuardReentrantCall()")); }
+   │                                           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ├ note: consider disabling this lint if you're certain the cast is safe
+   │       
+   │       // casting to 'bytes4' is safe because [explain why]
+   │       // forge-lint: disable-next-line(unsafe-typecast)
+   │       
+   │       
+   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:70:40
+   │
+70 │         token.transfer(address(guard), 300_000e6);
+   │                                        ━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:72:109
+   │
+72 │     function deploy(address asset) internal returns (PaymentGuard) { return new PaymentGuard(asset, signer, 50_000e6, 600, keys, recip…
+   │                                                                                                             ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:72:119
+   │
+72 │     function deploy(address asset) internal returns (PaymentGuard) { return new PaymentGuard(asset, signer, 50_000e6, 600, keys, recip…
+   │                                                                                                                       ━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:74:95
+   │
+74 │         return PaymentGuard.Payment(bytes32(uint256(42)), keys[0], RECIPIENT, address(token), 48_000e6,
+   │                                                                                               ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:75:13
+   │
+75 │             123, uint64(block.timestamp), uint64(block.timestamp + 600), keccak256("evidence"), guard.policyId());
+   │             ━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:75:68
+   │
+75 │             123, uint64(block.timestamp), uint64(block.timestamp + 600), keccak256("evidence"), guard.policyId());
+   │                                                                    ━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:85:30
+   │
+85 │         eq(token.decimals(), 6); eq(token.totalSupply(), 1_000_000e6);
+   │                              ━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:87:108
+   │
+87 │ …     eq(guard.policyId(), keccak256(abi.encode(guard.POLICY_TYPEHASH(), address(token), signer, uint256(50_000e6), uint64(600), guard…
+   │                                                                                                          ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:87:126
+   │
+87 │ …     eq(guard.policyId(), keccak256(abi.encode(guard.POLICY_TYPEHASH(), address(token), signer, uint256(50_000e6), uint64(600), guard…
+   │                                                                                                                            ━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:92:40
+   │
+92 │         eq(token.balanceOf(RECIPIENT), 48_000e6); eq(token.balanceOf(address(guard)), 252_000e6);
+   │                                        ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:93:94
+   │
+93 │         eq(guard.invoiceSettlementDigest(p.invoiceKey), digest); eq(uint256(guard.nonceState(123)), 1);
+   │                                                                                              ━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:95:40
+   │
+95 │         eq(token.balanceOf(RECIPIENT), 48_000e6);
+   │                                        ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ contracts/test/PaymentGuard.t.sol:98:87
+   │
+98 │         PaymentGuard.Payment memory p = payment(); execute(p); p.authorizationNonce = 124;
+   │                                                                                       ━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:101:37
+    │
+101 │         eq(uint256(guard.nonceState(124)), 0); eq(token.balanceOf(RECIPIENT), 48_000e6);
+    │                                     ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:101:79
+    │
+101 │         eq(uint256(guard.nonceState(124)), 0); eq(token.balanceOf(RECIPIENT), 48_000e6);
+    │                                                                               ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:106:43
+    │
+106 │         bytes memory sig = sign(guard, p, 7);
+    │                                           ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:114:47
+    │
+114 │             if (i == 2) p.recipient = address(0xBAD);
+    │                                               ━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:115:22
+    │
+115 │             if (i == 3) p.token = address(0xBAD);
+    │                      ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:115:43
+    │
+115 │             if (i == 3) p.token = address(0xBAD);
+    │                                           ━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:116:22
+    │
+116 │             if (i == 4) p.amountAtomic++;
+    │                      ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:118:22
+    │
+118 │             if (i == 6) p.issuedAt--;
+    │                      ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:119:22
+    │
+119 │             if (i == 7) p.deadline--;
+    │                      ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:152:109
+    │
+152 │     function testSignedInvalidToken() public { PaymentGuard.Payment memory p = payment(); p.token = address(0xBAD); reject(p, Payment…
+    │                                                                                                             ━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:154:115
+    │
+154 │     function testSignedWrongRecipient() public { PaymentGuard.Payment memory p = payment(); p.recipient = address(0xBAD); reject(p, P…
+    │                                                                                                                   ━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:156:111
+    │
+156 │     function testSignedOversizedAmount() public { PaymentGuard.Payment memory p = payment(); p.amountAtomic = 50_000e6 + 1; reject(p,…
+    │                                                                                                               ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:166:35
+    │
+166 │         p.deadline = p.issuedAt + 601; reject(p, PaymentGuard.InvalidTimeWindow.selector);
+    │                                   ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:174:37
+    │
+174 │         eq(uint256(guard.nonceState(123)), 2); eq(token.balanceOf(RECIPIENT), 0);
+    │                                     ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:175:102
+    │
+175 │         vm.expectRevert(PaymentGuard.NonceUnavailable.selector); vm.prank(signer); guard.cancelNonce(123);
+    │                                                                                                      ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:178:122
+    │
+178 │         execute(payment()); vm.expectRevert(PaymentGuard.NonceUnavailable.selector); vm.prank(signer); guard.cancelNonce(123);
+    │                                                                                                                          ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:179:40
+    │
+179 │         eq(token.balanceOf(RECIPIENT), 48_000e6);
+    │                                        ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:182:92
+    │
+182 │         vm.expectRevert(PaymentGuard.UnauthorizedCancellation.selector); guard.cancelNonce(123);
+    │                                                                                            ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:186:38
+    │
+186 │         for (uint8 mode = 1; mode <= 3; ++mode) {
+    │                                      ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:187:134
+    │
+187 │ …target = deploy(address(bad)); bad.transfer(address(target), 300_000e6);
+    │                                                               ━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:192:48
+    │
+192 │             eq(bad.balanceOf(address(target)), 300_000e6); eq(bad.balanceOf(RECIPIENT), 0);
+    │                                                ━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:197:86
+    │
+197 │ …     vm.expectRevert(); empty.executePayment(p, sig); eq(uint256(empty.nonceState(123)), 0); eq(empty.invoiceSettlementDigest(p.invo…
+    │                                                                                    ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:200:130
+    │
+200 │ …target = deploy(address(bad)); bad.transfer(address(target), 300_000e6);
+    │                                                               ━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:202:194
+    │
+202 │ …invoiceKey = bytes32(uint256(100)); nested.authorizationNonce = 456;
+    │                                                                  ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:203:23
+    │
+203 │         bad.configure(4, target, nested, sign(target, nested, KEY)); target.executePayment(p, sign(target, p, KEY));
+    │                       ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:204:94
+    │
+204 │ …     require(bad.callbackBlocked(), "callback not blocked"); eq(uint256(target.nonceState(456)), 0); eq(bad.balanceOf(RECIPIENT), 48…
+    │                                                                                            ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:204:134
+    │
+204 │ …256(target.nonceState(456)), 0); eq(bad.balanceOf(RECIPIENT), 48_000e6);
+    │                                                                ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:207:110
+    │
+207 │         vm.expectRevert(PaymentGuard.InvalidConfiguration.selector); new PaymentGuard(address(0), signer, 1, 600, keys, recipients);
+    │                                                                                                              ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:208:114
+    │
+208 │ …     vm.expectRevert(PaymentGuard.InvalidConfiguration.selector); new PaymentGuard(address(0xABC), signer, 1, 600, keys, recipients);
+    │                                                                                                                ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:209:118
+    │
+209 │ …     vm.expectRevert(PaymentGuard.InvalidConfiguration.selector); new PaymentGuard(address(token), address(0), 1, 600, keys, recipie…
+    │                                                                                                                    ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:210:114
+    │
+210 │ …     vm.expectRevert(PaymentGuard.InvalidConfiguration.selector); new PaymentGuard(address(token), signer, 0, 600, keys, recipients);
+    │                                                                                                                ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:212:114
+    │
+212 │ …     vm.expectRevert(PaymentGuard.InvalidConfiguration.selector); new PaymentGuard(address(token), signer, 1, 601, keys, recipients);
+    │                                                                                                                ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:217:109
+    │
+217 │         vm.expectRevert(PaymentGuard.InvalidRegistry.selector); new PaymentGuard(address(token), signer, 1, 600, k, r);
+    │                                                                                                             ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:219:109
+    │
+219 │         vm.expectRevert(PaymentGuard.InvalidRegistry.selector); new PaymentGuard(address(token), signer, 1, 600, k, r);
+    │                                                                                                             ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:220:122
+    │
+220 │         k[0] = k[1]; vm.expectRevert(PaymentGuard.InvalidRegistry.selector); new PaymentGuard(address(token), signer, 1, 600, k, r);
+    │                                                                                                                          ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:221:128
+    │
+221 │ …     k[0] = bytes32(0); vm.expectRevert(PaymentGuard.InvalidRegistry.selector); new PaymentGuard(address(token), signer, 1, 600, k, …
+    │                                                                                                                              ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:223:109
+    │
+223 │         vm.expectRevert(PaymentGuard.InvalidRegistry.selector); new PaymentGuard(address(token), signer, 1, 600, k, r);
+    │                                                                                                             ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:224:27
+    │
+224 │ …     k = new bytes32[](33); r = new address[](33); vm.expectRevert(PaymentGuard.InvalidRegistry.selector); new PaymentGuard(address(…
+    │                         ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:224:50
+    │
+224 │ …     k = new bytes32[](33); r = new address[](33); vm.expectRevert(PaymentGuard.InvalidRegistry.selector); new PaymentGuard(address(…
+    │                                                ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:224:155
+    │
+224 │ …Registry.selector); new PaymentGuard(address(token), signer, 1, 600, k, r);
+    │                                                                  ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:225:131
+    │
+225 │ …Registry.selector); new PaymentGuard(address(token), signer, 1, 600, keys, new address[](2));
+    │                                                                  ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:229:109
+    │
+229 │         vm.expectRevert(PaymentGuard.InvalidRegistry.selector); new PaymentGuard(address(token), signer, 1, 600, keys, r);
+    │                                                                                                             ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:232:81
+    │
+232 │         PaymentGuard.Payment memory p = payment(); p.amountAtomic = candidate % 50_000e6 + 1;
+    │                                                                                 ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:233:105
+    │
+233 │         execute(p); eq(token.balanceOf(RECIPIENT), p.amountAtomic); eq(token.balanceOf(address(guard)), 300_000e6 - p.amountAtomic);
+    │                                                                                                         ━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+warning[erc20-unchecked-transfer]: ERC20 'transfer' and 'transferFrom' calls should check the return value
+   ╭▸ contracts/test/PaymentGuard.t.sol:70:9
+   │
+70 │         token.transfer(address(guard), 300_000e6);
+   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/erc20-unchecked-transfer
+
+warning[unsafe-typecast]: typecasts that can truncate values should be checked
+   ╭▸ contracts/test/PaymentGuard.t.sol:75:18
+   │
+75 │             123, uint64(block.timestamp), uint64(block.timestamp + 600), keccak256("evidence"), guard.policyId());
+   │                  ━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ├ note: consider disabling this lint if you're certain the cast is safe
+   │       
+   │       // casting to 'uint64' is safe because [explain why]
+   │       // forge-lint: disable-next-line(unsafe-typecast)
+   │       
+   │       
+   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+warning[unsafe-typecast]: typecasts that can truncate values should be checked
+   ╭▸ contracts/test/PaymentGuard.t.sol:75:43
+   │
+75 │             123, uint64(block.timestamp), uint64(block.timestamp + 600), keccak256("evidence"), guard.policyId());
+   │                                           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ├ note: consider disabling this lint if you're certain the cast is safe
+   │       
+   │       // casting to 'uint64' is safe because [explain why]
+   │       // forge-lint: disable-next-line(unsafe-typecast)
+   │       
+   │       
+   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+warning[unused-return]: Return value of an external call is not used
+   ╭▸ contracts/test/PaymentGuard.t.sol:80:36
+   │
+80 │         vm.expectRevert(selector); guard.executePayment(p, sig);
+   │                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+   ╭▸ contracts/test/PaymentGuard.t.sol:94:66
+   │
+94 │         vm.expectRevert(PaymentGuard.NonceUnavailable.selector); guard.executePayment(p, sig);
+   │                                                                  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:100:71
+    │
+100 │         vm.expectRevert(PaymentGuard.InvoiceAlreadySettled.selector); guard.executePayment(p, sig);
+    │                                                                       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:105:65
+    │
+105 │         vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, "");
+    │                                                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:107:65
+    │
+107 │         vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, sig);
+    │                                                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[uninitialized-local]: local variable is read before being initialized
+    ╭▸ contracts/test/PaymentGuard.t.sol:110:25
+    │
+110 │         for (uint256 i; i < 10; ++i) {
+    │                         ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[calls-loop]: external call inside a loop
+   ╭▸ contracts/test/PaymentGuard.t.sol:75:97
+   │
+75 │             123, uint64(block.timestamp), uint64(block.timestamp + 600), keccak256("evidence"), guard.policyId());
+   │                                                                                                 ━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+   ╭▸ contracts/test/PaymentGuard.t.sol:25:56
+   │
+25 │         (uint8 v, bytes32 r, bytes32 s) = vm.sign(key, guard.hashPayment(p));
+   │                                                        ━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+   ╭▸ contracts/test/PaymentGuard.t.sol:25:43
+   │
+25 │         (uint8 v, bytes32 r, bytes32 s) = vm.sign(key, guard.hashPayment(p));
+   │                                           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:122:13
+    │
+122 │             vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, sig);
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:122:69
+    │
+122 │             vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, sig);
+    │                                                                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+note[cyclomatic-complexity]: this function has a cyclomatic complexity above 11; consider splitting it into smaller functions
+    ╭▸ contracts/test/PaymentGuard.t.sol:109:5
+    │
+109 │     function testEverySignedFieldBinding() public {
+    │     ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/cyclomatic-complexity
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:122:69
+    │
+122 │             vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, sig);
+    │                                                                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:128:65
+    │
+128 │         vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, sig);
+    │                                                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:130:65
+    │
+130 │         vm.expectRevert(PaymentGuard.InvalidApproval.selector); other.executePayment(p, sig);
+    │                                                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[uninitialized-local]: local variable is read before being initialized
+    ╭▸ contracts/test/PaymentGuard.t.sol:137:25
+    │
+137 │         for (uint256 i; i < 2; ++i) {
+    │                         ━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:140:47
+    │
+140 │             (uint8 v, bytes32 r, bytes32 s) = vm.sign(KEY, keccak256(abi.encodePacked(hex"1901", domain, structure)));
+    │                                               ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:141:13
+    │
+141 │             vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, abi.encodePacked(r, s, v));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:141:69
+    │
+141 │             vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, abi.encodePacked(r, s, v));
+    │                                                                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:141:69
+    │
+141 │             vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, abi.encodePacked(r, s, v));
+    │                                                                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:146:65
+    │
+146 │         vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, new bytes(64));
+    │                                                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:147:65
+    │
+147 │         vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, new bytes(65));
+    │                                                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:149:65
+    │
+149 │         vm.expectRevert(PaymentGuard.InvalidApproval.selector); guard.executePayment(p, highS);
+    │                                                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:173:66
+    │
+173 │         vm.expectRevert(PaymentGuard.NonceUnavailable.selector); guard.executePayment(p, sig);
+    │                                                                  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:187:36
+    │
+187 │ …     AdversarialToken bad = new AdversarialToken(); PaymentGuard target = deploy(address(bad)); bad.transfer(address(target), 300_00…
+    │                              ━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+   ╭▸ contracts/test/PaymentGuard.t.sol:72:77
+   │
+72 │ …l returns (PaymentGuard) { return new PaymentGuard(asset, signer, 50_000e6, 600, keys, recipients); }
+   │                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:187:104
+    │
+187 │ …; PaymentGuard target = deploy(address(bad)); bad.transfer(address(target), 300_000e6);
+    │                                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:188:93
+    │
+188 │             PaymentGuard.Payment memory p = payment(); p.token = address(bad); p.policyId = target.policyId();
+    │                                                                                             ━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:189:54
+    │
+189 │             bytes memory sig = sign(target, p, KEY); bad.configure(mode, target, p, sig);
+    │                                                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:190:13
+    │
+190 │             vm.expectRevert(); target.executePayment(p, sig);
+    │             ━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:190:32
+    │
+190 │             vm.expectRevert(); target.executePayment(p, sig);
+    │                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:191:24
+    │
+191 │             eq(uint256(target.nonceState(p.authorizationNonce)), 0); eq(target.invoiceSettlementDigest(p.invoiceKey), bytes32(0));
+    │                        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:191:73
+    │
+191 │             eq(uint256(target.nonceState(p.authorizationNonce)), 0); eq(target.invoiceSettlementDigest(p.invoiceKey), bytes32(0));
+    │                                                                         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:192:16
+    │
+192 │             eq(bad.balanceOf(address(target)), 300_000e6); eq(bad.balanceOf(RECIPIENT), 0);
+    │                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:192:63
+    │
+192 │             eq(bad.balanceOf(address(target)), 300_000e6); eq(bad.balanceOf(RECIPIENT), 0);
+    │                                                               ━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+   ╭▸ contracts/test/PaymentGuard.t.sol:22:55
+   │
+22 │     function eq(uint256 a, uint256 b) internal pure { require(a == b, "uint mismatch"); }
+   │                                                       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+   ╭▸ contracts/test/PaymentGuard.t.sol:23:55
+   │
+23 │     function eq(bytes32 a, bytes32 b) internal pure { require(a == b, "bytes32 mismatch"); }
+   │                                                       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[erc20-unchecked-transfer]: ERC20 'transfer' and 'transferFrom' calls should check the return value
+    ╭▸ contracts/test/PaymentGuard.t.sol:187:104
+    │
+187 │ …; PaymentGuard target = deploy(address(bad)); bad.transfer(address(target), 300_000e6);
+    │                                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/erc20-unchecked-transfer
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:190:32
+    │
+190 │             vm.expectRevert(); target.executePayment(p, sig);
+    │                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:197:28
+    │
+197 │ …     vm.expectRevert(); empty.executePayment(p, sig); eq(uint256(empty.nonceState(123)), 0); eq(empty.invoiceSettlementDigest(p.invo…
+    │                          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[erc20-unchecked-transfer]: ERC20 'transfer' and 'transferFrom' calls should check the return value
+    ╭▸ contracts/test/PaymentGuard.t.sol:200:100
+    │
+200 │ …; PaymentGuard target = deploy(address(bad)); bad.transfer(address(target), 300_000e6);
+    │                                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/erc20-unchecked-transfer
+
+warning[unused-return]: Return value of an external call is not used
+    ╭▸ contracts/test/PaymentGuard.t.sol:203:70
+    │
+203 │         bad.configure(4, target, nested, sign(target, nested, KEY)); target.executePayment(p, sign(target, p, KEY));
+    │                                                                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unsafe-typecast]: typecasts that can truncate values should be checked
+    ╭▸ contracts/test/PaymentGuard.t.sol:248:33
+    │
+248 │             uint256(nonce) + 1, uint64(block.timestamp), uint64(block.timestamp + 600), keccak256("invariant"), guard.policyId());
+    │                                 ━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ├ note: consider disabling this lint if you're certain the cast is safe
+    │       
+    │       // casting to 'uint64' is safe because [explain why]
+    │       // forge-lint: disable-next-line(unsafe-typecast)
+    │       
+    │       
+    ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+warning[unsafe-typecast]: typecasts that can truncate values should be checked
+    ╭▸ contracts/test/PaymentGuard.t.sol:248:58
+    │
+248 │             uint256(nonce) + 1, uint64(block.timestamp), uint64(block.timestamp + 600), keccak256("invariant"), guard.policyId());
+    │                                                          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ├ note: consider disabling this lint if you're certain the cast is safe
+    │       
+    │       // casting to 'uint64' is safe because [explain why]
+    │       // forge-lint: disable-next-line(unsafe-typecast)
+    │       
+    │       
+    ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:263:81
+    │
+263 │         address[] memory recipients = new address[](1); recipients[0] = address(0xB0B);
+    │                                                                                 ━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:265:40
+    │
+265 │         token.transfer(address(guard), 300_000e6); handler = new PaymentHandler(guard, token); targets.push(address(handler));
+    │                                        ━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:274:78
+    │
+274 │         eq(handler.successfulTransfers(), count); eq(token.balanceOf(address(0xB0B)), count * 1e6);
+    │                                                                              ━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:274:95
+    │
+274 │         eq(handler.successfulTransfers(), count); eq(token.balanceOf(address(0xB0B)), count * 1e6);
+    │                                                                                               ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:275:45
+    │
+275 │         eq(token.balanceOf(address(guard)), 300_000e6 - count * 1e6);
+    │                                             ━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ contracts/test/PaymentGuard.t.sol:275:65
+    │
+275 │         eq(token.balanceOf(address(guard)), 300_000e6 - count * 1e6);
+    │                                                                 ━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+warning[erc20-unchecked-transfer]: ERC20 'transfer' and 'transferFrom' calls should check the return value
+    ╭▸ contracts/test/PaymentGuard.t.sol:265:9
+    │
+265 │         token.transfer(address(guard), 300_000e6); handler = new PaymentHandler(guard, token); targets.push(address(handler));
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/erc20-unchecked-transfer
+
+warning[uninitialized-local]: local variable is read before being initialized
+    ╭▸ contracts/test/PaymentGuard.t.sol:272:129
+    │
+272 │ …     require((guard.invoiceSettlementDigest(key) != bytes32(0)) == (successes == 1), "settlement consumption mismatch"); count += su…
+    │                                                                                                                           ━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:271:59
+    │
+271 │             bytes32 key = bytes32(i); uint256 successes = handler.count(key); require(successes <= 1, "duplicate settlement");
+    │                                                           ━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:272:22
+    │
+272 │ …     require((guard.invoiceSettlementDigest(key) != bytes32(0)) == (successes == 1), "settlement consumption mismatch"); count += su…
+    │                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:276:53
+    │
+276 │ …     for (uint256 i = 1; i <= 256; i++) require((guard.nonceState(i) == PaymentGuard.NonceState.Executed) == handler.paidNonces(i), …
+    │                                                   ━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:276:113
+    │
+276 │ ….nonceState(i) == PaymentGuard.NonceState.Executed) == handler.paidNonces(i), "nonce consumption mismatch");
+    │                                                         ━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:271:79
+    │
+271 │             bytes32 key = bytes32(i); uint256 successes = handler.count(key); require(successes <= 1, "duplicate settlement");
+    │                                                                               ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:272:13
+    │
+272 │ …     require((guard.invoiceSettlementDigest(key) != bytes32(0)) == (successes == 1), "settlement consumption mismatch"); count += su…
+    │       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ contracts/test/PaymentGuard.t.sol:276:44
+    │
+276 │ …i++) require((guard.nonceState(i) == PaymentGuard.NonceState.Executed) == handler.paidNonces(i), "nonce consumption mismatch");
+    │       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+
+Running acceptance gate: test:contracts
+
+> secure-finance@0.1.0 test:contracts <project-root>
+> node scripts/foundry.mjs forge test --root contracts -vv
+
+No files changed, compilation skipped
+2026-10-10T17:36:24.082147Z  WARN forge::test: failed calling "targetArtifactSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.082543Z  WARN forge::test: failed calling "targetArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.082548Z  WARN forge::test: failed calling "excludeArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.082569Z  WARN forge::test: failed calling "targetSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.082573Z  WARN forge::test: failed calling "excludeSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.082635Z  WARN forge::test: failed calling "excludeContracts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.082662Z  WARN forge::test: failed calling "targetInterfaces()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.082681Z  WARN forge::test: failed calling "targetSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.082686Z  WARN forge::test: failed calling "excludeSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083223Z  WARN forge::test: failed calling "targetArtifactSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083229Z  WARN forge::test: failed calling "targetArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083232Z  WARN forge::test: failed calling "excludeArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083239Z  WARN forge::test: failed calling "targetSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083242Z  WARN forge::test: failed calling "excludeSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083250Z  WARN forge::test: failed calling "excludeContracts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083256Z  WARN forge::test: failed calling "targetInterfaces()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083259Z  WARN forge::test: failed calling "targetSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T17:36:24.083262Z  WARN forge::test: failed calling "excludeSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+
+Ran 29 tests for test/PaymentGuard.t.sol:PaymentGuardTest
+[PASS] testCancelBeforePayment() (gas: 166140)
+[PASS] testConstructorInvalidConfigurations() (gas: 16461)
+[PASS] testDeadlineMinusOneValid() (gas: 146673)
+[PASS] testEverySignedFieldBinding() (gas: 600659)
+[PASS] testExactDeadlineExpired() (gas: 79113)
+[PASS] testExactTransferAndReplay() (gas: 226458)
+[PASS] testExecutionWinsCancellationRace() (gas: 178478)
+[PASS] testFutureIssuance() (gas: 75685)
+[PASS] testFuzzAmountExact(uint256) (runs: 256, μ: 156318, ~: 156329)
+[PASS] testInsufficientLiquidityRollback() (gas: 139981)
+[PASS] testInvalidTimeWindows() (gas: 200754)
+[PASS] testMalformedECDSASignatures() (gas: 122376)
+[PASS] testReentrantCallbackBlocked() (gas: 1580915)
+[PASS] testRegistryOrderingAndInvalidEntries() (gas: 9331)
+[PASS] testRegistryRejectsVaultAsRecipient() (gas: 15097)
+[PASS] testSignedInvalidPolicy() (gas: 71912)
+[PASS] testSignedInvalidToken() (gas: 72735)
+[PASS] testSignedOversizedAmount() (gas: 75159)
+[PASS] testSignedUnknownSupplier() (gas: 74656)
+[PASS] testSignedWrongRecipient() (gas: 75225)
+[PASS] testSignedZeroAmount() (gas: 75196)
+[PASS] testTokenAndPolicy() (gas: 40451)
+[PASS] testTransferFailuresRollback() (gas: 4478794)
+[PASS] testTwoNoncesSameInvoiceOnlyOnePays() (gas: 210682)
+[PASS] testUnauthorizedAndZeroCancellation() (gas: 55444)
+[PASS] testUnsignedAndWrongSigner() (gas: 98299)
+[PASS] testWrongChainAndVaultDomain() (gas: 117744)
+[PASS] testWrongDomainNameAndVersion() (gas: 103620)
+[PASS] testZeroInvoiceNonceEvidence() (gas: 202169)
+Suite result: ok. 29 passed; 0 failed; 0 skipped; finished in 16.85ms (36.83ms CPU time)
+
+Ran 1 test for test/PaymentGuard.t.sol:PaymentGuardInvariantTest
+[PASS] invariant_oneSettlementPerInvoiceAndExactConservation() (runs: 64, calls: 2048, reverts: 0)
+
+╭----------------+----------+-------+---------+----------╮
+| Contract       | Selector | Calls | Reverts | Discards |
++========================================================+
+| PaymentHandler | attempt  | 1012  | 0       | 0        |
+|----------------+----------+-------+---------+----------|
+| PaymentHandler | cancel   | 1036  | 0       | 0        |
+╰----------------+----------+-------+---------+----------╯
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 2.12s (2.12s CPU time)
+
+Ran 2 test suites in 2.12s (2.14s CPU time): 30 tests passed, 0 failed, 0 skipped (30 total tests)
+
+Running acceptance gate: test:integration
+
+> secure-finance@0.1.0 test:integration <project-root>
+> vitest run --config vitest.integration.config.ts
+
+
+ RUN  v5.0.3 <project-root>
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  19:36:26
+   Duration  52.59s (tests 98%, import 2%)
+
+
+Running acceptance gate: build
+
+> secure-finance@0.1.0 build <project-root>
+> tsx scripts/build.ts
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 3121 modules transformed.
+rendering chunks...
+computing gzip size...
+apps/web/dist/index.html                                             0.42 kB │ gzip:   0.30 kB
+apps/web/dist/assets/inter-vietnamese-400-normal-DMkecbls.woff2      4.97 kB
+apps/web/dist/assets/inter-vietnamese-600-normal-Cc8MFFhd.woff2      5.10 kB
+apps/web/dist/assets/inter-vietnamese-700-normal-DlLaEgI2.woff2      5.10 kB
+apps/web/dist/assets/inter-vietnamese-500-normal-DOriooB6.woff2      5.11 kB
+apps/web/dist/assets/inter-greek-ext-400-normal-DGGRlc-M.woff2       5.26 kB
+apps/web/dist/assets/inter-greek-ext-500-normal-C4iEst2y.woff2       5.42 kB
+apps/web/dist/assets/inter-greek-ext-600-normal-DRtmH8MT.woff2       5.43 kB
+apps/web/dist/assets/inter-greek-ext-700-normal-qfdV9bQt.woff2       5.44 kB
+apps/web/dist/assets/inter-vietnamese-400-normal-Bbgyi5SW.woff       6.50 kB
+apps/web/dist/assets/inter-vietnamese-500-normal-mJboJaSs.woff       6.59 kB
+apps/web/dist/assets/inter-vietnamese-700-normal-BZaoP0fm.woff       6.63 kB
+apps/web/dist/assets/inter-vietnamese-600-normal-BuLX-rYi.woff       6.64 kB
+apps/web/dist/assets/inter-greek-ext-400-normal-KugGGMne.woff        7.06 kB
+apps/web/dist/assets/inter-greek-ext-500-normal-2j5mBUwD.woff        7.19 kB
+apps/web/dist/assets/inter-greek-ext-600-normal-B8X0CLgF.woff        7.21 kB
+apps/web/dist/assets/inter-greek-ext-700-normal-BoQ6DsYi.woff        7.21 kB
+apps/web/dist/assets/inter-cyrillic-400-normal-obahsSVq.woff2        7.71 kB
+apps/web/dist/assets/inter-greek-400-normal-B4URO6DV.woff2           7.77 kB
+apps/web/dist/assets/inter-cyrillic-500-normal-BasfLYem.woff2        7.90 kB
+apps/web/dist/assets/inter-cyrillic-700-normal-CjBOestx.woff2        7.90 kB
+apps/web/dist/assets/inter-greek-500-normal-BIZE56-Y.woff2           7.92 kB
+apps/web/dist/assets/inter-greek-700-normal-C3JjAnD8.woff2           7.92 kB
+apps/web/dist/assets/inter-greek-600-normal-plRanbMR.woff2           7.94 kB
+apps/web/dist/assets/inter-cyrillic-600-normal-CWCymEST.woff2        7.97 kB
+apps/web/dist/assets/inter-cyrillic-400-normal-HOLc17fK.woff         9.78 kB
+apps/web/dist/assets/inter-cyrillic-700-normal-DrXBdSj3.woff         9.91 kB
+apps/web/dist/assets/inter-greek-400-normal-q2sYcFCs.woff            9.92 kB
+apps/web/dist/assets/inter-cyrillic-600-normal-4D_pXhcN.woff         9.93 kB
+apps/web/dist/assets/inter-cyrillic-500-normal-CxZf_p3X.woff         9.94 kB
+apps/web/dist/assets/inter-greek-500-normal-Xzm54t5V.woff            9.98 kB
+apps/web/dist/assets/inter-greek-700-normal-BUv2fZ6O.woff            9.98 kB
+apps/web/dist/assets/inter-greek-600-normal-BZpKdvQh.woff           10.03 kB
+apps/web/dist/assets/inter-cyrillic-ext-400-normal-BQZuk6qB.woff2   10.23 kB
+apps/web/dist/assets/inter-cyrillic-ext-500-normal-B0yAr1jD.woff2   10.43 kB
+apps/web/dist/assets/inter-cyrillic-ext-600-normal-Dfes3d0z.woff2   10.48 kB
+apps/web/dist/assets/inter-cyrillic-ext-700-normal-BjwYoWNd.woff2   10.49 kB
+apps/web/dist/assets/inter-cyrillic-ext-400-normal-DQukG94-.woff    13.33 kB
+apps/web/dist/assets/inter-cyrillic-ext-700-normal-LO58E6JB.woff    13.40 kB
+apps/web/dist/assets/inter-cyrillic-ext-500-normal-BmqWE9Dz.woff    13.45 kB
+apps/web/dist/assets/inter-cyrillic-ext-600-normal-Bcila6Z-.woff    13.46 kB
+apps/web/dist/assets/inter-latin-400-normal-C38fXH4l.woff2          23.66 kB
+apps/web/dist/assets/inter-latin-500-normal-Cerq10X2.woff2          24.27 kB
+apps/web/dist/assets/inter-latin-700-normal-Yt3aPRUw.woff2          24.35 kB
+apps/web/dist/assets/inter-latin-600-normal-LgqL8muc.woff2          24.45 kB
+apps/web/dist/assets/inter-latin-400-normal-CyCys3Eg.woff           30.69 kB
+apps/web/dist/assets/inter-latin-600-normal-CiBQ2DWP.woff           31.26 kB
+apps/web/dist/assets/inter-latin-500-normal-BL9OpVg8.woff           31.28 kB
+apps/web/dist/assets/inter-latin-700-normal-BLAVimhd.woff           31.32 kB
+apps/web/dist/assets/inter-latin-ext-400-normal-C1nco2VV.woff2      35.00 kB
+apps/web/dist/assets/inter-latin-ext-500-normal-CV4jyFjo.woff2      36.02 kB
+apps/web/dist/assets/inter-latin-ext-700-normal-Ca8adRJv.woff2      36.24 kB
+apps/web/dist/assets/inter-latin-ext-600-normal-D2bJ5OIk.woff2      36.26 kB
+apps/web/dist/assets/inter-latin-ext-400-normal-77YHD8bZ.woff       47.56 kB
+apps/web/dist/assets/inter-latin-ext-500-normal-BxGbmqWO.woff       48.49 kB
+apps/web/dist/assets/inter-latin-ext-700-normal-TidjK2hL.woff       48.63 kB
+apps/web/dist/assets/inter-latin-ext-600-normal-CIVaiw4L.woff       48.66 kB
+apps/web/dist/assets/index-C4IxoaWv.css                             49.89 kB │ gzip:  11.32 kB
+apps/web/dist/assets/secp256k1-DyEWm7ic.js                          31.51 kB │ gzip:  12.27 kB
+apps/web/dist/assets/src-Og-0ESdy.js                                50.07 kB │ gzip:  19.48 kB
+apps/web/dist/assets/index-6bEX94Wi.js                             463.27 kB │ gzip: 140.00 kB
+apps/web/dist/assets/CampusCanvas-1-R3A4eU.js                      999.08 kB │ gzip: 265.03 kB
+
+✓ built in 244ms
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 569 modules transformed.
+rendering chunks...
+computing gzip size...
+apps/approver/dist/index.html                                             0.47 kB │ gzip:   0.31 kB
+apps/approver/dist/assets/inter-vietnamese-400-normal-DMkecbls.woff2      4.97 kB
+apps/approver/dist/assets/inter-vietnamese-600-normal-Cc8MFFhd.woff2      5.10 kB
+apps/approver/dist/assets/inter-vietnamese-500-normal-DOriooB6.woff2      5.11 kB
+apps/approver/dist/assets/inter-greek-ext-400-normal-DGGRlc-M.woff2       5.26 kB
+apps/approver/dist/assets/inter-greek-ext-500-normal-C4iEst2y.woff2       5.42 kB
+apps/approver/dist/assets/inter-greek-ext-600-normal-DRtmH8MT.woff2       5.43 kB
+apps/approver/dist/assets/inter-vietnamese-400-normal-Bbgyi5SW.woff       6.50 kB
+apps/approver/dist/assets/inter-vietnamese-500-normal-mJboJaSs.woff       6.59 kB
+apps/approver/dist/assets/inter-vietnamese-600-normal-BuLX-rYi.woff       6.64 kB
+apps/approver/dist/assets/inter-greek-ext-400-normal-KugGGMne.woff        7.06 kB
+apps/approver/dist/assets/inter-greek-ext-500-normal-2j5mBUwD.woff        7.19 kB
+apps/approver/dist/assets/inter-greek-ext-600-normal-B8X0CLgF.woff        7.21 kB
+apps/approver/dist/assets/inter-cyrillic-400-normal-obahsSVq.woff2        7.71 kB
+apps/approver/dist/assets/inter-greek-400-normal-B4URO6DV.woff2           7.77 kB
+apps/approver/dist/assets/inter-cyrillic-500-normal-BasfLYem.woff2        7.90 kB
+apps/approver/dist/assets/inter-greek-500-normal-BIZE56-Y.woff2           7.92 kB
+apps/approver/dist/assets/inter-greek-600-normal-plRanbMR.woff2           7.94 kB
+apps/approver/dist/assets/inter-cyrillic-600-normal-CWCymEST.woff2        7.97 kB
+apps/approver/dist/assets/inter-cyrillic-400-normal-HOLc17fK.woff         9.78 kB
+apps/approver/dist/assets/inter-greek-400-normal-q2sYcFCs.woff            9.92 kB
+apps/approver/dist/assets/inter-cyrillic-600-normal-4D_pXhcN.woff         9.93 kB
+apps/approver/dist/assets/inter-cyrillic-500-normal-CxZf_p3X.woff         9.94 kB
+apps/approver/dist/assets/inter-greek-500-normal-Xzm54t5V.woff            9.98 kB
+apps/approver/dist/assets/inter-greek-600-normal-BZpKdvQh.woff           10.03 kB
+apps/approver/dist/assets/inter-cyrillic-ext-400-normal-BQZuk6qB.woff2   10.23 kB
+apps/approver/dist/assets/inter-cyrillic-ext-500-normal-B0yAr1jD.woff2   10.43 kB
+apps/approver/dist/assets/inter-cyrillic-ext-600-normal-Dfes3d0z.woff2   10.48 kB
+apps/approver/dist/assets/inter-cyrillic-ext-400-normal-DQukG94-.woff    13.33 kB
+apps/approver/dist/assets/inter-cyrillic-ext-500-normal-BmqWE9Dz.woff    13.45 kB
+apps/approver/dist/assets/inter-cyrillic-ext-600-normal-Bcila6Z-.woff    13.46 kB
+apps/approver/dist/assets/inter-latin-400-normal-C38fXH4l.woff2          23.66 kB
+apps/approver/dist/assets/inter-latin-500-normal-Cerq10X2.woff2          24.27 kB
+apps/approver/dist/assets/inter-latin-600-normal-LgqL8muc.woff2          24.45 kB
+apps/approver/dist/assets/inter-latin-400-normal-CyCys3Eg.woff           30.69 kB
+apps/approver/dist/assets/inter-latin-600-normal-CiBQ2DWP.woff           31.26 kB
+apps/approver/dist/assets/inter-latin-500-normal-BL9OpVg8.woff           31.28 kB
+apps/approver/dist/assets/inter-latin-ext-400-normal-C1nco2VV.woff2      35.00 kB
+apps/approver/dist/assets/inter-latin-ext-500-normal-CV4jyFjo.woff2      36.02 kB
+apps/approver/dist/assets/inter-latin-ext-600-normal-D2bJ5OIk.woff2      36.26 kB
+apps/approver/dist/assets/inter-latin-ext-400-normal-77YHD8bZ.woff       47.56 kB
+apps/approver/dist/assets/inter-latin-ext-500-normal-BxGbmqWO.woff       48.49 kB
+apps/approver/dist/assets/inter-latin-ext-600-normal-CIVaiw4L.woff       48.66 kB
+apps/approver/dist/assets/index-CSA_f5m8.css                              9.87 kB │ gzip:   2.15 kB
+apps/approver/dist/assets/ccip-Cpd4LpPe.js                                2.83 kB │ gzip:   1.30 kB
+apps/approver/dist/assets/index-DRcpBvs-.js                             666.83 kB │ gzip: 193.41 kB
+
+✓ built in 107ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+Built web, approver, API and shared packages.
+
+Running acceptance gate: test:e2e
+
+> secure-finance@0.1.0 test:e2e <project-root>
+> playwright test --config tests/e2e/playwright.config.ts
+
+
+Running 9 tests using 1 worker
+
+(node:48722) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/campus.spec.ts:3:1 › campus is real WebGL, responsive panels, selection, controls and accessible fallback (8.0s)
+  ✓  2 tests/e2e/campus.spec.ts:4:1 › business calculator recomputes without claiming profit (567ms)
+  ✓  3 tests/e2e/campus.spec.ts:5:1 › WebGL unavailable falls back to full workspace and reduced motion is supported (1.0s)
+  ✓  4 tests/e2e/workflow.spec.ts:8:1 › complete HTML workflow uses real wallet signature, local transfer and verified evidence (12.9s)
+  ✓  5 tests/e2e/workflow.spec.ts:9:1 › beneficiary replacement is held and forged CFO text creates no payment authority (5.2s)
+  ✓  6 tests/e2e/workflow.spec.ts:10:246 › wallet login reports wrong network and grants no session (549ms)
+  ✓  7 tests/e2e/workflow.spec.ts:10:246 › wallet login reports wallet rejection and grants no session (745ms)
+  ✓  8 tests/e2e/workflow.spec.ts:10:246 › wallet login reports nonmember wallet and grants no session (648ms)
+  ✓  9 tests/e2e/workflow.spec.ts:11:1 › wallet cancellation is imported as observation and confirmed without creating settlement (25.9s)
+
+  9 passed (56.4s)
+┌─────────┬────────────────────┬────────┬──────────┬────────────┐
+│ (index) │ gate               │ status │ exitCode │ durationMs │
+├─────────┼────────────────────┼────────┼──────────┼────────────┤
+│ 0       │ 'typecheck'        │ 'PASS' │ 0        │ 2395       │
+│ 1       │ 'lint'             │ 'PASS' │ 0        │ 872        │
+│ 2       │ 'test'             │ 'PASS' │ 0        │ 2667       │
+│ 3       │ 'contracts:build'  │ 'PASS' │ 0        │ 319        │
+│ 4       │ 'test:contracts'   │ 'PASS' │ 0        │ 2353       │
+│ 5       │ 'test:integration' │ 'PASS' │ 0        │ 52841      │
+│ 6       │ 'build'            │ 'PASS' │ 0        │ 793        │
+│ 7       │ 'test:e2e'         │ 'PASS' │ 0        │ 56736      │
+└─────────┴────────────────────┴────────┴──────────┴────────────┘

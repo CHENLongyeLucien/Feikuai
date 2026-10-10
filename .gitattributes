@@ -1,0 +1,5 @@
+# Invoice variants intentionally exercise exact bytes and mixed line endings.
+fixtures/invoices/*.txt -text -whitespace
+
+# Preserve recorded diagnostic output, including tool-generated whitespace.
+*.log -whitespace

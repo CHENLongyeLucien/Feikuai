@@ -1,0 +1,75 @@
+Compiling 1 files with Solc 0.8.37
+Solc 0.8.37 finished in 1.36s
+Compiler run successful with warnings:
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> src/PaymentGuard.sol:101:29:
+    |
+101 |         (address recovered, ECDSA.RecoverError error,) = ECDSA.tryRecover(digest, signature);
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+2026-10-10T16:59:29.520808Z  WARN forge::test: failed calling "targetArtifactSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.521338Z  WARN forge::test: failed calling "targetArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.521345Z  WARN forge::test: failed calling "excludeArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.521480Z  WARN forge::test: failed calling "targetSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.521490Z  WARN forge::test: failed calling "excludeSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.521631Z  WARN forge::test: failed calling "excludeContracts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.521648Z  WARN forge::test: failed calling "targetInterfaces()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.521654Z  WARN forge::test: failed calling "targetSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.521659Z  WARN forge::test: failed calling "excludeSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522208Z  WARN forge::test: failed calling "targetArtifactSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522219Z  WARN forge::test: failed calling "targetArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522225Z  WARN forge::test: failed calling "excludeArtifacts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522235Z  WARN forge::test: failed calling "targetSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522240Z  WARN forge::test: failed calling "excludeSenders()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522250Z  WARN forge::test: failed calling "excludeContracts()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522259Z  WARN forge::test: failed calling "targetInterfaces()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522264Z  WARN forge::test: failed calling "targetSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+2026-10-10T16:59:29.522268Z  WARN forge::test: failed calling "excludeSelectors()": execution reverted: EvmError: Revert (gas: 21199)
+
+Ran 29 tests for test/PaymentGuard.t.sol:PaymentGuardTest
+[PASS] testCancelBeforePayment() (gas: 166140)
+[PASS] testConstructorInvalidConfigurations() (gas: 16461)
+[PASS] testDeadlineMinusOneValid() (gas: 146673)
+[PASS] testEverySignedFieldBinding() (gas: 600659)
+[PASS] testExactDeadlineExpired() (gas: 79113)
+[PASS] testExactTransferAndReplay() (gas: 226458)
+[PASS] testExecutionWinsCancellationRace() (gas: 178478)
+[PASS] testFutureIssuance() (gas: 75685)
+[PASS] testFuzzAmountExact(uint256) (runs: 256, μ: 156319, ~: 156329)
+[PASS] testInsufficientLiquidityRollback() (gas: 139981)
+[PASS] testInvalidTimeWindows() (gas: 200754)
+[PASS] testMalformedECDSASignatures() (gas: 122376)
+[PASS] testReentrantCallbackBlocked() (gas: 1580915)
+[PASS] testRegistryOrderingAndInvalidEntries() (gas: 9331)
+[PASS] testRegistryRejectsVaultAsRecipient() (gas: 15097)
+[PASS] testSignedInvalidPolicy() (gas: 71912)
+[PASS] testSignedInvalidToken() (gas: 72735)
+[PASS] testSignedOversizedAmount() (gas: 75159)
+[PASS] testSignedUnknownSupplier() (gas: 74656)
+[PASS] testSignedWrongRecipient() (gas: 75225)
+[PASS] testSignedZeroAmount() (gas: 75196)
+[PASS] testTokenAndPolicy() (gas: 40451)
+[PASS] testTransferFailuresRollback() (gas: 4478794)
+[PASS] testTwoNoncesSameInvoiceOnlyOnePays() (gas: 210682)
+[PASS] testUnauthorizedAndZeroCancellation() (gas: 55444)
+[PASS] testUnsignedAndWrongSigner() (gas: 98299)
+[PASS] testWrongChainAndVaultDomain() (gas: 117744)
+[PASS] testWrongDomainNameAndVersion() (gas: 103620)
+[PASS] testZeroInvoiceNonceEvidence() (gas: 202169)
+Suite result: ok. 29 passed; 0 failed; 0 skipped; finished in 39.78ms (230.13ms CPU time)
+
+Ran 1 test for test/PaymentGuard.t.sol:PaymentGuardInvariantTest
+[PASS] invariant_oneSettlementPerInvoiceAndExactConservation() (runs: 64, calls: 2048, reverts: 0)
+
+╭----------------+----------+-------+---------+----------╮
+| Contract       | Selector | Calls | Reverts | Discards |
++========================================================+
+| PaymentHandler | attempt  | 1008  | 0       | 0        |
+|----------------+----------+-------+---------+----------|
+| PaymentHandler | cancel   | 1040  | 0       | 0        |
+╰----------------+----------+-------+---------+----------╯
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 2.19s (2.18s CPU time)
+
+Ran 2 test suites in 2.20s (2.23s CPU time): 30 tests passed, 0 failed, 0 skipped (30 total tests)
+2026-10-10T16:59:31.684039Z  WARN evm::traces: failed to flush signature cache err=failed to create file "<user-home>/.foundry/cache/signatures": Operation not permitted (os error 1)

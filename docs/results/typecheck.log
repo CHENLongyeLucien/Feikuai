@@ -1,0 +1,4 @@
+
+> secure-finance@0.1.0 typecheck <project-root>
+> tsc --noEmit
+

@@ -1,0 +1,9 @@
+
+ RUN  v5.0.3 <project-root>
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  19:00:45
+   Duration  53.51s (tests 98%, import 1%)
+

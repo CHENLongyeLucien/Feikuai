@@ -1,0 +1,30 @@
+{
+  "environment": "local Anvil",
+  "agentMode": "fixture",
+  "measurementTime": "2026-10-10T17:36:51.393Z",
+  "measurements": [
+    {
+      "scenario": "external-direct-execution",
+      "txHash": "0x5656ba87557aadeb647f66a933162f9e96e1c8afc7746425921eae3d797b9e58",
+      "invoiceKey": "0xcef0b7f44ae42a6a8fd39ffdcd7efd9f65bd0bd47399d7e47a0faa52ea2f2e00",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "amountAtomic": "48000000000",
+      "recipientDeltaAtomic": "48000000000",
+      "gasUsed": "121675",
+      "blockNumber": "491"
+    },
+    {
+      "scenario": "cancellation-before-import",
+      "txHash": "0x7792de08f7862eb28af528b72ffd89822b80e6c3c17edd9db4f409106ada3466",
+      "invoiceKey": "0x8ae004b86433072c306302f394a964c1aa3d2aaa62716ec90ecd82e3dee1ee2c",
+      "nonce": "67156282062327238850405448506449073148151302007771000681384923311274474919234",
+      "blockNumber": "495"
+    },
+    {
+      "scenario": "execution-wins-cancellation",
+      "paymentTxHash": "0xc209f9e179d95b7018afd3acdeb7c410866c621a73a2a4f69491a5c4ff2bd168",
+      "revertedCancellationTxHash": "0x0ad1716f7bfa38568c2854276586b015922326ca96209b265e17326a36542731",
+      "invoiceKey": "0x30a4e02b9c3d8356489f3d2bb6be64dbf8a96934bb0f85743dafd02bb6e4e091"
+    }
+  ]
+}

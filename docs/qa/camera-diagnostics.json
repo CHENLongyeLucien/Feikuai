@@ -1,0 +1,9 @@
+{
+  "camera": "{\"position\":[30,30,30.000000000000004],\"zoom\":17.542857142857144,\"drawCalls\":171}",
+  "buttons": [
+    "Cases 0",
+    "Agents 2",
+    "Payments 0"
+  ],
+  "renderer": "Chrome headless with SwiftShader; scene demand-rendered"
+}

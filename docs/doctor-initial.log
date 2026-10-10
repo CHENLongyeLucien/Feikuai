@@ -1,0 +1,11 @@
+PASS     Runtime: v24.14.0; required v24.14.0
+PASS     Foundry: forge Version: 1.8.1
+PASS     Environment: local / fixture / synthetic; mainnet disabled
+MISSING  OPENAI_API_KEY: not configured
+MISSING  OPENAI_MODEL: not configured
+MISSING  RELAYER_PRIVATE_KEY: not configured
+MISSING  SESSION_SECRET: not configured
+BLOCKED  Deployment: Run contracts:deploy:local or configure a real Fuji manifest
+BLOCKED  Trusted registry: ./fixtures/trusted-registry.local.json
+INFO     Local relayer configuration: Set RELAYER_PRIVATE_KEY to the dedicated local-only account 2 key in private .env, or use documented local fixture configuration. Never configure the approver key on the server.
+INFO     Fuji/live acceptance: No claim of live model execution or Fuji settlement follows from local tests.

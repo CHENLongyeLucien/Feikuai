@@ -1,0 +1,8 @@
+<project-root>/scripts/deploy-fuji.ts:11
+if(missing.length)throw new Error(`Fuji deployment blocked: configure public roles ${missing.join(', ')}. Import sf-fuji-deployer into Foundry encrypted keystore; fund deployer, relayer and approver with test AVAX. Never supply the approver private key to this process.`);
+                        ^
+
+Error: Fuji deployment blocked: configure public roles FUJI_DEPLOYER_ADDRESS, FUJI_APPROVER_ADDRESS, FUJI_RELAYER_ADDRESS, FUJI_SUPPLIER_1_ADDRESS, FUJI_SUPPLIER_2_ADDRESS. Import sf-fuji-deployer into Foundry encrypted keystore; fund deployer, relayer and approver with test AVAX. Never supply the approver private key to this process.
+    at <anonymous> (<project-root>/scripts/deploy-fuji.ts:11:25)
+
+Node.js v24.14.0

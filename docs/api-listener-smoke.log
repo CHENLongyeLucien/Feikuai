@@ -1,0 +1,1 @@
+{"source":"apps/api/src/app.ts","build":"esbuild Node ESM bundle, packages external","mode":"real loopback listener","environment":"isolated private database; no RPC, relayer key or worker","health":{"status":"ok"},"session":{"authenticated":false},"successful":true,"observedAt":"2026-10-10T17:31:46.078Z"}

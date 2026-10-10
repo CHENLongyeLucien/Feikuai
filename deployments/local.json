@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "secure-finance.deployment.v1",
+  "environment": "local",
+  "chainId": "31337",
+  "rpcUrl": "http://127.0.0.1:8545",
+  "vault": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+  "token": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "approver": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+  "roles": {
+    "deployer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+    "approver": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    "relayer": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+    "suppliers": [
+      "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65"
+    ]
+  },
+  "maxPerPaymentAtomic": "50000000000",
+  "maxAuthorizationTTL": "600",
+  "registry": [
+    {
+      "supplierKey": "0xf196c9ccdcfccc47a4d0f389d750efffd5445e8db940c805135ca72bc78e8678",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65"
+    },
+    {
+      "supplierKey": "0xf7850731316551808eb554d30b038e375c94ffe9908f20916ac6ce5885bb75ad",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906"
+    }
+  ],
+  "registryHash": "0xc508e310478cdea1788c7fe8ef9e8b102d08556dd503552dce136ede10c8bd3b",
+  "policyId": "0xbb4046833e461619d3df867f6e388f47f07c9dec251bd07f89074dd4877d368b",
+  "runtimeCodeHash": "0xe05209030edb98d11f0c68f0cf66da65507fde03754add451b650eb09ad90b3b",
+  "tokenRuntimeCodeHash": "0xdbb64367e83b9b942902c9e4b1f324df653e9581d47b60d7b14eb8dacd56a8f3",
+  "deploymentBlock": "2",
+  "transactions": {
+    "token": "0x4c432432889388350fef284fb58012d51d169728f06bea0e58f57d3bb3f6ae47",
+    "vault": "0x5f9872b9cc176a8ab31bf4b93769287664d00e9f11bedc29993498e75ed7a266",
+    "funding": "0x037830c0873637cdbaaade04c7dd194c2c0b2615c7fec78e024b460078fc78b2"
+  },
+  "build": {
+    "solidity": "0.8.37",
+    "openzeppelin": "5.7.0",
+    "evmVersion": "cancun",
+    "optimizerRuns": 200,
+    "viaIR": true,
+    "foundry": "1.8.1"
+  }
+}

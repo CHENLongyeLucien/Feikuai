@@ -1,0 +1,45 @@
+{
+  "kind": "ACTUAL_LOCAL_EXECUTION",
+  "signatureSource": "Anvil unlocked isolated development wallet; automated protocol test, not human review",
+  "runId": "ead17aeb-090f-4e46-bb57-43b5671c640b",
+  "chainId": "31337",
+  "vault": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+  "token": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "payment": {
+    "invoiceKey": "0x59cc01da346f1cd6cc7faa69739b5a7bf80a53d6380d093605faf804aee97e86",
+    "supplierKey": "0xf196c9ccdcfccc47a4d0f389d750efffd5445e8db940c805135ca72bc78e8678",
+    "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+    "token": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+    "amountAtomic": "1000000",
+    "authorizationNonce": "1129850297889387064091101081301305242572681988688444014078031388652074267998",
+    "issuedAt": "1791651443",
+    "deadline": "1791652043",
+    "evidenceCommitment": "0xca9e55f7ee17003c3edd33639b7ca4e024a6858c676f378191e1a1e90f5fb7b7",
+    "policyId": "0xbb4046833e461619d3df867f6e388f47f07c9dec251bd07f89074dd4877d368b"
+  },
+  "digest": "0xad013086b7ae9131ddbc7c6cd228a979513954fa8bf397d34c885195db421926",
+  "hash": "0xc5cc63190e977ed3a06fb94384da126fd08931be9794a826a36192252228646f",
+  "blockNumber": "10",
+  "gasUsed": "121687",
+  "effectiveGasPrice": "1306714246",
+  "feeWei": "159010136453002",
+  "submissionToReceiptMs": 4007.9545829999997,
+  "recipientDeltaAtomic": "1000000",
+  "vaultDeltaAtomic": "-1000000",
+  "negativeTransactions": [
+    {
+      "kind": "ACTUAL_LOCAL_REVERT",
+      "label": "same authorization replay",
+      "hash": "0x0fe1b120e6e4801f4e09e4edd02a6e16bab35a20781570110faba8882a590f8c",
+      "blockNumber": "12",
+      "gasUsed": "42145"
+    },
+    {
+      "kind": "ACTUAL_LOCAL_REVERT",
+      "label": "unsigned request",
+      "hash": "0x3ac739cfa41a54ae2459df3eaefba6f870472bfa63aef14144e90547228208d5",
+      "blockNumber": "14",
+      "gasUsed": "31769"
+    }
+  ]
+}

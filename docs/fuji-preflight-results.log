@@ -1,0 +1,1 @@
+Preflight blocked: ENOENT: no such file or directory, open 'deployments/fuji.json'. Fuji requires separate deployer/approver/relayer/supplier addresses, funded test AVAX wallets and a receipt-derived Fuji manifest.

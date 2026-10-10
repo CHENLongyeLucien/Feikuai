@@ -1,0 +1,51 @@
+
+ RUN  v5.0.3 <project-root>
+
+ ✓ tests/api/agents.test.ts > bounded Responses adapter with explicitly injected test provider > executes allowed server-scoped tools and validates final output 4ms
+ ✓ tests/api/agents.test.ts > bounded Responses adapter with explicitly injected test provider > rejects invented payment tools and arbitrary argument scope 1ms
+ ✓ tests/api/agents.test.ts > bounded Responses adapter with explicitly injected test provider > enforces three actual tools and four requests across continuations 0ms
+ ✓ tests/api/agents.test.ts > bounded Responses adapter with explicitly injected test provider > allows one schema repair then records failure 0ms
+ ✓ tests/api/agents.test.ts > bounded Responses adapter with explicitly injected test provider > records refusal without a fixture result 0ms
+ ✓ tests/api/agents.test.ts > bounded Responses adapter with explicitly injected test provider > cannot use tools in Intake 0ms
+ ✓ tests/api/agents.test.ts > bounded Responses adapter with explicitly injected test provider > validates quoted UTF-16 spans without treating prose as authority 1ms
+ ✓ tests/api/agents.test.ts > bounded Responses adapter with explicitly injected test provider > bounds whole input and rejects unsupported formats 1ms
+ ✓ tests/api/agents.test.ts > isolated PDF extraction > rejects a selectable-text PDF over the page cap and never returns a partial extraction 163ms
+ ✓ tests/api/agents.test.ts > isolated PDF extraction > rejects a PDF with no selectable text and a password-protected PDF 134ms
+ ✓ tests/api/agents.test.ts > isolated PDF extraction > enforces complete extracted PDF character count and raw byte cap 79ms
+ ✓ tests/api/agents.test.ts > isolated PDF extraction > extracts a text PDF in the bounded worker and labels its algorithm 66ms
+ ✓ tests/api/agents.test.ts > provider-attempt durability hook > records the attempted request before provider invocation and final usage afterward 1ms
+ ✓ tests/api/backend.test.ts > authentication and durable identities > denies unauthenticated and wrong-origin writes 113ms
+ ✓ tests/api/backend.test.ts > authentication and durable identities > uses exact single-use SIWE with browser binding; replay fails 58ms
+ ✓ tests/api/backend.test.ts > authentication and durable identities > rejects expired and wrong-wallet login signatures 54ms
+ ✓ tests/api/backend.test.ts > authentication and durable identities > requires CSRF and server-owned role 62ms
+ ✓ tests/api/backend.test.ts > authentication and durable identities > deduplicates concurrent identical uploads and rejects key collisions 78ms
+ ✓ tests/api/backend.test.ts > authentication and durable identities > keeps invoiceKey on revision and enforces stale version/tenant isolation 76ms
+ ✓ tests/api/backend.test.ts > authentication and durable identities > persists jobs, documents, invoice keys and WAL across restart 60ms
+ ✓ tests/api/backend.test.ts > bounded extraction and two-agent fixtures > runs all 11 benign variants without a hard hold 41ms
+ ✓ tests/api/backend.test.ts > bounded extraction and two-agent fixtures > holds recipient substitution and flags forged authority/tool instructions 36ms
+ ✓ tests/api/backend.test.ts > bounded extraction and two-agent fixtures > rejects fabricated record identities and invalid source pointers 34ms
+ ✓ tests/api/backend.test.ts > bounded extraction and two-agent fixtures > records live credential failure without silently calling a fixture 34ms
+ ✓ tests/api/backend.test.ts > bounded extraction and two-agent fixtures > bounds whole-document extraction and MIME; does not truncate 33ms
+ ✓ tests/api/backend.test.ts > bounded extraction and two-agent fixtures > writes actual artifacts and checks through analysis orchestration 77ms
+ ✓ tests/api/backend.test.ts > frozen approval lifecycle (chain reads explicitly stubbed for API isolation) > freezes real artifact hashes, then blocks a second packet even before signature import 73ms
+ ✓ tests/api/backend.test.ts > frozen approval lifecycle (chain reads explicitly stubbed for API isolation) > serializes concurrent freezes across separate cases for one invoice key 86ms
+ ✓ tests/api/backend.test.ts > frozen approval lifecycle (chain reads explicitly stubbed for API isolation) > recovers only the real eligible signature; replayed import is idempotent 86ms
+ ✓ tests/api/backend.test.ts > frozen approval lifecycle (chain reads explicitly stubbed for API isolation) > preserves manual holds through reanalysis and refuses hard mismatch overrides 83ms
+ ✓ tests/api/backend.test.ts > revision and cancellation authority visibility > blocks replacement after a revision while an unimported exported packet remains usable 86ms
+ ✓ tests/api/backend.test.ts > revision and cancellation authority visibility > treats a cancellation hash as pending before any signature import 85ms
+ ✓ tests/api/backend.test.ts > revision and cancellation authority visibility > requires executed chain time for packet replacement at exact expiry 65ms
+ ✓ tests/api/backend.test.ts > revision and cancellation authority visibility > cannot overwrite a cancellation observation arriving during signature verification 74ms
+ ✓ tests/api/backend.test.ts > interrupted agent attempt history > keeps unknown billing provenance when an expired job lease is reclaimed 59ms
+ ✓ tests/api/backend.test.ts > API packaging and bounded list retrieval > reads the vault balance from the pinned token contract without converting its integer amount 31ms
+ ✓ tests/api/backend.test.ts > API packaging and bounded list retrieval > paginates and filters only the session tenant cases 69ms
+ ✓ tests/api/backend.test.ts > API packaging and bounded list retrieval > initializes an empty persistent volume explicitly and reseeds idempotently 38ms
+ ✓ tests/api/backend.test.ts > unsigned preparation failures (RPC explicitly stubbed) > decodes expiry at gas estimation, releases an unsigned nonce and never claims a broadcast 83ms
+ ✓ tests/api/backend.test.ts > unsigned preparation failures (RPC explicitly stubbed) > retains an unsigned reservation when an external pending nonce makes release uncertain 85ms
+ ✓ tests/api/backend.test.ts > unsigned preparation failures (RPC explicitly stubbed) > never releases persisted signed envelopes on a preparation error 81ms
+ ✓ tests/api/backend.test.ts > unsigned preparation failures (RPC explicitly stubbed) > never persists arbitrary provider/RPC exception text as an error code 31ms
+
+ Test Files  2 passed (2)
+      Tests  42 passed (42)
+   Start at  19:35:22
+   Duration  2.48s (tests 76%, import 20%, transform 4%)
+

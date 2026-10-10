@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "chainId": 31337,
+  "snapshot": "var/anvil-state.json",
+  "restoredRpc": "http://127.0.0.1:8546",
+  "balanceAtomic": "263999000000",
+  "settlements": [
+    {
+      "transactionHash": "0x6d8760c90dac061483ad1ffcf344a21e768c4900a1115995416455f88232544c",
+      "status": "success",
+      "digest": "0xf3661fe25975d54b304629fca97fa39b3f919c504bdb4286bd71b438f970f614"
+    },
+    {
+      "transactionHash": "0x4def53596bd164722a0868c8ca0e7e1745bd083c3323877cb3646421a6c3fc3b",
+      "status": "success",
+      "digest": "0x61a3f6cc30e58c56d4e016874f6aed2ddc8ceccf1af2a6ebf52916a63caf328e"
+    },
+    {
+      "transactionHash": "0xd01a28ba54c1c17e19729f8dbf95d4987a957cd7ff533a8f6d19c3e58a9c414d",
+      "status": "success",
+      "digest": "0xdbe0d10d11f40a872c7e13c0ca9075de71d1ceeeb2125eb2544ec1cd34f57428"
+    }
+  ],
+  "observedAt": "2026-10-10T17:39:22.367Z"
+}

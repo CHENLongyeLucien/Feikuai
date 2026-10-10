@@ -1,0 +1,10 @@
+{
+  "boundary": "after-broadcast",
+  "termination": "SIGKILL",
+  "executionId": "d1f1a7c9-883a-46a2-9986-97e84c7847bb",
+  "transactionHash": "0x0730770e34a1d674b9762ded268d1a71454cd0f6616f844886b304daf44b82a6",
+  "settlementCount": 1,
+  "exactSupplierDeltaAtomic": "48000000000",
+  "outboxPreserved": true,
+  "observedAt": "2026-10-10T17:37:18.699Z"
+}

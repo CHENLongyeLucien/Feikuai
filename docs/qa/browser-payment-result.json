@@ -1,0 +1,18 @@
+{
+  "caseId": "b1d17020-7f1c-4022-9ed1-4aa9d23f81b6",
+  "invoiceReference": "NS-2026-0050",
+  "recipientDeltaAtomic": "48000000000",
+  "artifactIntegrity": "VALID",
+  "signatureCorrespondence": "VALID",
+  "offlineSettlement": "UNVERIFIED_OFFLINE",
+  "errors": [],
+  "chainId": "31337",
+  "environment": "Anvil local / scripted agent fixtures / automated isolated test wallet",
+  "transactionHash": "0xd01a28ba54c1c17e19729f8dbf95d4987a957cd7ff533a8f6d19c3e58a9c414d",
+  "blockNumber": "551",
+  "gasUsed": "104611",
+  "effectiveGasPrice": "1000000007",
+  "feeWei": "104611000732277",
+  "humanReviewTime": "UNMEASURED: automated test signing",
+  "observedAt": "2026-10-10T17:39:48.405Z"
+}

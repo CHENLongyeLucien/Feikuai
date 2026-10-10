@@ -1,0 +1,31 @@
+services:
+  api:
+    build: {context: ., target: api}
+    env_file: .env
+    environment:
+      NODE_ENV: ${DOCKER_NODE_ENV:-development}
+      API_HOST: 0.0.0.0
+      API_PORT: 3001
+      WEB_ORIGIN: ${DOCKER_WEB_ORIGIN:-http://localhost:8080}
+      APPROVER_ORIGIN: ${DOCKER_APPROVER_ORIGIN:-http://localhost:8081}
+      RPC_URL: ${DOCKER_RPC_URL:-http://host.docker.internal:8545}
+      SEED_ON_START: "true"
+      DATABASE_PATH: /data/secure-finance.sqlite
+      ARTIFACT_ROOT: /data/artifacts
+    volumes: [private-data:/data]
+    restart: unless-stopped
+    extra_hosts: [host.docker.internal:host-gateway]
+  web:
+    build:
+      context: .
+      target: web
+      args:
+        VITE_APPROVER_URL: ${DOCKER_APPROVER_URL:-http://localhost:8081}
+    ports: [127.0.0.1:8080:80]
+    depends_on:
+      api: {condition: service_healthy}
+  approver:
+    build: {context: ., target: approver}
+    ports: [127.0.0.1:8081:80]
+volumes:
+  private-data:

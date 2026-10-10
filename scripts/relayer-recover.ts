@@ -1,0 +1,37 @@
+import {randomUUID} from 'node:crypto';
+import {createWalletClient,http,keccak256,type Hex} from 'viem';
+import {privateKeyToAccount} from 'viem/accounts';
+import {loadConfig} from '../apps/api/src/config.js';
+import {openDatabase,event} from '../apps/api/src/db/database.js';
+import {ChainService} from '../apps/api/src/jobs/chain.js';
+import {parsed,json,fail} from '../apps/api/src/domain/errors.js';
+const args=process.argv.slice(2).filter(x=>x!=='--');const executionId=args.find(x=>!x.startsWith('--'));if(!executionId||!/^[0-9a-f-]{36}$/.test(executionId)||args.some(x=>x.startsWith('--')&&x!=='--broadcast'))throw new Error('Usage: pnpm relayer:recover-nonce -- <executionId> [--broadcast]. Default is inspection/dry run.');
+const config=loadConfig(),{db}=openDatabase(config.DATABASE_PATH),chain=new ChainService(db,config);
+try{
+ const deployment=await chain.assertConfiguration();const execution=chain.execution(executionId);await chain.scan();await chain.reconcile(executionId);
+ const reservation=db.prepare('SELECT * FROM tx_outbox WHERE execution_id=?').get(executionId) as any;if(!reservation)fail('NO_RESERVATION','Execution has no reserved relayer account nonce.');
+ if(['CONFIRMED','REVERTED','RECOVERED'].includes(reservation.status)){console.log(json({executionId,reservationStatus:reservation.status,message:'Account reservation is already resolved; no recovery transaction needed.'}));process.exitCode=0;}
+ else {
+  const accountAddress=deployment.roles.relayer,nonce=reservation.relayer_account_nonce;
+  const [latest,pending,current]=await Promise.all([chain.client.getTransactionCount({address:accountAddress,blockTag:'latest'}),chain.client.getTransactionCount({address:accountAddress,blockTag:'pending'}),chain.current(execution.packet.payment.invoiceKey,execution.packet.payment.authorizationNonce)]);
+  const priorRecovery=db.prepare("SELECT * FROM tx_envelopes WHERE reservation_id=? AND kind='QUEUE_RECOVERY' ORDER BY rowid DESC LIMIT 1").get(reservation.id) as any;
+  if(priorRecovery){let receipt:any=null;try{receipt=await chain.client.getTransactionReceipt({hash:priorRecovery.tx_hash});}catch{/* no executed receipt */}if(receipt?.status==='success'){const tx=await chain.client.getTransaction({hash:priorRecovery.tx_hash});if(tx.from.toLowerCase()!==accountAddress||tx.to?.toLowerCase()!==accountAddress||tx.value!==0n||tx.nonce!==nonce)fail('RECOVERY_MISMATCH','Recovery transaction does not match reserved self-transfer.');db.transaction(()=>{db.prepare("UPDATE tx_envelopes SET status='CONFIRMED' WHERE id=?").run(priorRecovery.id);db.prepare("UPDATE tx_outbox SET status='RECOVERED' WHERE id=?").run(reservation.id);db.prepare("UPDATE execution_requests SET status='NONE',error='Queue recovery confirmed; no payment settlement was inferred.' WHERE id=? AND status!='CONFIRMED'").run(executionId);event(db,execution.tenant_id,'execution.queue_recovered',execution.case_id,{executionId,txHash:priorRecovery.tx_hash});chain.observation(executionId,'QUEUE_RECOVERED',{txHash:priorRecovery.tx_hash,accountNonce:nonce,receiptBlock:receipt.blockNumber.toString()});})();console.log(json({executionId,status:'QUEUE_RECOVERED',txHash:priorRecovery.tx_hash,message:'Zero-value self-transfer resolved the account queue. This is not a payment settlement.'}));process.exitCode=0;}
+   else {if(args.includes('--broadcast')){const stillCannotExecute=current.nonceState!==0||current.invoiceDigest!=='0x'+'0'.repeat(64)||current.timestamp>=BigInt(execution.packet.payment.deadline);if(!stillCannotExecute||latest!==nonce)fail('RECOVERY_NOT_ELIGIBLE','Current authority/account nonce does not permit rebroadcast.');try{await chain.client.sendRawTransaction({serializedTransaction:priorRecovery.raw_transaction});db.prepare("UPDATE tx_envelopes SET status='SUBMITTED' WHERE id=?").run(priorRecovery.id);}catch{db.prepare("UPDATE tx_envelopes SET status='UNKNOWN' WHERE id=?").run(priorRecovery.id);}}console.log(json({executionId,status:'RECOVERY_PENDING',txHash:priorRecovery.tx_hash,latestAccountNonce:latest,pendingAccountNonce:pending,message:'Observe this existing recovery envelope; explicit --broadcast only resends identical saved bytes.'}));process.exitCode=1;}
+  }else if(latest>nonce){console.log(json({executionId,status:'ACCOUNT_NONCE_ALREADY_CONSUMED',latestAccountNonce:latest,reservedNonce:nonce,message:'Inspect all account transactions and vault observations before manually classifying the reservation; no transaction prepared.'}));process.exitCode=1;}
+  else {
+   const cannotExecute=current.nonceState!==0||current.invoiceDigest!=='0x'+'0'.repeat(64)||current.timestamp>=BigInt(execution.packet.payment.deadline);
+   if(!cannotExecute)fail('AUTHORIZATION_STILL_USABLE','Cannot clear this account nonce while the old payment authority may execute. Cancel with the approver wallet or establish expiry first.');if(latest!==nonce)fail('EARLIER_NONCE_BLOCKED','Resolve the earlier account nonce first.');
+   const fee=await chain.client.estimateFeesPerGas();const old=parsed<any>(reservation.envelope);const maxFeePerGas=[fee.maxFeePerGas??0n,BigInt(old.maxFeePerGas??0)*2n].reduce((a,b)=>a>b?a:b),maxPriorityFeePerGas=[fee.maxPriorityFeePerGas??0n,BigInt(old.maxPriorityFeePerGas??0)*2n].reduce((a,b)=>a>b?a:b);
+   if(maxFeePerGas>100000000000n||maxPriorityFeePerGas>100000000000n)fail('RECOVERY_FEE_BOUND','Recovery exceeds the 100 gwei demonstration fee ceiling. Inspect fees explicitly.');
+   const request={to:accountAddress,value:0n,nonce,gas:21000n,maxFeePerGas,maxPriorityFeePerGas,chain:chain.chain};
+   console.log(json({executionId,chainId:deployment.chainId,reservedNonce:nonce,latestAccountNonce:latest,pendingAccountNonce:pending,authorizationState:current.nonceState,chainTimestamp:current.timestamp,deadline:execution.packet.payment.deadline,preparedRecovery:{to:accountAddress,value:'0',gas:'21000',maxFeePerGas,maxPriorityFeePerGas},mode:args.includes('--broadcast')?'explicit-broadcast':'inspection-only',message:'Zero-value self-transfer clears only the relayer queue. It cannot withdraw vault funds or create payment authority.'}));
+   if(args.includes('--broadcast')){
+    if(!/^0x[0-9a-fA-F]{64}$/.test(config.RELAYER_PRIVATE_KEY))fail('RELAYER_KEY_MISSING','Explicit broadcast requires the dedicated relayer key.');const account=privateKeyToAccount(config.RELAYER_PRIVATE_KEY as Hex);if(account.address.toLowerCase()!==accountAddress||accountAddress===deployment.approver)fail('WRONG_RELAYER','Configured key is not the distinct pinned relayer.');
+    const wallet=createWalletClient({account,chain:chain.chain,transport:http(config.RPC_URL)}),prepared=await wallet.prepareTransactionRequest({...request,account}),raw=await wallet.signTransaction({...prepared,chain:chain.chain} as any),txHash=keccak256(raw),id=randomUUID();
+    db.transaction(()=>{db.prepare('INSERT INTO tx_envelopes VALUES(?,?,?,?,?,?,?,?,?)').run(id,reservation.id,deployment.chainId,'QUEUE_RECOVERY',txHash,raw,json(request),'PREPARED',new Date().toISOString());chain.observation(executionId,'QUEUE_RECOVERY_PREPARED',{txHash,accountNonce:nonce});})();
+    try{await chain.client.sendRawTransaction({serializedTransaction:raw});db.prepare("UPDATE tx_envelopes SET status='SUBMITTED' WHERE id=?").run(id);}catch{db.prepare("UPDATE tx_envelopes SET status='UNKNOWN' WHERE id=?").run(id);}
+    console.log(json({executionId,recoveryTransactionHash:txHash,message:'Outcome is pending. Rerun inspection to verify the executed receipt before freeing the reservation.'}));
+   }
+  }
+ }
+}finally{db.close();}

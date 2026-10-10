@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "secure-finance.chain-golden.v1",
+  "domain": {
+    "name": "SecureFinancePaymentGuard",
+    "version": "1",
+    "chainId": "31337",
+    "verifyingContract": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"
+  },
+  "payment": {
+    "invoiceKey": "0x34b5fb7ef8569a23fb692b0b23d5dfb8659d25a1f3afd8ffbb6a393b38acc6f3",
+    "supplierKey": "0xf196c9ccdcfccc47a4d0f389d750efffd5445e8db940c805135ca72bc78e8678",
+    "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+    "token": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+    "amountAtomic": "48000000000",
+    "authorizationNonce": "123456789",
+    "issuedAt": "1800000000",
+    "deadline": "1800000600",
+    "evidenceCommitment": "0xca9e55f7ee17003c3edd33639b7ca4e024a6858c676f378191e1a1e90f5fb7b7",
+    "policyId": "0xbb4046833e461619d3df867f6e388f47f07c9dec251bd07f89074dd4877d368b"
+  },
+  "typedDigest": "0x1d74c291bed536636bccd7eaea251477f0ea1a345853c329d2f76160bb0f0ba3",
+  "policy": {
+    "registryHash": "0xc508e310478cdea1788c7fe8ef9e8b102d08556dd503552dce136ede10c8bd3b",
+    "policyId": "0xbb4046833e461619d3df867f6e388f47f07c9dec251bd07f89074dd4877d368b",
+    "paymentTypeHash": "0x8b6473785c013e0a6ceb470b6a08ae65b43fe513dd0135677ad26991f5b4cb6f",
+    "policyTypeHash": "0x46e28346b04d97fcf838089baae5aba5a3079ebc07f20884c72745220ee71d4d"
+  },
+  "provenance": {
+    "chainId": "31337",
+    "vault": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+    "blockNumber": "9"
+  }
+}

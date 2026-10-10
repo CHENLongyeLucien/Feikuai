@@ -1,0 +1,10 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { readFileSync, existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+import 'dotenv/config';
+const root=resolve(import.meta.dirname);
+const read=(path:string)=>existsSync(path)?JSON.parse(readFileSync(path,'utf8')):null;
+const deployment=read(resolve(process.env.DEPLOYMENT_MANIFEST_PATH??'deployments/local.json'));
+const registry=read(resolve(process.env.TRUSTED_REGISTRY_PATH??'fixtures/trusted-registry.local.json'));
+export default defineConfig({root,plugins:[react()],define:{__DEPLOYMENT__:JSON.stringify(deployment),__REGISTRY__:JSON.stringify(registry)},resolve:{alias:Object.fromEntries(['shared','chain','evidence'].map(name=>[`@secure-finance/${name}`,resolve(root,`../../packages/${name}/src/index.ts`)]))},server:{host:'127.0.0.1',port:5174,strictPort:true},build:{outDir:'dist',emptyOutDir:true}});

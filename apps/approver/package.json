@@ -1,0 +1,1 @@
+{"name":"@secure-finance/approver","version":"0.1.0","private":true,"type":"module","scripts":{"dev":"vite --host 127.0.0.1 --port 5174","build":"vite build"},"dependencies":{"@secure-finance/shared":"workspace:*","@secure-finance/chain":"workspace:*","@secure-finance/evidence":"workspace:*"}}

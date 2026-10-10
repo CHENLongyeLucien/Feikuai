@@ -1,0 +1,20 @@
+
+> secure-finance@0.1.0 test:e2e <project-root>
+> playwright test --config tests/e2e/playwright.config.ts
+
+
+Running 9 tests using 1 worker
+
+(node:48722) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/campus.spec.ts:3:1 › campus is real WebGL, responsive panels, selection, controls and accessible fallback (8.0s)
+  ✓  2 tests/e2e/campus.spec.ts:4:1 › business calculator recomputes without claiming profit (567ms)
+  ✓  3 tests/e2e/campus.spec.ts:5:1 › WebGL unavailable falls back to full workspace and reduced motion is supported (1.0s)
+  ✓  4 tests/e2e/workflow.spec.ts:8:1 › complete HTML workflow uses real wallet signature, local transfer and verified evidence (12.9s)
+  ✓  5 tests/e2e/workflow.spec.ts:9:1 › beneficiary replacement is held and forged CFO text creates no payment authority (5.2s)
+  ✓  6 tests/e2e/workflow.spec.ts:10:246 › wallet login reports wrong network and grants no session (549ms)
+  ✓  7 tests/e2e/workflow.spec.ts:10:246 › wallet login reports wallet rejection and grants no session (745ms)
+  ✓  8 tests/e2e/workflow.spec.ts:10:246 › wallet login reports nonmember wallet and grants no session (648ms)
+  ✓  9 tests/e2e/workflow.spec.ts:11:1 › wallet cancellation is imported as observation and confirmed without creating settlement (25.9s)
+
+  9 passed (56.4s)

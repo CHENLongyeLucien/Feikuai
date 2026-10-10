@@ -1,0 +1,2 @@
+import tseslint from 'typescript-eslint';
+export default tseslint.config({ignores:['**/node_modules/**','**/dist/**','contracts/**','**/abi.ts','docs/**','var/**','test-results/**','playwright-report/**']},{files:['**/*.ts','**/*.tsx'],languageOptions:{parser:tseslint.parser},plugins:{'@typescript-eslint':tseslint.plugin},rules:{'@typescript-eslint/no-floating-promises':'off','no-debugger':'error','no-constant-condition':['error',{checkLoops:false}],'no-duplicate-imports':'error'}});

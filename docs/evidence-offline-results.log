@@ -1,0 +1,31 @@
+{
+  "artifactIntegrity": "VALID",
+  "signatureCorrespondence": "VALID",
+  "signerEligibility": "VERIFIED_CONFIGURATION",
+  "settlement": "UNVERIFIED_OFFLINE",
+  "businessFacts": "APPLICATION_REPORTED",
+  "coverage": {
+    "included": [
+      "agents/2fe48130-0a60-41b6-a465-5b4f28f8803c.json",
+      "agents/bf5c5ddd-b57c-478a-9ce5-87379d53b322.json",
+      "checks/results.json",
+      "registry/payable.json",
+      "registry/supplier.json",
+      "source/extracted.json",
+      "source/original.txt",
+      "tools/bf5c5ddd-b57c-478a-9ce5-87379d53b322-0.json",
+      "tools/bf5c5ddd-b57c-478a-9ce5-87379d53b322-1.json",
+      "tools/bf5c5ddd-b57c-478a-9ce5-87379d53b322-2.json"
+    ],
+    "missing": [],
+    "redacted": [],
+    "unsupported": []
+  },
+  "errors": [],
+  "limitations": [
+    "Offline receipt JSON is not a consensus proof.",
+    "Eligibility requires independently trusted deployment pins.",
+    "Business facts are application-reported."
+  ],
+  "verificationMode": "OFFLINE"
+}

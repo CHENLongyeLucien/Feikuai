@@ -1,0 +1,10 @@
+
+Running 3 tests using 1 worker
+
+(node:47071) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/campus.spec.ts:3:1 › campus is real WebGL, responsive panels, selection, controls and accessible fallback (8.2s)
+  ✓  2 tests/e2e/campus.spec.ts:4:1 › business calculator recomputes without claiming profit (534ms)
+  ✓  3 tests/e2e/campus.spec.ts:5:1 › WebGL unavailable falls back to full workspace and reduced motion is supported (1.0s)
+
+  3 passed (10.2s)

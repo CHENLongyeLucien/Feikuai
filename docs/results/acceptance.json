@@ -1,0 +1,60 @@
+{
+  "observedAt": "2026-10-10T17:38:16.577Z",
+  "runtime": "v24.14.0",
+  "environment": "local deterministic acceptance",
+  "results": [
+    {
+      "gate": "typecheck",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 2395
+    },
+    {
+      "gate": "lint",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 872
+    },
+    {
+      "gate": "test",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 2667
+    },
+    {
+      "gate": "contracts:build",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 319
+    },
+    {
+      "gate": "test:contracts",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 2353
+    },
+    {
+      "gate": "test:integration",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 52841
+    },
+    {
+      "gate": "build",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 793
+    },
+    {
+      "gate": "test:e2e",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 56736
+    }
+  ],
+  "externalGates": {
+    "liveAgents": "NOT_RUN: provider credentials required",
+    "fuji": "NOT_RUN: funded separate role wallets and genuine human signing required",
+    "manualWalletDisplay": "NOT_RUN"
+  }
+}
