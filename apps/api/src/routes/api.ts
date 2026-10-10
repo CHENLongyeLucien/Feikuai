@@ -12,6 +12,7 @@ import {demoLoginAvailable} from '../security/demo.js';
 import {Service} from '../domain/service.js';
 import {fail,json,parsed} from '../domain/errors.js';
 import {usesStandingPolicy} from '../automation/policy.js';
+import {caseReadingReport,renderReadingPdf} from '../reports/pdf.js';
 async function boundedStatus<T>(read:()=>Promise<T>):Promise<T>{let timer:ReturnType<typeof setTimeout>|undefined;try{return await Promise.race([read(),new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(new Error('Status unavailable')),1500);timer.unref();})]);}finally{clearTimeout(timer);}}
 const idParam=z.object({id:z.string().uuid()});const version=z.number().int().positive();const idem=(r:FastifyRequest)=>z.string().min(1).max(180).parse(r.headers['idempotency-key']);
 export async function registerApi(app:FastifyInstance,service:Service,db:Db,config:Config,runtime:{automationAvailable?:()=>boolean}={}){
@@ -23,6 +24,7 @@ export async function registerApi(app:FastifyInstance,service:Service,db:Db,conf
  app.get('/api/v1/cases',async(req)=>cases(requireIdentity(db,req),z.object({limit:z.coerce.number().int().min(1).max(200).optional(),offset:z.coerce.number().int().min(0).max(1000000).optional(),q:z.string().max(100).optional()}).strict().parse(req.query)));
  app.get('/api/v1/bootstrap',async(req)=>{const u=requireIdentity(db,req);return db.transaction(()=>({...cases(u),cursor:String((db.prepare('SELECT MAX(id) id FROM events WHERE tenant_id=?').get(u.tenantId) as any).id??0)}))();});
  app.get('/api/v1/cases/:id',async(req)=>{const u=requireIdentity(db,req);return service.project(u,idParam.parse(req.params).id);});
+ app.get('/api/v1/cases/:id/report.pdf',async(req,reply)=>{const u=requireIdentity(db,req),id=idParam.parse(req.params).id;const report=db.transaction(()=>{const projected=service.project(u,id),context=service.context(u.tenantId,id),checkRun=db.prepare('SELECT record_versions,results,created_at FROM business_check_runs WHERE case_id=? ORDER BY rowid DESC LIMIT 1').get(id) as any;return caseReadingReport(projected,{createdAt:context.row.created_at,updatedAt:context.row.updated_at,approvalDocumentVersion:projected.latestProposal?String(service.proposal(u.tenantId,projected.latestProposal.id).packet.manifest.recordVersions.documentVersion):null,currentVersions:{document:String(context.row.document_version),payable:context.payable.version,supplier:context.supplier.version},checkRun:checkRun?{createdAt:checkRun.created_at,versions:parsed(checkRun.record_versions),checks:parsed(checkRun.results)}:null});})();return reply.type('application/pdf').header('Cache-Control','no-store').header('Content-Security-Policy',"default-src 'none'; sandbox").header('Content-Disposition',`attachment; filename="invoice-review-${id}.pdf"`).send(await renderReadingPdf(report));});
  async function upload(req:FastifyRequest,caseId?:string){const u=requireMutation(db,config,req,['operator']),key=idem(req);let payableId:string,expectedVersion:number|undefined,file:{bytes:Uint8Array;mimeType:string;filename:string};
   if(req.isMultipart()){
    const fields:Record<string,string>={};let receivedFile:any;

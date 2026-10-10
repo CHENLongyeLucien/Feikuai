@@ -93,10 +93,12 @@ test('a synthetic invoice completes five checks and reports an actual registered
   }
   await capture(page, 'docs/qa/redesign-invoice-detail.png');
   const downloaded = page.waitForEvent('download');
-  await page.getByRole('button', {name: 'Download review report'}).click();
+  await page.getByRole('button', {name: 'Download PDF report'}).click();
   const report = await downloaded;
-  const reportPath = testInfo.outputPath('verified-invoice-report.json'); await report.saveAs(reportPath);
-  const artifact = JSON.parse(readFileSync(reportPath, 'utf8'));
+  const reportPath = testInfo.outputPath('verified-invoice-report.pdf'); await report.saveAs(reportPath);
+  expect(report.suggestedFilename()).toMatch(/\.pdf$/);
+  expect(readFileSync(reportPath).subarray(0,5).toString()).toBe('%PDF-');
+  const artifact = await page.request.get(`/api/v1/inbox/${actual.id}/incident-report`).then(response => response.json());
   expect(artifact.schemaVersion).toBe('secure-finance.incident-report.v1');
   expect(artifact.item.payment.txHash).toBe(actual.payment.txHash);
   await page.getByRole('button', {name: 'Back to inbox'}).click();
@@ -117,9 +119,11 @@ test('phishing is quarantined with evidence, no approval button, no fetched link
   await expect(page.getByRole('link', {name: /verify-payments/})).toHaveCount(0);
   const item = await jsonItem(page); expect(item.status).toBe('quarantined'); expect(item.linkedCaseId).toBeNull(); expect(item.payment).toBeNull();
   expect(item.source.senderAuthentication).toBe('not_verified');
-  const downloadEvent = page.waitForEvent('download'); await page.getByRole('button', {name: 'Download review report'}).click();
-  const report = await downloadEvent; const saved = testInfo.outputPath('phishing-incident.json'); await report.saveAs(saved);
-  expect(JSON.parse(readFileSync(saved, 'utf8')).item.risks.length).toBeGreaterThan(1);
+  const downloadEvent = page.waitForEvent('download'); await page.getByRole('button', {name: 'Download PDF report'}).click();
+  const report = await downloadEvent; const saved = testInfo.outputPath('phishing-incident.pdf'); await report.saveAs(saved);
+  expect(report.suggestedFilename()).toMatch(/\.pdf$/);
+  expect(readFileSync(saved).subarray(0,5).toString()).toBe('%PDF-');
+  expect(item.risks.length).toBeGreaterThan(1);
   await capture(page, 'docs/qa/redesign-security-review.png');
   await page.getByRole('link', {name: 'Activity', exact: false}).click();
   const notice = page.locator('.sf-activity-list article').filter({hasText: 'Security review required'}).first();

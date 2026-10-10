@@ -1,5 +1,15 @@
 # Secure Finance build status
 
+## Readable PDF reports — 11 October 2026
+
+Replaced everyday report downloads with PDFs in the unified History & reports library, inbox review and payment review. Users can search saved records, read a review and download its PDF with progress and retry feedback. Original evidence exports and offline verification remain available inside a closed Advanced verification section; wallet-signing interchange remains unchanged.
+
+Added authenticated, tenant-scoped PDF routes for inbox and invoice cases. Reports separate workflow decisions, recorded authority, execution and verified settlement; preserve historical method/version provenance; label stale business checks; and omit raw wallet identifiers and link destinations from the reading copy. PDF generation performs no network calls or financial actions.
+
+Validation: **191 unit/API tests passed**, including 10 new PDF tests; TypeScript, ESLint and the production build passed. **Six focused browser scenarios passed** in Chrome, Firefox and WebKit at 1440px and 390px using a separate copied database with workers and seeding disabled. They cover both real PDF routes, individual review downloads, search/filter, failed-download retry and the collapsed verifier. Rendered all 16 pages across invoice, quarantined-email and long mixed-alphabet samples with PyMuPDF and inspected their layout. An initial mixed-font overlap was found visually, fixed with explicit line layout and covered by a regression assertion; the focused tests and browser scenarios were rerun after correction. Existing production chunk-size warnings remain. No payment/contract test was rerun and no new settlement is claimed.
+
+Original environment files, saved chain/database/receipts and unrelated Fuji changes were preserved. Test downloads and raw results stay under ignored `var/pdf-qa/` and `var/pdf-report-qa/`. See [PDF_REPORTS.md](PDF_REPORTS.md).
+
 ## Inbox consolidation — 11 October 2026
 
 Removed the duplicate Needs review landing page and navigation item. Inbox now owns all four filters, with accessible selected states and shareable URLs. Legacy `/review` bookmarks open `/?filter=review`, preserving other query parameters and composition requests. Mobile navigation now shows Inbox, Payments, Activity, Audit and More.

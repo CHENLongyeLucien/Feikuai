@@ -82,8 +82,8 @@ test('guided human approval returns its wallet signature across origins and sett
  const after=await rpc.readContract({address:deployment.token,abi:demoTokenAbi,functionName:'balanceOf',args:[payable.recipient]});
  expect(after-before).toBe(BigInt(payable.amountAtomic));
  await page.screenshot({path:'docs/qa/guided-approval-settled.png',fullPage:true});
- const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download evidence bundle',exact:true}).click();
- await (await downloadPromise).saveAs(testInfo.outputPath('guided-payment-evidence.zip'));
+ const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download PDF report',exact:true}).click();
+ await (await downloadPromise).saveAs(testInfo.outputPath('guided-payment-report.pdf'));
  expect(errors).toEqual([]);
  writeFileSync('docs/qa/guided-payment-result.json',JSON.stringify({inboxId,caseId,invoiceReference:payable.invoiceReference,scenarioId:payable.scenarioId,transactionHash:receipt.transactionHash,recipientDeltaAtomic:String(after-before),receiptStatus:receipt.status,bridgeOrigins:['http://localhost:5183','http://localhost:5184'],walletSignatureReturned:true,errors},null,2));
 });

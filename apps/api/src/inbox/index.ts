@@ -9,6 +9,7 @@ import {requireIdentity,requireMutation} from '../security/auth.js';
 import {InboxService,type InboxFile} from './service.js';
 import {InboxWorker} from './worker.js';
 import {inboxChannelSchema,inboxInputSchema,inboxStatusSchema,reviewSchema,type InboxInput,type InboxPayment} from './types.js';
+import {inboxReadingReport,renderReadingPdf} from '../reports/pdf.js';
 export * from './types.js';
 export {InboxService} from './service.js';
 
@@ -21,6 +22,7 @@ export async function registerInbox(app:FastifyInstance,payments:Service,db:Db,c
  app.post('/api/v1/inbox/notifications/:id/read',async req=>{const user=requireMutation(db,config,req),id=idParam.parse(req.params).id;z.object({}).strict().parse(req.body??{});const notification=db.prepare('SELECT id FROM inbox_notifications WHERE id=? AND tenant_id=?').get(id,user.tenantId);if(!notification)fail('NOT_FOUND','Notification not found.',404);db.prepare('UPDATE inbox_notifications SET is_read=1 WHERE id=? AND tenant_id=?').run(id,user.tenantId);return {id,read:true};});
  app.get('/api/v1/inbox/demo-examples',async req=>{const user=requireIdentity(db,req,['operator','reviewer']);if(config.APP_ENV!=='local'||config.CHAIN_ID!=='31337'||!config.ENABLE_DEMO_ROUTES)fail('DEMO_ROUTE_DISABLED','Synthetic examples are available only in the explicitly configured local demo.',404);return service.demoExamples(user);});
  app.get('/api/v1/inbox/:id',async req=>service.project(requireIdentity(db,req),idParam.parse(req.params).id));
+ app.get('/api/v1/inbox/:id/report.pdf',async(req,reply)=>{const user=requireIdentity(db,req),id=idParam.parse(req.params).id,report=db.transaction(()=>inboxReadingReport(service.project(user,id)))();return reply.type('application/pdf').header('Cache-Control','no-store').header('Content-Security-Policy',"default-src 'none'; sandbox").header('Content-Disposition',`attachment; filename="inbox-review-${id}.pdf"`).send(await renderReadingPdf(report));});
  app.get('/api/v1/inbox/:id/incident-report',async(req,reply)=>{const user=requireIdentity(db,req),id=idParam.parse(req.params).id;reply.header('Content-Disposition',`attachment; filename="incident-${id}.json"`);return service.incidentReport(user,id);});
  app.get('/api/v1/inbox/:id/source',async(req,reply)=>{const user=requireIdentity(db,req),row=service.row(user.tenantId,idParam.parse(req.params).id);reply.type('application/octet-stream').header('Content-Disposition',`attachment; filename="inbox-source-${row.id}"`).header('Content-Security-Policy',"default-src 'none'; sandbox");return readFile(row.source_path);});
  app.post('/api/v1/inbox',{config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(req,reply)=>{const user=requireMutation(db,config,req,['operator','reviewer']),key=idempotency(req);let input:Omit<InboxInput,'text'>&{text?:string},file:InboxFile|undefined;

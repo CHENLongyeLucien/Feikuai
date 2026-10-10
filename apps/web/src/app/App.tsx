@@ -128,7 +128,7 @@ export default function App(){
    :<main className="sf-legacy-view">{path.startsWith('/cases/')?<div className="page-content"><button className="breadcrumb" onClick={()=>navigate('/workspace')}>Payments <ChevronRight size={13}/> Invoice review</button><CaseWorkspace id={path.split('/')[2]!} onNotice={notify}/></div>
     :path==='/agents'?<Agents cases={cases} config={data.config.data} onSelect={id=>{select({kind:'agent',id});navigate('/operations');cameraTo({kind:'focus',target:id})}}/>
     :path==='/payments'?<Payments cases={cases} navigate={navigate}/>
-    :path==='/evidence'?<><div className="sf-audit-intro"><strong>Looking for an inbox review?</strong><span>Every source has its own report, including security findings and human decisions.</span><button className="sf-btn sf-btn-secondary" onClick={()=>navigate('/')}>Open inbox reports <ArrowRight size={15}/></button></div><EvidenceVerifier cases={cases} onNotice={notify}/></>
+    :path==='/evidence'?<EvidenceVerifier cases={cases} onNotice={notify} authenticated={authenticated} navigate={navigate}/>
     :path==='/business'?<Business/>
     :path==='/settings'?<SettingsPage config={data.config.data} session={data.session.data} connected={connected}/>
     :path==='/workspace'?<Workspace cases={cases} authenticated={authenticated} onUpload={()=>navigate('/inbox?new=invoice')} onLogin={requestLogin} navigate={navigate} search={debouncedSearch}/>

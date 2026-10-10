@@ -92,7 +92,7 @@ for(const size of sizes){
   await capture(page,info,'saved-payment-approval');
   await workspace.getByRole('button',{name:'Execution & evidence',exact:true}).click();
   await expect(workspace.getByRole('heading',{name:'Verified onchain settlement',exact:true})).toBeVisible();
-  await expect(workspace.getByRole('heading',{name:'Final audit and evidence',exact:true})).toBeVisible();
+  await expect(workspace.getByRole('heading',{name:'Review report',exact:true})).toBeVisible();
   await capture(page,info,'saved-payment-receipt');
   observations={savedSourceStatus:item!.status,recordedStageCount:item!.stages.length,savedPaymentStatus:saved.settlementStatus,disabledResubmissionVerified:true};
  });
@@ -100,7 +100,8 @@ for(const size of sizes){
  test(`saved JSON and ZIP evidence verify with invalid-file recovery at ${size.name} ${size.width}px`,async({page},info)=>{
   await page.setViewportSize(size);await login(page,'/evidence');
   const exports=await existingExports(page,info);
-  await expect(page.getByRole('heading',{level:1,name:'Evidence library',exact:true})).toBeVisible();
+  await expect(page.getByRole('heading',{level:1,name:'History & reports',exact:true})).toBeVisible();
+  await page.getByText('Advanced verification', {exact:true}).click();
   const input=page.getByLabel('Choose an evidence ZIP or approval request JSON',{exact:true});
   const report=page.getByRole('region',{name:'Verification result',exact:true});
   await input.setInputFiles(exports.packetPath);

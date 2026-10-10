@@ -6,11 +6,12 @@ The October 2026 reference images guide the visual system: sage backgrounds, war
 
 - Shared design tokens in `packages/design/tokens.css` serve the main workspace and the separate approval application. Fonts are self-hosted.
 - Inbox, review stages, notifications, integrations, payments, agents, settings, business assumptions and evidence use the same surfaces, spacing and controls.
-- Desktop navigation uses a narrow floating rail with text tooltips. Mobile navigation keeps Inbox, Payments, Activity and Audit available, with remaining tools in an accessible More dialog.
+- Desktop navigation uses a narrow floating rail with text tooltips. Mobile navigation keeps Inbox, Payments, Activity and Reports available, with remaining tools in an accessible More dialog.
 - Inbox includes the Needs review filter; there is no separate review landing page. Filter links survive reloads and browser history, and legacy `/review` links open `/?filter=review`.
 - Search supports keyboard focus and a mobile search dialog. Invoice actions on payments and the campus open the actual import dialog; composition links survive sign-in. No financial authority is added by navigation.
 - Payment lists become readable cards on phones. Source details, blockchain references and verification internals stay behind disclosures. Mobile account controls retain explicit accessible names.
 - The independent approval application uses the same visual language and responsive controls. Expiry, consumed authorizations, source checks and signing restrictions are preserved.
+- History & reports groups source reviews and invoice cases with readable PDF downloads, search and retry feedback. Technical exports and verification are collapsed under Advanced verification. See [PDF_REPORTS.md](PDF_REPORTS.md).
 - Evidence verification presents integrity, signature correspondence, authority and settlement coverage separately. File integrity does not imply permission or settlement; offline verification does not contact RPC.
 
 ## Garden campus
