@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-11",
+  "scope": "Progressive globe zoom behind retained landing-page components",
+  "browser": {
+    "passed": 33,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "engines": [
+      "Chrome",
+      "Firefox",
+      "WebKit"
+    ],
+    "overview_widths": [
+      1440,
+      1024,
+      390,
+      320
+    ],
+    "zoom_widths": [
+      1440,
+      390
+    ],
+    "retries": 0
+  },
+  "checks": {
+    "typecheck": "PASS",
+    "scoped_eslint": "PASS",
+    "production_build": "PASS",
+    "build_warning": "Existing approver chunk exceeds 500 kB"
+  },
+  "regressions": [
+    "Original heading, description, header, activity panel and controls remain visible during zoom",
+    "Original controls and explorer links receive pointer input above the globe",
+    "No duplicate Start or separate Overview action bar",
+    "Real mobile page scrolling while zoomed",
+    "Continued inward zoom, resize, Reset, Escape and original Start/Cancel navigation",
+    "Reduced motion, fallback and stale/offline feed behavior"
+  ],
+  "scope_limits": [
+    "Synthetic intercepted read-only UI fixtures; application mutations blocked",
+    "Browser viewport checks, not physical-device performance measurements"
+  ],
+  "preserved": [
+    "Private environment files and saved demonstration data",
+    "Unrelated local Fuji deployment changes"
+  ]
+}

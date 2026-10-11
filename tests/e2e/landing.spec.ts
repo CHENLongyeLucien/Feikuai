@@ -1,4 +1,4 @@
-import {expect,test,type Page,type TestInfo} from '@playwright/test';
+import {expect,test,type Locator,type Page,type TestInfo} from '@playwright/test';
 import {mkdirSync} from 'node:fs';
 import {join} from 'node:path';
 
@@ -17,6 +17,37 @@ async function open(page:Page,status:'fresh'|'stale'|'unavailable'='fresh'){
 async function state(page:Page){return JSON.parse(await page.getByTestId('landing-globe').locator('canvas').getAttribute('data-globe')||'{}') as {frame:number;drawCalls:number;rotation:number[];distance:number;transactionCount:number;arcMotion:boolean};}
 async function rendered(page:Page){await expect.poll(async()=>(await state(page)).drawCalls||0).toBeGreaterThan(2);}
 async function fillsViewport(page:Page,timeout=3000){await expect.poll(async()=>{const box=await page.getByTestId('landing-globe').locator('canvas').boundingBox(),viewport=page.viewportSize()!;return !!box&&Math.abs(box.x)<2&&Math.abs(box.y)<2&&Math.abs(box.width-viewport.width)<2&&Math.abs(box.height-viewport.height)<2;},{intervals:[30,50,100],timeout}).toBe(true);}
+async function notConcealed(locator:Locator){
+ await expect(locator).toBeVisible();
+ await expect.poll(()=>locator.evaluate(element=>{let opacity=1;for(let node:Element|null=element;node;node=node.parentElement)opacity*=Number(getComputedStyle(node).opacity);return opacity;}),{message:'Page content must not fade away during manual globe zoom'}).toBeGreaterThan(.8);
+}
+async function pointerTarget(locator:Locator){
+ await notConcealed(locator);await locator.scrollIntoViewIfNeeded();
+ await expect.poll(()=>locator.evaluate(element=>{const box=element.getBoundingClientRect(),hit=document.elementFromPoint(box.x+box.width/2,box.y+box.height/2);return !!hit&&(hit===element||element.contains(hit));}),{message:'The retained page control must receive pointer input above the globe'}).toBe(true);
+ return locator.boundingBox();
+}
+async function wheelOverExposedCanvas(page:Page,delta:number){
+ const canvas=page.getByTestId('landing-globe').locator('canvas');
+ const exposed=()=>canvas.evaluate(element=>{
+  const box=element.getBoundingClientRect(),left=Math.max(8,box.left+8),right=Math.min(innerWidth-8,box.right-8),top=Math.max(8,box.top+8),bottom=Math.min(innerHeight-8,box.bottom-8);
+  for(const y of [.35,.5,.65,.2,.8,.1,.9])for(const x of [.65,.5,.8,.35,.2,.9,.1]){
+   const point={x:left+(right-left)*x,y:top+(bottom-top)*y};if(right>left&&bottom>top&&document.elementFromPoint(point.x,point.y)===element)return point;
+  }
+  return null;
+ });
+ await expect.poll(exposed,{message:'Wheel zoom needs an exposed, hit-testable canvas point'}).not.toBeNull();
+ const point=(await exposed())!;await page.mouse.move(point.x,point.y);await page.mouse.wheel(0,delta);
+}
+async function retainedPageContent(page:Page){
+ await notConcealed(page.getByRole('heading',{level:1,name:/Every payment/}));
+ await notConcealed(page.getByText('Bring the message, the checks and the decision into one calm workspace.',{exact:true}));
+ await expect(page.getByRole('button',{name:'Start',exact:true})).toHaveCount(1);await expect(page.getByRole('button',{name:'Overview',exact:true})).toHaveCount(0);
+ await pointerTarget(page.getByRole('link',{name:'SecureFinance home',exact:true}));
+ await pointerTarget(page.getByRole('link',{name:'Network activity',exact:true}));
+ await pointerTarget(page.getByTestId('landing-start'));await expect(page.getByTestId('landing-start')).toBeEnabled();
+ await expect(page.getByText('Live network',{exact:true})).toBeVisible();await pointerTarget(page.getByRole('link',{name:/View transaction/}).first());
+ for(const name of ['Zoom in on globe','Zoom out of globe','Rotate globe left','Rotate globe right','Reset globe view','Pause globe motion'])await pointerTarget(page.getByRole('button',{name,exact:true}));
+}
 async function capture(page:Page,info:TestInfo,name:string){
  const fit=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:innerWidth}));expect(fit.scroll).toBeLessThanOrEqual(fit.width+1);
  await page.evaluate(()=>{const marker=document.createElement('div');marker.textContent='UI QA · synthetic RPC fixture';marker.style.cssText='position:fixed;right:12px;bottom:10px;z-index:1000;padding:5px 8px;background:#ffffffd9;color:#657769;font:9px sans-serif;border-radius:4px;pointer-events:none';document.body.append(marker);});
@@ -41,29 +72,39 @@ test('keyboard rotation, reset, pause and cancellable Start use the actual globe
  await page.waitForTimeout(1150);expect(new URL(page.url()).pathname).toBe('/');
  await capture(page,info,'cancelled-entry-qa-fixture');await page.getByRole('button',{name:'Start',exact:true}).click();await expect(page).toHaveURL(/\/workflow$/);await expect(page.getByRole('heading',{name:'One clear path.'})).toBeVisible();
 });
-for(const size of [{name:'desktop',width:1440,height:1000},{name:'mobile',width:390,height:844}])test(`manual globe zoom fills the viewport and returns to overview ${size.name}`,async({page},info)=>{
+for(const size of [{name:'desktop',width:1440,height:1000},{name:'mobile',width:390,height:844}])test(`manual globe zoom fills the background while page content stays usable ${size.name}`,async({page},info)=>{
  await page.setViewportSize(size);await open(page);await rendered(page);
  const canvas=page.getByTestId('landing-globe').locator('canvas'),landing=page.getByTestId('landing-page');
- await canvas.scrollIntoViewIfNeeded();const scroll=await page.evaluate(()=>scrollY);const box=(await canvas.boundingBox())!;
- await page.mouse.move(box.x+box.width*.48,box.y+box.height*.43);await page.mouse.wheel(0,-650);
+ await canvas.scrollIntoViewIfNeeded();await wheelOverExposedCanvas(page,-650);
  await expect(landing).toHaveAttribute('data-expanded','true');await fillsViewport(page);
+ await retainedPageContent(page);
+ await expect.poll(()=>page.evaluate(()=>[getComputedStyle(document.body).overflowY,getComputedStyle(document.documentElement).overflowY].some(value=>value==='hidden'||value==='clip'))).toBe(false);
+ if(size.name==='mobile'){
+  await pointerTarget(page.getByRole('link',{name:'Network activity',exact:true}));await page.getByRole('link',{name:'Network activity',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Avalanche',exact:true})).toBeInViewport();
+  const cardPoint=(await pointerTarget(page.getByText('Live network',{exact:true})))!,beforeScroll=await page.evaluate(()=>scrollY);expect(beforeScroll).toBeGreaterThan(100);
+  await page.mouse.move(cardPoint.x+cardPoint.width/2,cardPoint.y+cardPoint.height/2);await page.mouse.wheel(0,-240);
+  await expect.poll(()=>page.evaluate(()=>scrollY),{message:'The mobile page must scroll normally while the globe remains enlarged'}).toBeLessThan(beforeScroll-30);
+  await expect(landing).toHaveAttribute('data-expanded','true');await fillsViewport(page);
+ }
  const distance=(await state(page)).distance;
- await page.mouse.move(size.width*.45,size.height*.5);await page.mouse.wheel(0,-650);
+ await wheelOverExposedCanvas(page,-650);
  await expect.poll(async()=>(await state(page)).distance).toBeLessThan(distance-.2);
  for(let zoom=0;zoom<8;zoom++)await page.getByRole('button',{name:'Zoom in on globe',exact:true}).click();
  await expect.poll(async()=>(await state(page)).distance).toBeLessThan(3.2);await fillsViewport(page);
- const directory=join('var/landing-qa',info.project.name);mkdirSync(directory,{recursive:true});await page.screenshot({path:join(directory,`${size.name}-fullscreen-zoom-qa-fixture.png`)});
+ await retainedPageContent(page);await capture(page,info,`${size.name}-background-zoom-qa-fixture`);
  await page.setViewportSize({width:size.width+40,height:size.height-30});await fillsViewport(page);
  await expect.poll(async()=>(await state(page)).distance).toBeLessThan(4);
  await page.setViewportSize(size);await fillsViewport(page);
  await page.keyboard.press('Escape');await expect(landing).toHaveAttribute('data-expanded','false');
- await expect.poll(async()=>await page.evaluate(()=>document.body.style.overflow)).not.toBe('hidden');expect(Math.abs((await page.evaluate(()=>scrollY))-scroll)).toBeLessThan(2);
+ await expect.poll(async()=>await page.evaluate(()=>document.body.style.overflow)).not.toBe('hidden');
  await expect.poll(async()=>Math.round((await canvas.boundingBox())?.width||0)).not.toBe(size.width);
  await page.getByRole('button',{name:'Zoom in on globe',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','true');await fillsViewport(page);
- await page.getByRole('button',{name:'Reset globe view',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','false');
+ await pointerTarget(page.getByRole('button',{name:'Reset globe view',exact:true}));await page.getByRole('button',{name:'Reset globe view',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','false');
  await page.getByRole('button',{name:'Zoom in on globe',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','true');
- await page.getByRole('button',{name:'Start',exact:true}).click();await fillsViewport(page,900);await page.getByRole('button',{name:'Cancel',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','false');
+ await pointerTarget(page.getByTestId('landing-start'));await page.getByTestId('landing-start').click();await fillsViewport(page,900);await page.getByRole('button',{name:'Cancel',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','false');
  await page.waitForTimeout(1150);expect(new URL(page.url()).pathname).toBe('/');
+ await page.getByTestId('landing-start').click();await expect(page).toHaveURL(/\/workflow$/);await expect(page.getByRole('heading',{name:'One clear path.'})).toBeVisible();
 });
 test('reduced motion enters directly and pauses automatic globe motion',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await open(page);await rendered(page);await expect(page.getByRole('button',{name:'Globe motion reduced in Settings'})).toBeDisabled();

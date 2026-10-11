@@ -1,11 +1,11 @@
-import {useEffect,useLayoutEffect,useMemo,useRef} from 'react';
+import {useEffect,useLayoutEffect,useMemo,useRef,useState,type RefObject} from 'react';
 import {Canvas,useFrame,useThree} from '@react-three/fiber';
 import {OrbitControls} from '@react-three/drei';
 import {BackSide,DoubleSide,Group,Mesh,PerspectiveCamera,TubeGeometry,Vector3} from 'three';
 import {createLandGeometry,illustrativeRoute} from './globe-geometry';
 
 export type GlobeCommand={kind:'left'|'right'|'up'|'down'|'in'|'out'|'reset';nonce:number};
-type Props={hashes:string[];activityLive:boolean;highlight:string|null;paused:boolean;reduced:boolean;entering:boolean;expanded:boolean;command:GlobeCommand;onFailure:()=>void;onZoomIn:()=>void};
+type Props={hashes:string[];activityLive:boolean;highlight:string|null;paused:boolean;reduced:boolean;entering:boolean;expanded:boolean;anchor:RefObject<HTMLDivElement|null>;command:GlobeCommand;onFailure:()=>void;onZoomIn:()=>void};
 
 function ActivityArc({hash,highlighted,moving}:{hash:string;highlighted:boolean;moving:boolean}){
   const pulse=useRef<Mesh>(null),progress=useRef((parseInt(hash.slice(-4),16)%100)/100);
@@ -30,27 +30,44 @@ function ActivityArc({hash,highlighted,moving}:{hash:string;highlighted:boolean;
   </group>;
 }
 
-function GlobeScene({hashes,activityLive,highlight,paused,reduced,entering,expanded,command,onFailure,onZoomIn}:Props){
+function GlobeScene({hashes,activityLive,highlight,paused,reduced,entering,expanded,anchor,command,onFailure,onZoomIn}:Props){
   const planet=useRef<Group>(null),frames=useRef(0),entryTime=useRef(0),entryDistance=useRef(8.5);
   const fittedDistance=useRef<number|null>(null);
+  const [cameraDistance,setCameraDistance]=useState(8.8);
   const {camera,size,gl,invalidate}=useThree();
   const land=useMemo(createLandGeometry,[]);
   const moving=!paused&&!reduced;
-  const cameraDistance=useMemo(()=>{
-    const fov=36*Math.PI/180,aspect=size.width/Math.max(1,size.height);
-    return 2.72/Math.sin(Math.atan(Math.tan(fov/2)*Math.min(1,aspect)));
-  },[size.width,size.height]);
   useEffect(()=>()=>land.dispose(),[land]);
   useLayoutEffect(()=>{
-    const previous=fittedDistance.current;
-    // Fit the overview responsively; fullscreen exploration keeps the user's
-    // camera distance even when a landscape canvas becomes a portrait viewport.
-    if(!entering&&!expanded){
-      if(previous)camera.position.setLength(Math.max(3.05,camera.position.length()*cameraDistance/previous));
-      else camera.position.set(0,0,cameraDistance);
-    }
-    fittedDistance.current=cameraDistance;camera.lookAt(0,0,0);camera.updateProjectionMatrix();invalidate();
-  },[camera,cameraDistance,entering,expanded,invalidate]);
+    const element=anchor.current;
+    if(!element||!(camera instanceof PerspectiveCamera))return;
+    const project=()=>{
+      const frame=element.getBoundingClientRect(),surface=gl.domElement.getBoundingClientRect();
+      if(frame.width<=0||frame.height<=0||surface.width<=0||surface.height<=0)return;
+      const halfFov=camera.fov*Math.PI/360,aspect=frame.width/frame.height;
+      const distance=2.72/Math.sin(Math.atan(Math.tan(halfFov)*Math.min(1,aspect)));
+      const previous=fittedDistance.current;
+      // Fit against the original layout, never the expanded render surface.
+      // During exploration, changing the surface cannot undo the user's zoom.
+      if(previous===null){camera.position.set(0,0,distance);camera.lookAt(0,0,0);}
+      else if(!entering&&!expanded&&distance!==previous)camera.position.setLength(Math.max(3.05,camera.position.length()*distance/previous));
+      fittedDistance.current=distance;setCameraDistance(current=>current===distance?current:distance);
+      if(expanded||entering){
+        // Extend the original camera image beyond its frame. Its focal length
+        // and screen-space center stay fixed while the globe grows behind UI.
+        camera.setViewOffset(frame.width,frame.height,surface.left-frame.left,surface.top-frame.top,surface.width,surface.height);
+      }else{
+        camera.clearViewOffset();camera.aspect=aspect;camera.updateProjectionMatrix();
+      }
+      invalidate();
+    };
+    project();
+    const observer=new ResizeObserver(project);observer.observe(element);
+    window.addEventListener('resize',project);window.addEventListener('scroll',project,{passive:true,capture:true});
+    return()=>{observer.disconnect();window.removeEventListener('resize',project);window.removeEventListener('scroll',project,true);};
+    // R3F writes camera.aspect when its renderer resizes. Reapply the anchored
+    // projection after that update, even if the anchor itself did not resize.
+  },[anchor,camera,size.width,size.height,gl,entering,expanded,invalidate]);
   useEffect(()=>{
     if(!planet.current)return;
     if(command.kind==='reset'){planet.current.rotation.set(0,.42,-.14);camera.position.set(0,0,fittedDistance.current??8.8);camera.lookAt(0,0,0);}

@@ -1,5 +1,13 @@
 # Secure Finance build status
 
+## Globe zoom with the page retained — 11 October 2026
+
+Earth now grows progressively in place behind the existing landing page. The heading, description, header, public activity panel, Start button and original globe controls remain visible and usable. Removed the separate fullscreen action bar and scroll lock. The original globe region remains a layout anchor; only the rendering surface expands, with an off-axis camera projection that preserves apparent position and scale through expansion. Reset/Home/Escape restore the initial globe view. This is the current behavior and supersedes the immersive mode described in the previous entry.
+
+Actual validation: **33/33 browser checks passed** without failures, skips, flakes or retries across Chrome, Firefox and WebKit. The six desktop/phone zoom checks verify visibility, opacity, actual pointer hit targets for retained actions, a single original Start button, real mobile scrolling, continued inward zoom, viewport resizing and Reset/Escape/Start/Cancel. Existing four-width layouts, reduced motion, WebGL fallback and stale/offline feed checks also pass. Nine focused checks passed before the full run. TypeScript, scoped ESLint and production build pass; the existing approver chunk-size warning remains. Desktop/phone screenshots were visually inspected. See [results](results/globe-inline.json) and [browser output](results/globe-inline-browser.log).
+
+Checks use intercepted synthetic read-only fixtures and prohibit application writes. They do not measure physical-device performance or verify new network/payment activity. Existing environments, saved demonstration data and unrelated Fuji files were preserved. Raw QA output remains under ignored `var/globe-inline-qa/` and `var/landing-qa/`.
+
 ## Fullscreen globe zoom — 11 October 2026
 
 Zooming now expands the existing globe renderer to the full viewport instead of clipping it inside the hero column. Wheel/pinch and the new +/− controls support exploration; Overview, Reset, Home and Escape restore the landing layout. Start uses the same full viewport for its cancellable camera transition. Background content is hidden while exploring, and page scrolling is restored afterward. Camera distance and orbit survive fullscreen resizing, including the landscape-to-portrait change on phones.

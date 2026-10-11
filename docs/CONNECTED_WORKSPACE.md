@@ -2,7 +2,7 @@
 
 The opening page at `/` shows a geographic Earth with a read-only public Avalanche **C-Chain** activity sample. **Start** moves the camera toward Earth and opens `/workflow`. Reduced motion, paused animation, or unavailable WebGL enters immediately. Escape or Cancel stops the transition.
 
-Zooming with the wheel, pinch gesture or **+** expands Earth across the full viewport. Drag to explore and use **−** to zoom out. **Overview**, **Reset**, **Home** or **Escape** restores the landing layout. **Start** also uses the full viewport for its zoom transition. On phones, page scrolling resumes when you return to the overview.
+Zoom with the wheel, a pinch gesture or **+**. Earth grows in place behind the page and can fill the screen; the heading, public activity panel, Start button and globe controls stay visible and usable. Drag to explore and use **−** to zoom out. **Reset**, **Home** or **Escape** restores the initial globe view. Page scrolling remains available while zoomed, including on phones. **Start** uses the same expanded rendering surface for its transition.
 
 ## Everyday use
 

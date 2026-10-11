@@ -1,6 +1,6 @@
 import {Component,lazy,Suspense,useCallback,useEffect,useRef,useState,type ReactNode} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import {ArrowDown,ArrowRight,ArrowUpRight,Check,ChevronLeft,ChevronRight,Globe2,Leaf,Minus,Pause,Play,Plus,RefreshCw,RotateCcw} from 'lucide-react';
+import {ArrowDown,ArrowUpRight,Check,ChevronLeft,ChevronRight,Globe2,Leaf,Minus,Pause,Play,Plus,RefreshCw,RotateCcw} from 'lucide-react';
 import type {NetworkActivity} from '@secure-finance/shared';
 import {request} from '../../app/api';
 import {useUI} from '../../app/store';
@@ -49,7 +49,7 @@ export default function LandingPage({onStart}:{onStart:()=>void}){
     document.addEventListener('visibilitychange',update);window.addEventListener('online',update);window.addEventListener('offline',update);
     return()=>{clearInterval(tick);document.removeEventListener('visibilitychange',update);window.removeEventListener('online',update);window.removeEventListener('offline',update);};
   },[]);
-  useEffect(()=>{if(!entering&&!expanded)return;const escape=(event:KeyboardEvent)=>{if(event.key==='Escape')cancel();};window.addEventListener('keydown',escape);const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{window.removeEventListener('keydown',escape);document.body.style.overflow=previous;};},[entering,expanded,cancel]);
+  useEffect(()=>{if(!entering&&!expanded)return;const escape=(event:KeyboardEvent)=>{if(event.key==='Escape')cancel();};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape);},[entering,expanded,cancel]);
   const start=()=>{
     if(entryLock.current)return;
     entryLock.current=true;
@@ -78,7 +78,7 @@ export default function LandingPage({onStart}:{onStart:()=>void}){
         <div className="sg-world-coordinate" aria-hidden="true"><span>GLOBAL CONTEXT</span><span>DRAG TO ROTATE</span></div>
         <div ref={globeRegion} className="sg-globe-region" role="group" tabIndex={0} aria-label="Interactive Earth. Drag to rotate, or use the arrow keys. Plus and minus zoom. Home or Escape returns to the overview." onKeyDown={event=>{if(entering)return;const keys:Record<string,GlobeCommand['kind']>={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down','+':'in','=':'in','-':'out',Home:'reset'};const action=keys[event.key];if(action){event.preventDefault();turn(action);}}}>
           <div className="sg-earth-shadow"/>
-          {failed?<div className="sg-globe-fallback" data-testid="globe-fallback"><Globe2 size={100} strokeWidth={.5}/><p>Interactive globe unavailable</p></div>:<GlobeBoundary onFailure={fail}><Suspense fallback={<div className="sg-globe-loading"><Globe2 size={42} strokeWidth={.7}/><span>Opening the world…</span></div>}><GlobeCanvas hashes={currentHashes} activityLive={fresh} highlight={highlight} paused={paused} reduced={reduced} entering={entering} expanded={expanded} command={command} onFailure={fail} onZoomIn={expand}/></Suspense></GlobeBoundary>}
+          <div className="sg-globe-stage">{failed?<div className="sg-globe-fallback" data-testid="globe-fallback"><Globe2 size={100} strokeWidth={.5}/><p>Interactive globe unavailable</p></div>:<GlobeBoundary onFailure={fail}><Suspense fallback={<div className="sg-globe-loading"><Globe2 size={42} strokeWidth={.7}/><span>Opening the world…</span></div>}><GlobeCanvas anchor={globeRegion} hashes={currentHashes} activityLive={fresh} highlight={highlight} paused={paused} reduced={reduced} entering={entering} expanded={expanded} command={command} onFailure={fail} onZoomIn={expand}/></Suspense></GlobeBoundary>}</div>
         </div>
         <div className="sg-globe-controls" aria-label="Globe controls">
           <button aria-label="Zoom in on globe" title="Zoom in" disabled={failed||entering} onClick={()=>turn('in')}><Plus size={17}/></button><button aria-label="Zoom out of globe" title="Zoom out" disabled={failed||entering} onClick={()=>turn('out')}><Minus size={17}/></button>
@@ -99,7 +99,6 @@ export default function LandingPage({onStart}:{onStart:()=>void}){
       </aside>
     </section>
 
-    {expanded&&!entering&&<div className="sg-explore-actions"><button className="sg-overview" onClick={cancel}><ChevronLeft size={16}/>Overview</button><button className="sg-explore-start" onClick={start}>Start<ArrowUpRight size={17}/></button></div>}
     {entering&&<button className="sg-entry-cancel" onClick={cancel}>Cancel</button>}
 
     <footer className="sg-footer"><div className="sg-footer-story"><span className="sg-footer-icon"><Globe2 size={19} strokeWidth={1.4}/></span><p>A live network.<br/><strong>A deliberate decision.</strong></p></div><p className="sg-placement-note">Arcs illustrate real transaction records. <br/>Positions are illustrative, never sender locations.</p><p className="sg-workspace-note">Public mainnet activity is separate from <br/>your synthetic, test-token workspace.</p></footer>
