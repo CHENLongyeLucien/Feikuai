@@ -12,6 +12,7 @@ import {registerInbox} from './inbox/index.js';
 import {AutomationService} from './automation/index.js';
 import {registerInboxWebhook} from './integrations/webhook.js';
 import {registerApi} from './routes/api.js';
+import {registerNetworkActivity} from './network/activity.js';
 import {Service} from './domain/service.js';
 import {ChainService} from './jobs/chain.js';
 import {WorkerLoop} from './jobs/worker.js';
@@ -21,6 +22,7 @@ export async function buildApp(options:{config?:Config;worker?:boolean;logger?:b
  await app.register(cookie);await app.register(multipart,{limits:{fileSize:10*1024*1024,files:1,fields:4}});await app.register(rateLimit,{global:false});
  app.setErrorHandler((error,req,reply)=>{if(error instanceof DomainError)return reply.code(error.statusCode).send({error:{code:error.code,message:error.message}});if(error instanceof ZodError)return reply.code(400).send({error:{code:'SCHEMA_INVALID',message:'Request does not match the required schema.',fields:error.issues.map(i=>i.path.join('.'))}});const status=(error as any).statusCode;return reply.code(status&&status<500?status:500).send({error:{code:status===413?'UPLOAD_TOO_LARGE':'INTERNAL_ERROR',message:status===413?'Upload exceeds the permitted size.':'Request failed. Inspect the protected server diagnostics.'}});});
  app.addHook('onSend',async(req,reply,payload)=>{reply.header('X-Content-Type-Options','nosniff').header('Cache-Control','no-store');return payload;});
+ await registerNetworkActivity(app);
  if(config.SEED_ON_START)seed(db,config);
  const chain=new ChainService(db,config),service=new Service(db,config,chain),worker=new WorkerLoop(db,service,chain);await registerAuth(app,db,config);await registerDemoAuth(app,db,config);await registerApi(app,service,db,config,{automationAvailable:()=>automation.available});
  const inbox=await registerInbox(app,service,db,config,{startWorker:options.worker!==false});

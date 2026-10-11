@@ -1,13 +1,13 @@
 # Secure Finance — Implementation README
 
-> Current experience (11 October 2026): start with the inbox, follow specialist checks, and review only the exceptions. [Demo and limitations](docs/EXPERIENCE_DEMO.md), [track alignment and response playbook](docs/TRACK_ALIGNMENT.md), [build log](docs/BUILD_STATUS.md), [unified design and browser checks](docs/DESIGN_SYSTEM.md). The original implementation specification below is retained as history; the latest user direction adds multichannel intake and a separate, explicitly registered automatic-payment policy. The 3D campus remains available under Operations.
+> Current experience (11 October 2026): open the live Avalanche C-Chain globe, press **Start**, and manage intake, recorded checks, decisions, payments and PDF reports in one workspace. The left navigation has been removed. [Connected workspace guide](docs/CONNECTED_WORKSPACE.md), [demo and limitations](docs/EXPERIENCE_DEMO.md), [track alignment](docs/TRACK_ALIGNMENT.md), [build log](docs/BUILD_STATUS.md). The original implementation specification below is retained as history; the latest user direction adds multichannel intake and a separate, explicitly registered automatic-payment policy.
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm demo:start
 ```
 
-Open **http://localhost:5183**, choose **Explore demo**, then try an invoice, a suspicious email, or a voice transcript. This launcher uses its own local chain and saved directory (`var/experience-demo/`). It preserves `.env`, `.env.fuji`, the existing local demonstration, and Fuji deployments. Requires the pinned Node/pnpm runtime and installed Foundry tools; see [setup](docs/RUNBOOK.md).
+Open **http://localhost:5183**, press **Start**, sign in with **Explore the demo**, then try an invoice, a suspicious email, or a voice transcript. This launcher uses its own local chain and saved directory (`var/experience-demo/`). It preserves `.env`, `.env.fuji`, the existing local demonstration, and Fuji deployments. Requires the pinned Node/pnpm runtime and installed Foundry tools; see [setup](docs/RUNBOOK.md).
 
 The demonstration uses synthetic data, deterministic rules and fixture agents. Its payment receipts come from actual local contract execution with valueless tokens. Live mailbox OAuth, isolated URL scanning and live AI/transcription have not been demonstrated. The launcher does not deploy to Fuji or ask for private keys.
 

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+export type {NetworkActivity, NetworkTransaction} from './network.js';
 
 export type Address = `0x${string}`;
 export type Hex32 = `0x${string}`;
