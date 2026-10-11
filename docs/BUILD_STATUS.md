@@ -1,5 +1,13 @@
 # Secure Finance build status
 
+## Manual input test pack - 11 October 2026
+
+Added `fixtures/user-tests/` with five selectable-text invoice PDFs, five email messages, five voice transcripts with matching synthetic WAV recordings, and five pasted-text examples. A guide and spreadsheet checklist describe the intended clean, incomplete, financial-mismatch and security-hold scenarios. `fixtures/user-test-pack.zip` packages all 28 files. The invoice examples avoid the five standing-policy demo obligations; no source includes a wallet destination or credentials.
+
+Validation: all **20 offline source checks passed** using the application's extraction, classification, security and finance functions, with an explicitly assumed fresh unpaid projection for the clean invoice. All five PDF pages were rendered and visually inspected, all five EML files passed MIME checks, and all five PCM WAVs are structurally valid and non-silent. TypeScript and focused ESLint passed. The ZIP entry count and CRC checks passed. An existing raw-email-header classification limitation was found and documented in the pack; no application behavior was changed.
+
+This task did not import test items, run live transcription/model calls, seed or reset a database, sign approvals or submit payments. Existing environments, local demo state and unrelated Fuji edits remain untouched. See `fixtures/user-tests/VALIDATION.md` for actual scope; offline rule projections are not end-to-end payment acceptance results.
+
 ## Direct dashboard navigation — 11 October 2026
 
 Removed the More / “…” button and dialog. Each of the nine destinations now appears once in the navigation, including direct access to Agents, Business and Settings. The desktop rail includes short visible labels; Alerts and Agents have distinct names. Removed the extra rail account button while retaining the header account controls. On phones, all links appear below the header in two rows, in normal flow so navigation cannot cover review or payment actions. Short desktop rails scroll, with keyboard focus kept visible.

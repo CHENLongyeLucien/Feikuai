@@ -1,0 +1,19 @@
+From: Account Support <support@example.invalid>
+To: Finance Desk <finance@example.invalid>
+Date: Sun, 11 Oct 2026 09:04:00 +0000
+Message-ID: <user-test-04-20261011@example.invalid>
+Subject: Action required to keep your workspace access
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+
+Hello,
+
+Your workspace access needs an urgent security check. Please open the sign-in page below and enter your password and verification code to keep access active.
+
+https://login.example.invalid/workspace-check
+
+Complete the check within one hour or your access will be suspended.
+
+Account Support
+
+Synthetic test message - no real customer data.

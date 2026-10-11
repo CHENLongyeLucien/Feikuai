@@ -1,0 +1,17 @@
+From: Client Services <client@example.invalid>
+To: Finance Desk <finance@example.invalid>
+Date: Sun, 11 Oct 2026 09:01:00 +0000
+Message-ID: <user-test-01-20261011@example.invalid>
+Subject: Agenda for our project review
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+
+Hello team,
+
+Could you please send next week's project meeting agenda and confirm whether Tuesday at 10:00 works for our support review?
+We would like to discuss the latest milestones and agree on the next delivery dates.
+
+Thank you,
+Client Services
+
+Synthetic test message - no real customer data.

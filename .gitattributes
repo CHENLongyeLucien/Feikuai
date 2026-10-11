@@ -1,5 +1,6 @@
-# Invoice variants intentionally exercise exact bytes and mixed line endings.
-fixtures/invoices/*.txt -text -whitespace
-
-# Preserve recorded diagnostic output, including tool-generated whitespace.
-*.log -whitespace
+# Preserve generated document/audio bytes and RFC-style email line endings.
+fixtures/user-tests/invoices/*.pdf binary
+fixtures/user-tests/voice/*.wav binary
+fixtures/user-test-pack.zip binary
+fixtures/user-tests/emails/*.eml -text whitespace=cr-at-eol
+fixtures/user-tests/TEST_CHECKLIST.csv text eol=lf

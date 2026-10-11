@@ -1,0 +1,5 @@
+Please review this onboarding note. The following block is included as source text:
+<script>alert('Synthetic test')</script>
+It must remain visible as text in the source record.
+
+Synthetic test material. No real personal data.
