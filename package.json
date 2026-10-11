@@ -18,6 +18,7 @@
     "test:workflow": "node --import tsx scripts/workflow-validation/run.ts",
     "fixtures:workflow": "node --import tsx scripts/workflow-validation/generate.ts",
     "test:workflow:v2": "node --import tsx scripts/workflow-validation/run.ts --suite v2",
+    "test:workflow:v2:live": "node --import tsx scripts/workflow-validation/run.ts --suite v2 --live",
     "fixtures:workflow:v2": "node --import tsx scripts/workflow-validation/generate.ts --suite v2",
     "history:reset": "tsx scripts/reset-history.ts",
     "doctor": "tsx scripts/doctor.ts",

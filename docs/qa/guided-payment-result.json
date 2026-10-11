@@ -1,10 +1,10 @@
 {
-  "inboxId": "9cf2f251-a28e-468c-9bc7-87fb189c87c7",
-  "caseId": "02405af3-81e7-4462-a450-81974c46c7b4",
-  "invoiceReference": "NS-2026-0052",
-  "scenarioId": "BENIGN-08",
-  "transactionHash": "0x93568880e9d3a26cd825149394a7595d9f4b635d3e931c52805e605df2b26408",
-  "recipientDeltaAtomic": "48000000000",
+  "inboxId": "6ef1aa30-e67d-4a39-9cb7-be0f4ac4970a",
+  "caseId": "ae24c04f-b0f9-4a76-bc53-8bc87d67bf81",
+  "invoiceReference": "NS-TEST10-0002",
+  "scenarioId": "SMALL-10-02",
+  "transactionHash": "0xe2d6f24e85c8e00acee4252e9e3b52b450b340a191a9722b3c2ed53a2a51a0e3",
+  "recipientDeltaAtomic": "10000000",
   "receiptStatus": "success",
   "bridgeOrigins": [
     "http://localhost:5183",

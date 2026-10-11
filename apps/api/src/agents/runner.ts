@@ -55,6 +55,6 @@ export async function runAgent(agent:'intake'|'finance',input:any,context:ToolCo
   }
   artifact.output=schema.parse(artifact.output);artifact.outcome='COMPLETED';
   if(agent==='intake'){const out=artifact.output as IntakeResult;artifact.sourcePointers=[...out.fieldSources.map(s=>({field:s.field,verified:validateSourceSpan(s.span,input.pages.map((p:PageText)=>p.text))})),...out.suspiciousInstructions.map(s=>({field:s.category,verified:validateSourceSpan(s.span,input.pages.map((p:PageText)=>p.text))}))];}
- }catch(e:any){artifact.outcome='FAILED';artifact.error=e?.status?`Provider HTTP ${e.status}; ${e.name}`:String(e.message).slice(0,1000);}
+ }catch(e:any){artifact.outcome='FAILED';artifact.error=e?.status?`AI provider unavailable (HTTP ${e.status}${e.status===429?': rate limit or no remaining API credits':e.status===401?': API key rejected':''})`:String(e.message).slice(0,1000);}
  artifact.durationMs=Date.now()-start;onProgress?.(artifact);return artifact;
 }

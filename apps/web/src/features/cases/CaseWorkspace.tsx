@@ -25,7 +25,7 @@ export function CaseWorkspace({id,onNotice,navigate}:{id:string;onNotice:(s:stri
  const config=useQuery({queryKey:['config'],queryFn:()=>request<Config>('/config')});
  const [tab,setTab]=useState<string|null>(null),[holdOpen,setHoldOpen]=useState(false),[holdReason,setHoldReason]=useState(''),[busy,setBusy]=useState(''),[acknowledge,setAcknowledge]=useState(false),[feedback,setFeedback]=useState<{text:string;error:boolean}|null>(null);
  const locked=useRef(false),signature=useRef<HTMLInputElement>(null),cancellation=useRef<HTMLInputElement>(null),revision=useRef<HTMLInputElement>(null);
- const bridge=useRef<{source:Window;origin:string;nonce:string;packet?:ApprovalRequestFile;ready:boolean}|null>(null);
+ const bridge=useRef<{source:Window;origin:string;nonce:string;packet?:ApprovalRequestFile;ready:boolean;preparing:boolean;acknowledge:boolean}|null>(null);
  const onBridge=useRef<(event:MessageEvent)=>void>(()=>{});
  useEffect(()=>{const receive=(event:MessageEvent)=>onBridge.current(event);window.addEventListener('message',receive);return()=>{window.removeEventListener('message',receive);bridge.current=null}},[id]);
  useEffect(()=>{setTab(null);setFeedback(null);setAcknowledge(false)},[id]);
@@ -53,29 +53,37 @@ export function CaseWorkspace({id,onNotice,navigate}:{id:string;onNotice:(s:stri
  }
  onBridge.current=(event:MessageEvent)=>{
   const channel=bridge.current;if(!channel)return;
-  if(acceptsBridgeEvent(event,channel,'ready')){channel.ready=true;if(channel.packet)channel.source.postMessage(bridgeMessage('request',channel.nonce,channel.packet),channel.origin);return}
+  if(acceptsBridgeEvent(event,channel,'ready')){channel.ready=true;if(channel.packet){channel.source.postMessage(bridgeMessage('request',channel.nonce,channel.packet),channel.origin);return}if(!channel.preparing){channel.preparing=true;void prepareRequest(channel);}return}
   const signatureMessage=acceptsBridgeEvent(event,channel,'signature'),cancellationMessage=acceptsBridgeEvent(event,channel,'cancellation');
   if(!signatureMessage&&!cancellationMessage||!channel.packet)return;
   const packet=channel.packet,kind=signatureMessage?'signature':'cancellation';
   void action(kind==='signature'?'Import signed approval':'Import cancellation',async()=>{
    const current=await request<CaseDTO>(`/cases/${id}`);
    if(current.latestProposal?.id!==packet.manifest.proposalId)throw new Error('This request no longer matches the active case. Refresh the case before continuing.');
-   await post(`/proposals/${packet.manifest.proposalId}/${kind==='signature'?'authorizations':'cancellation-observations'}`,{expectedVersion:current.version,...(kind==='signature'?{signatureFile:(event.data as {payload:unknown}).payload}:{observation:(event.data as {payload:unknown}).payload})});
+   const result=await post<{authorizationId?:string}>(`/proposals/${packet.manifest.proposalId}/${kind==='signature'?'authorizations':'cancellation-observations'}`,{expectedVersion:current.version,...(kind==='signature'?{signatureFile:(event.data as {payload:unknown}).payload}:{observation:(event.data as {payload:unknown}).payload})});
    channel.source.postMessage(bridgeMessage('received',channel.nonce,{kind}),channel.origin);
-  },kind==='signature'?'Wallet signature received and verified. You can now request execution.':'Cancellation received. Waiting for its verified chain result.','approval');
+   // "Approve & pay" was the explicit choice: request execution once. The idempotency key matches the manual button, so it cannot run twice.
+   if(kind==='signature'&&result.authorizationId){const signed=await request<CaseDTO>(`/cases/${id}`);await post(`/authorizations/${result.authorizationId}/execute`,{expectedVersion:signed.version},`execute-${result.authorizationId}`);}
+  },kind==='signature'?'Signature verified and payment submitted. It shows as paid only after the receipt is verified.':'Cancellation received. Waiting for its verified chain result.',kind==='signature'?'execution':'approval');
  };
+ /** Creates (or reuses) the time-limited request only after the approver's wallet is ready. */
+ async function prepareRequest(channel:NonNullable<typeof bridge.current>){
+  try{
+   const fresh=await request<CaseDTO>(`/cases/${id}`);let packet:ApprovalRequestFile;
+   if(fresh.latestProposal&&!['CANCELLED','EXPIRED','CONSUMED'].includes(fresh.authorizationStatus??''))packet=await request<ApprovalRequestFile>(`/proposals/${fresh.latestProposal.id}/approval-request`);
+   else{const result=await post<{approvalRequest:ApprovalRequestFile}>(`/cases/${id}/proposals`,{expectedVersion:fresh.version,acknowledgeSuspicious:channel.acknowledge});packet=result.approvalRequest}
+   channel.packet=packet;channel.source.postMessage(bridgeMessage('request',channel.nonce,packet),channel.origin);
+   setFeedback({text:'The exact payment request is in the approval window. Review it there and sign with your wallet.',error:false});
+   await Promise.all([client.invalidateQueries({queryKey:['case',id]}),client.invalidateQueries({queryKey:['cases']})]);
+  }catch(error){const text=error instanceof Error?error.message:String(error);channel.preparing=false;setFeedback({text,error:true});if(!channel.source.closed)channel.source.postMessage(bridgeMessage('error',channel.nonce,{message:text}),channel.origin);}
+ }
  function openGuidedReview(){
   if(locked.current)return;
   const reason=reuseRequest?exportReason:freezeReason;if(reason){setFeedback({text:reason,error:true});return}
   const nonce=crypto.randomUUID();let target:URL;try{target=new URL(approverUrl);if(!['http:','https:'].includes(target.protocol)||target.username||target.password)throw new Error('Invalid approval origin.')}catch{setFeedback({text:'The approval screen is not configured with a valid web address. Ask your administrator to repair its origin, or export the request for an independently configured client.',error:true});return}target.hash=`review=${nonce}`;
   const popup=window.open(target.href,'_blank');if(!popup){setFeedback({text:'Allow the approval window to open, or use the file exchange options below.',error:true});return}
-  const channel={source:popup,origin:target.origin,nonce,ready:false,packet:undefined as ApprovalRequestFile|undefined};bridge.current=channel;
-  void action('Open guided approval',async()=>{
-   const fresh=await request<CaseDTO>(`/cases/${id}`);let packet:ApprovalRequestFile;
-   if(fresh.latestProposal&&!['CANCELLED','EXPIRED','CONSUMED'].includes(fresh.authorizationStatus??''))packet=await request<ApprovalRequestFile>(`/proposals/${fresh.latestProposal.id}/approval-request`);
-   else{const result=await post<{approvalRequest:ApprovalRequestFile}>(`/cases/${id}/proposals`,{expectedVersion:fresh.version,acknowledgeSuspicious:acknowledge});packet=result.approvalRequest}
-   channel.packet=packet;if(channel.ready)channel.source.postMessage(bridgeMessage('request',nonce,packet),channel.origin);
-  },'The approval window is ready. Review the exact transfer there; your signed authorization will return to this case.','approval');
+  bridge.current={source:popup,origin:target.origin,nonce,ready:false,preparing:false,acknowledge,packet:undefined};
+  setFeedback({text:'Approval window opened. Connect the approval wallet there. The short signing window starts only once the wallet is ready.',error:false});
  }
  const doExecute=()=>void action('Request execution',()=>post(`/authorizations/${c.authorization!.id}/execute`,{expectedVersion:c.version},`execute-${c.authorization!.id}`),'Execution requested. The payment remains pending until its receipt is verified.','execution');
  const recipient=(c as CaseDTO&{recipient?:string}).recipient??proposal?.payment.recipient;
@@ -107,8 +115,8 @@ export function CaseWorkspace({id,onNotice,navigate}:{id:string;onNotice:(s:stri
   {activeTab==='approval'&&<div className="case-columns"><section>
    <h3><Wallet size={17}/> Authorize this payment</h3>
    {guide.attention&&<label className="acknowledgement"><input type="checkbox" checked={acknowledge} onChange={event=>setAcknowledge(event.target.checked)}/>I reviewed the flagged source text against the trusted facts. This acknowledgment is not payment approval.</label>}
-   <div className="guided-approval"><span className="case-step-label">1 · REVIEW & SIGN</span><Button className="primary" disabled={!!busy||!!(reuseRequest?exportReason:freezeReason)||c.settlementStatus==='SETTLED'||c.authorizationStatus==='VALID'} busy={busy==='Open guided approval'} onClick={openGuidedReview}>Review payment <ArrowUpRight size={15}/></Button><p className="action-reason">Your wallet signs in the approval window. The result returns here for submission.</p><Reason>{c.authorizationStatus==='VALID'?'Wallet signature verified.':reuseRequest?exportReason:freezeReason}</Reason></div>
-   <div className="guided-execution"><span className="case-step-label">2 · SUBMIT PAYMENT</span><Button className="primary" disabled={!!busy||!!guide.executeReason} busy={busy==='Request execution'} onClick={doExecute}>Request execution <ArrowUpRight size={15}/></Button><Reason>{guide.executeReason}</Reason>{c.authorizationStatus==='VALID'&&!guide.executeReason&&<p className="action-reason">Submits the exact signed transfer after a final policy check.</p>}</div>
+   <div className="guided-approval"><span className="case-step-label">1 · REVIEW & SIGN</span><Button className="primary" disabled={!!busy||!!(reuseRequest?exportReason:freezeReason)||c.settlementStatus==='SETTLED'||c.authorizationStatus==='VALID'} busy={busy==='Open guided approval'||busy==='Import signed approval'} onClick={openGuidedReview}>Approve &amp; pay {amount(c.amountAtomic)} DEMO to {c.supplierName} <ArrowUpRight size={15}/></Button><p className="action-reason">Opens the independent approval window. After your wallet signs the exact terms, this payment is submitted once. It shows as paid only after its receipt is verified.</p><Reason>{c.authorizationStatus==='VALID'?'Wallet signature verified.':reuseRequest?exportReason:freezeReason}</Reason></div>
+   <div className="guided-execution"><span className="case-step-label">2 · SUBMIT PAYMENT (IF NOT ALREADY SENT)</span><Button className="primary" disabled={!!busy||!!guide.executeReason} busy={busy==='Request execution'} onClick={doExecute}>Request execution <ArrowUpRight size={15}/></Button><Reason>{guide.executeReason}</Reason>{c.authorizationStatus==='VALID'&&!guide.executeReason&&<p className="action-reason">Submits the exact signed transfer after a final policy check.</p>}</div>
    <details className="details"><summary>Manual file exchange and payment steps</summary>
    <ol className="approval-steps"><li className={!proposal?'current':''}><span>1</span><div><strong>Create a review request</strong><p>Freeze the checked amount, recipient and evidence when you are ready. The signing window lasts at most ten minutes.</p><Button className="primary" disabled={!!busy||!!freezeReason} busy={busy==='Create approval request'} onClick={()=>void action('Create approval request',()=>post(`/cases/${c.id}/proposals`,{expectedVersion:c.version,acknowledgeSuspicious:acknowledge}),'Request created. Download it and open the approval client.')}>Create approval request</Button><Reason>{freezeReason}</Reason></div></li>
     <li className={proposal&&!c.authorization?'current':''}><span>2</span><div><strong>Review and sign in your wallet</strong><p>Download the request, open the approval client, and import that file there. It independently checks the transfer before showing the wallet prompt.</p><div className="action-row"><Button disabled={!!busy||!!exportReason} onClick={()=>proposal&&void action('Export approval request',()=>download(`/proposals/${proposal.id}/approval-request`,`approval-request-${proposal.id}.json`),'Request downloaded. Import it in the approval client.')}><Download size={15}/> Export request</Button><a className="button" href={approverUrl} target="_blank" rel="noreferrer">Open approval client <ArrowUpRight size={15}/></a></div><Reason>{exportReason}</Reason></div></li>

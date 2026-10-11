@@ -1,5 +1,32 @@
 # Secure Finance build status
 
+## Guided approval, wallet readiness and live-agent mode — 11 October 2026
+
+**Approval flow (brief P0.3/P0.4, §8 Screen C).**
+- The approval window now starts with an explicit wallet step: connect, configured approver account, and network, with a one-click network switch (it adds Avalanche Fuji if missing).
+- Declined, pending, locked and missing-wallet cases are explained next to the action.
+- The time-limited payment request is created only after the approval wallet is ready, so its signing window no longer runs down during wallet setup.
+- The case's primary action is now **Approve & pay *amount* DEMO to *supplier***. After the signature verifies, execution is requested once, with the same idempotency key as the manual button.
+- The signing countdown is anchored to the signed window length, because chain time can differ from the browser clock.
+- Manual JSON exchange remains as a fallback.
+
+**Analysis failures are explained.** A failed or unavailable model now shows *"Invoice analysis could not complete, so nothing was cleared: AI provider unavailable (HTTP 429: rate limit or no remaining API credits)"* instead of a generic hold.
+
+**Live agents.** `pnpm test:workflow:v2:live` runs the 100 inputs with the live OpenAI agents (default `gpt-5.4-mini`, or `OPENAI_MODEL`). In that mode only api.openai.com is reachable. The configured key currently has **no API credits**:
+- every live analysis returned HTTP 429;
+- the 14 legitimate invoices were held rather than cleared;
+- 86/100 outcomes matched, with 0 unsafe approvals.
+
+No live-model quality result exists yet. `.env.fuji` remains in fixture mode.
+
+**Verification (actual):**
+- 496/496 unit/API tests.
+- v2 corpus in fixture mode: 100/100 outcomes.
+- Browser, real Chrome, isolated local chain: the guided approval passed end to end. The request was created only after the wallet was ready; signature, automatic single execution and verified receipt followed, and the recipient balance changed by exactly 10 DEMO.
+- Browser: 5/5 approver wallet-recovery scenarios passed (no wallet, declined connection, wrong account, network switch, declined switch).
+- `bridge.spec.ts` was updated for the redesigned landing and workspace: login through the UI, intake through the authenticated API.
+- Not run: the other legacy browser suites, and a real MetaMask extension rehearsal (needs the human approver).
+
 ## Public Fuji configuration publication — 11 October 2026
 
 Reviewed the remaining local Fuji files for repository publication: the deployment-script path correction, public chain-43113 manifest, synthetic trusted registry and invoice fixtures, and saved deployment preflight report. The preflight report is a historical observation at block 59277926, not a current balance or a new check performed during publication. The application fixes and their 477 unit/API and 30 browser results were already published in commit `98ccac2`.
