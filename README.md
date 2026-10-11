@@ -1,24 +1,101 @@
-# Secure Finance — Implementation README
+# Feikuai: stop manipulated supplier payments before money moves
 
-> Integration API (11 October 2026): ERPs and accounting systems can use the same engine server to server. They import payables, submit invoices and read decisions and payment status with a per-tenant token. A person still signs every payment. [Guide](docs/INTEGRATION_API.md), [OpenAPI](docs/integration/openapi.yaml), [français](docs/API_README.fr.md).
+**Secure Horizons 2026, Track 1: Fintech Security / Guardians of Value.** NIST CSF: Detect and Respond (plus Protect and Govern).
 
-> Reset-brief repairs (11 October 2026): finance-agent holds now block payment, duplicate invoice submissions are held, and a final pre-execution audit runs before every payment. **100/100 correct outcomes on a second set of 100 new inputs** (95/100 before the rule fixes). [Repairs](docs/WORKFLOW_REPAIR.md#reset-brief-repairs-11-october-2026-second-pass), [v2 results](docs/workflow-validation-v2/README.md).
+Finance teams receive supplier requests that look genuine and are increasingly read by AI agents. One manipulated email or invoice can redirect a real payment: a changed payout wallet, "the CFO already approved this", or hidden instructions to the AI. Feikuai reads each request, checks it against trusted records, and explains any discrepancy to the right person. It then lets a human sign only the exact payment, which an Avalanche smart contract enforces.
 
-> Workflow repair and dashboard (11 October 2026): MIME/email and PDF intake, invoice matching and worker recovery have been corrected. **100/100 authored inputs pass** through the actual isolated API/worker workflow. Open **Dashboard** in the workspace for recorded finances and activity graphs. [What changed and how to use it](docs/WORKFLOW_REPAIR.md), [actual results](docs/workflow-validation/README.md), [100 organized test documents](fixtures/workflow-validation/README.md). Repeat with `pnpm test:workflow`; it consumes no DEMO and preserves saved state.
+**AI reads, rules decide, people sign, the blockchain enforces.**
 
-> AgentGuard update (11 October 2026): the supplied proposal has been integrated as compact authority/provenance explanations, reviewer PDF incident drafts, DORA decision support, Merkle evidence tools and a separately tested optional payment-firewall contract. **AgentGuard is not deployed or connected to the existing payment routes.** See [implementation and activation boundaries](docs/AGENTGUARD.md) and the [original French proposal](docs/references/AgentGuard_Solutions_FR.md).
+| Deliverable | Where |
+| --- | --- |
+| Defense sheet (scenario, NIST CSF, ATT&CK/ATLAS/OWASP, metrics, limits) | [docs/DEFENSE_SHEET.md](docs/DEFENSE_SHEET.md) |
+| Response playbook | [docs/RESPONSE_PLAYBOOK.md](docs/RESPONSE_PLAYBOOK.md) |
+| Compliance slide content (DORA, AML/CFT, MiCA, AI Act; how an auditor verifies) | [docs/COMPLIANCE.md](docs/COMPLIANCE.md) |
+| Pitch deck outline and demo video script | [docs/PITCH_DECK.md](docs/PITCH_DECK.md) |
+| Integration API for ERPs (OpenAPI) | [docs/INTEGRATION_API.md](docs/INTEGRATION_API.md), [openapi.yaml](docs/integration/openapi.yaml) |
+| Manual test pack (27 files) | [fixtures/manual-tests](fixtures/manual-tests/README.md) |
 
-> Current experience (11 October 2026): open the live Avalanche C-Chain globe, press **Start**, and manage intake, recorded checks, decisions, payments and PDF reports in one workspace. The left navigation has been removed. [Connected workspace guide](docs/CONNECTED_WORKSPACE.md), [demo and limitations](docs/EXPERIENCE_DEMO.md), [track alignment](docs/TRACK_ALIGNMENT.md), [build log](docs/BUILD_STATUS.md). The original implementation specification below is retained as history; the latest user direction adds multichannel intake and a separate, explicitly registered automatic-payment policy.
+## Results (measured 11 October 2026)
+
+On 4,645 **held-out** items (real Enron business email, real Nazario phishing from 2021–2025, and synthetic accounts-payable attacks), through the real pipeline:
+
+| Precision | False-positive rate | Recall | Attacks not auto-cleared | Time to detect |
+| --- | --- | --- | --- | --- |
+| **96.9%** | **1.5%** | **74.0%** | **97.5%** | **0.63 s** median with the real worker (10.6 ms pipeline only) |
+
+- No attack ever produced payment authority.
+- Real Fuji payments through the full flow (upload → checks → Approve & pay → MetaMask signature → contract → verified receipt): NS-TEST10-0005 [tx 0xeabc41cd…6d88](https://testnet.snowtrace.io/tx/0xeabc41cd969c6792f3fed6e4c2b7c993c7fcbef66b0eefea21923b0c67616d88) and NS-TEST10-0009 [tx 0xdf73e231…9888](https://testnet.snowtrace.io/tx/0xdf73e2310e0c0f8be105e7e5f83943237b61fc4cc9234826a7f0efe238699888), 11 October 2026, both status 1 on PaymentGuard `0x667ef97b213cfbe3f89ed2fe835c16d11acf6914`. Re-submitting either invoice is blocked as *already paid*.
+- The 100-input workflow corpus scores 100/100, and the 27-file manual test pack 27/27.
+- Tests: 501 unit/API, 79 smart-contract, 5 backend-to-chain integration, and browser tests of the guided approval and wallet recovery.
+- Details and limits are in the [defense sheet](docs/DEFENSE_SHEET.md).
+
+## Architecture
+
+```text
+ Source (PDF, email, voice transcript, text, ERP API)
+   │ 1 Receive: original stored, SHA-256, size and format limits
+   ▼
+ 2 Intake agent: extracts facts; instructions are recorded, never followed
+ 3 Security stage: injection, claimed approval, wallet change, phishing, look-alike characters
+ 4 Finance agent + deterministic checks against trusted records (supplier, amount, wallet,
+   token, already paid, duplicate); a discrepancy becomes a review task
+   │            ├── finding → quarantine or "payment paused" + plain reason + alert
+   ▼
+ 5 Human authorization: "Approve & pay", then an EIP-712 signature in a separate approval app
+ 6 Final pre-execution audit, recomputed from current records
+ 7 Relayer → PaymentGuard contract (Avalanche Fuji): exact recipient, amount and token, one payment per invoice
+ 8 Reconciliation: "Paid" only after the receipt and event are verified → PDF report and evidence ZIP
+```
+
+| Part | Technology |
+| --- | --- |
+| `apps/api` | Fastify, SQLite (durable jobs, idempotency), agents (OpenAI adapter or deterministic fixtures), viem |
+| `apps/web` | Workspace (React): inbox, decisions, payments, reports, dashboard |
+| `apps/approver` | Separate approval app (its own origin and pinned policy): wallet readiness, exact terms, signature |
+| `contracts` | `PaymentGuard` (Solidity, Foundry) on Avalanche Fuji, plus the DEMO test token |
+| `packages` | Shared schemas, chain ABI, evidence bundle builder and verifier |
+
+## Installation
+
+Requires Node 24.14 with pnpm 10 (via corepack) and Foundry (`foundryup`).
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm demo:start
+
+# Isolated local demo: its own local chain, no keys or funds needed
+pnpm demo:start               # open http://localhost:5183 → Start → Sign in → Explore the demo
+
+# Fuji workspace (needs .env.fuji, see .env.example and docs/RUNBOOK.md)
+pnpm dev                      # http://localhost:5173, approval app on :5174
+
+# Checks
+pnpm test                     # unit, API and the 100-input workflow corpus
+pnpm test:workflow:v2         # second 100-input corpus with precision, FPR and time to decide
+pnpm test:manual-pack         # the 27 manual test files against a copy of the Fuji records
+pnpm benchmark:fetch && pnpm benchmark:detection --split test   # held-out real-data benchmark (Python with pyarrow)
+pnpm test:contracts           # smart-contract tests
 ```
 
-Open **http://localhost:5183**, press **Start**, sign in with **Explore the demo**, then try an invoice, a suspicious email, or a voice transcript. This launcher uses its own local chain and saved directory (`var/experience-demo/`). It preserves `.env`, `.env.fuji`, the existing local demonstration, and Fuji deployments. Requires the pinned Node/pnpm runtime and installed Foundry tools; see [setup](docs/RUNBOOK.md).
+No secrets are committed. `.env*` files and runtime data under `var/` are ignored; `.env.example` lists the variables.
 
-The demonstration uses synthetic data, deterministic rules and fixture agents. Its payment receipts come from actual local contract execution with valueless tokens. Live mailbox OAuth, isolated URL scanning and live AI/transcription have not been demonstrated. The launcher does not deploy to Fuji or ask for private keys.
+## Known limitations
 
+- **Recall.** About 1 in 4 real phishing emails is not quarantined. Most go to human review; 46 of 1,821 were auto-cleared. At a realistic 1% attack rate, precision would fall to about 33%. The system triages for analysts; it does not replace them.
+- **No live LLM measured.** Agents ran deterministically. If the AI provider fails, items are held, never cleared.
+- **Not built.** No URL or attachment sandbox (links are never opened, archives are held). No sender authentication. No voice-clone detection. No mailbox connectors. No outbound webhooks.
+- **Human approval.** Every payment needs one. Automatic payment would need a separately designed, human-approved spending mandate.
+- **Contract scope.** Only suppliers registered in the deployed contract can be paid. A human can still be deceived into signing terms that pass every rule.
+- **Not production-ready.** Synthetic data and a valueless DEMO token on the Fuji testnet.
+
+## Further documentation
+
+[Repair log](docs/WORKFLOW_REPAIR.md) · [Build log](docs/BUILD_STATUS.md) · [Runbook](docs/RUNBOOK.md) · [Contracts](docs/CONTRACTS.md) · [AgentGuard and DORA draft](docs/AGENTGUARD.md) · [Workflow validation v2](docs/workflow-validation-v2/README.md)
+
+---
+
+# Implementation history: original build specification
+
+The specification below guided the first build. It is kept for reference; the sections above describe the current product.
 
 **Build specification · 10 October 2026 · Secure Horizons, Track 1: Guardians of Value**
 

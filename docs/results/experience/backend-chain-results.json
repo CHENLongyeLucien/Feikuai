@@ -1,33 +1,33 @@
 {
   "environment": "isolated local Anvil",
   "rpcUrl": "http://127.0.0.1:18545",
-  "testVault": "0x610178da211fef7d417bc0e6fed39f05609ad788",
-  "testToken": "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
+  "testVault": "0x0b306bf915c4d645ff596e518faf3f9669b97016",
+  "testToken": "0x9a676e781a523b5d0c0e43731313a708cb607508",
   "agentMode": "fixture",
-  "measurementTime": "2026-10-10T22:21:16.007Z",
+  "measurementTime": "2026-10-11T08:45:54.753Z",
   "measurements": [
     {
       "scenario": "external-direct-execution",
-      "txHash": "0x9987f52914c5a5a6f4314e07857c26e02d74ff6930badbc1f69e5d8e3f7e858d",
-      "invoiceKey": "0x90b10db0e461a39b0708c2fa086816790528fd1f518bc56efcdc337c7a19dff4",
+      "txHash": "0x85fbef4e63d5a1a6b11114e447e0511256e2693565a02d2ee45da717a4ab606e",
+      "invoiceKey": "0x1595464281abd3bed7fbd0ce6ea4e514507079a4c8aa425604cb5656a2230339",
       "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
-      "amountAtomic": "48000000000",
-      "recipientDeltaAtomic": "48000000000",
+      "amountAtomic": "10000000",
+      "recipientDeltaAtomic": "10000000",
       "gasUsed": "121699",
-      "blockNumber": "939"
+      "blockNumber": "3103"
     },
     {
       "scenario": "cancellation-before-import",
-      "txHash": "0x4e1073cf81cf96f36c05a681d64469c9cf9f39cf9fe88ce941ed7792412566b3",
-      "invoiceKey": "0x211e35f5c712aa71a0aa42a62ff057860ea719087f8f5d4f56f0aea00c6987de",
-      "nonce": "25772700515963101899992346493908122396624349994684583526371597666889904547299",
-      "blockNumber": "943"
+      "txHash": "0x64642f3185b906cf7185f390716dd4b7f2fb3aeabc49806de170e7a20806bfbf",
+      "invoiceKey": "0x4f44d04b06fa50c7a05f2ffc6b63e96111927fc2c048357eb20941377b44af3f",
+      "nonce": "74761119863190541270900083335858980929941254504103171650250848333845447387709",
+      "blockNumber": "3105"
     },
     {
       "scenario": "execution-wins-cancellation",
-      "paymentTxHash": "0x3c630a2973e7620fa03b25ff31cdabaf405b796c64f6d0ce4adf3a111001a140",
-      "revertedCancellationTxHash": "0x66664bb193be9183b474a1b305396b00d8684ab7c8e4fdcddb38cd8260da0da3",
-      "invoiceKey": "0x1895b5811be4c918187028f9f9bbf6d15f9f751c86f6cbaeca8bde0d62ef90f0"
+      "paymentTxHash": "0xffe4da8832a7323c622c2bfbf1017efc712fa1e1d5f96e3ee0ce4211366973c6",
+      "revertedCancellationTxHash": "0xd028e2fb9f65476834f1630a69761f6393c6c68e6e3923587bebc29909124bd3",
+      "invoiceKey": "0x2335236e0ddb734d8809c3a526e2450a2b8bf1bb2aa0f6ef531f1eae7d884cf2"
     }
   ]
 }

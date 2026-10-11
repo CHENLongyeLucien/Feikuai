@@ -1,5 +1,29 @@
 # Secure Finance build status
 
+## Track 1 evaluation-grid audit — 11 October 2026
+
+Checked against the official candidate guide (Track 1 grid and deliverables).
+
+**Added deliverables:**
+- [DEFENSE_SHEET.md](DEFENSE_SHEET.md)
+- [RESPONSE_PLAYBOOK.md](RESPONSE_PLAYBOOK.md)
+- [COMPLIANCE.md](COMPLIANCE.md)
+- [PITCH_DECK.md](PITCH_DECK.md), including the demo video script
+- A jury-facing README front page (problem, architecture, installation, limitations)
+
+**Detection metrics (held-out):**
+- Teammate's real-data benchmark, test split only: 4,645 items. Precision 96.9%, false-positive rate 1.5%, recall 74.0%, 97.5% of attacks not auto-cleared, median time to detect 10.6 ms (pipeline) and 0.63 s (real worker).
+- The legacy 24-case corpus, refreshed: recall 0.83, precision 0.91, false-positive rate 0.083. Its three misses are reported, not tuned.
+- The v2 runner now reports precision, false-positive rate and time to decide.
+
+**Verification (actual):**
+- 501/501 unit/API tests; 79/79 contract tests; 5/5 backend-to-chain integration tests.
+- v2 corpus: 100/100 outcomes. Manual pack: 27/27, now aware of invoices already paid on the platform.
+
+**Live platform:** two real Fuji payments (NS-TEST10-0005, NS-TEST10-0009) were verified on-chain with status 1.
+
+**Secret scan:** no `.env` file ever committed; no API-key or token patterns in history; the 5 local secrets were absent from all commits.
+
 ## Guided approval, wallet readiness and live-agent mode — 11 October 2026
 
 **Approval flow (brief P0.3/P0.4, §8 Screen C).**

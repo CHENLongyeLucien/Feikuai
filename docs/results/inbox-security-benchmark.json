@@ -1,6 +1,6 @@
 {
   "schemaVersion": "secure-finance.synthetic-security-benchmark.v1",
-  "generatedAt": "2026-10-10T22:16:53.888Z",
+  "generatedAt": "2026-10-11T08:43:26.947Z",
   "corpus": {
     "path": "tests/fixtures/inbox-security-corpus.json",
     "sha256": "da7b293c03b368e036072e20a859934022b1cc65a74c51610fdea61eff2608b5",
@@ -26,30 +26,30 @@
     ]
   },
   "confusion": {
-    "truePositive": 8,
-    "falsePositive": 3,
-    "trueNegative": 9,
-    "falseNegative": 4
+    "truePositive": 10,
+    "falsePositive": 1,
+    "trueNegative": 11,
+    "falseNegative": 2
   },
   "metrics": {
-    "detectionRecall": 0.666667,
-    "precision": 0.727273,
-    "falsePositiveRate": 0.25,
-    "falseNegativeRate": 0.333333,
-    "corpusAccuracy": 0.708333,
-    "conservativeBenignAbstentions": 3
+    "detectionRecall": 0.833333,
+    "precision": 0.909091,
+    "falsePositiveRate": 0.083333,
+    "falseNegativeRate": 0.166667,
+    "corpusAccuracy": 0.875,
+    "conservativeBenignAbstentions": 1
   },
   "latency": {
     "unit": "milliseconds per local classification + rule evaluation",
     "warmupRounds": 100,
     "measuredRounds": 1000,
     "evaluations": 24000,
-    "minimumMs": 0.021041,
-    "medianMs": 0.057291,
-    "p95Ms": 0.125375,
-    "maximumMs": 0.601166,
-    "meanMs": 0.06533,
-    "totalMeasuredMs": 1568.918875,
+    "minimumMs": 0.026709,
+    "medianMs": 0.032833,
+    "p95Ms": 0.04275,
+    "maximumMs": 0.168167,
+    "meanMs": 0.033939,
+    "totalMeasuredMs": 815.432125,
     "environment": {
       "node": "v24.14.0",
       "platform": "darwin",
@@ -140,15 +140,13 @@
         "rationale": "The authored scenario marks this documentation link benign. The application does not fetch or verify destinations and should conservatively hold it."
       },
       "prediction": {
-        "securityHold": true,
+        "securityHold": false,
         "classification": "client_request",
-        "matchedRiskCodes": [
-          "UNVERIFIED_LINK"
-        ],
+        "matchedRiskCodes": [],
         "linksObserved": 1
       },
-      "outcome": "false_positive",
-      "conservativeAbstention": true
+      "outcome": "true_negative",
+      "conservativeAbstention": false
     },
     {
       "id": "benign-06",
@@ -160,15 +158,13 @@
         "rationale": "The text explicitly warns against credential disclosure; a phrase matcher may still flag the quoted behavior."
       },
       "prediction": {
-        "securityHold": true,
+        "securityHold": false,
         "classification": "general_message",
-        "matchedRiskCodes": [
-          "CREDENTIAL_REQUEST"
-        ],
+        "matchedRiskCodes": [],
         "linksObserved": 0
       },
-      "outcome": "false_positive",
-      "conservativeAbstention": true
+      "outcome": "true_negative",
+      "conservativeAbstention": false
     },
     {
       "id": "benign-07",
@@ -237,7 +233,7 @@
       },
       "prediction": {
         "securityHold": false,
-        "classification": "general_message",
+        "classification": "client_request",
         "matchedRiskCodes": [],
         "linksObserved": 0
       },
@@ -452,12 +448,14 @@
         "rationale": "The fictional attacker relies on urgency and secrecy rather than the rule vocabulary. A financial scope check may still route this to human review."
       },
       "prediction": {
-        "securityHold": false,
+        "securityHold": true,
         "classification": "general_message",
-        "matchedRiskCodes": [],
+        "matchedRiskCodes": [
+          "EXECUTIVE_PRESSURE"
+        ],
         "linksObserved": 0
       },
-      "outcome": "false_negative",
+      "outcome": "true_positive",
       "conservativeAbstention": false
     },
     {
@@ -488,12 +486,15 @@
         "rationale": "The word pаssword contains a Cyrillic a. The intent remains credential theft despite the spelling difference."
       },
       "prediction": {
-        "securityHold": false,
+        "securityHold": true,
         "classification": "client_request",
-        "matchedRiskCodes": [],
+        "matchedRiskCodes": [
+          "CREDENTIAL_REQUEST",
+          "OBFUSCATED_TEXT"
+        ],
         "linksObserved": 0
       },
-      "outcome": "false_negative",
+      "outcome": "true_positive",
       "conservativeAbstention": false
     },
     {

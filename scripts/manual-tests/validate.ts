@@ -22,6 +22,10 @@ system.chain.scan=async()=>{};system.chain.submit=async()=>{throw new Error('PAY
 const tenantId=(system.db.prepare('SELECT tenant_id FROM payables LIMIT 1').get() as {tenant_id:string}).tenant_id;
 const user={tenantId,membershipId:'manual-validation',address:'manual-validation',roles:['operator','reviewer'],csrfToken:''};
 const rows:Array<{id:string;expected:string;observed:string;reason:string;ok:boolean}>=[],ids=new Map<string,string>();
+// Invoices already paid on the live platform correctly become "already paid"; expect that instead.
+const paid=new Set((system.db.prepare('SELECT p.invoice_reference r FROM settlements s JOIN payables p ON p.invoice_key=s.invoice_key AND p.tenant_id=s.tenant_id').all() as {r:string}[]).map(x=>x.r));
+const invoiceOf=(file:string)=>{const m=/-(\d{4})\.(?:pdf|eml)$/.exec(file);return m?`NS-TEST10-${m[1]}`:null;};
+const expected=(test:typeof tests[number])=>{const ref=invoiceOf(test.file);return ref&&paid.has(ref)&&test.expect==='Approved'?'Needs review':test.expect;};
 for(const test of tests){
  const bytes=await readFile(join(root,test.file));
  try{
@@ -32,7 +36,7 @@ for(const test of tests){
 const pending=()=>(system.db.prepare("SELECT COUNT(*) n FROM inbox_jobs WHERE status IN ('QUEUED','RUNNING','WAITING')").get() as {n:number}).n+(system.db.prepare("SELECT COUNT(*) n FROM jobs WHERE status IN ('QUEUED','RUNNING') AND kind='ANALYZE'").get() as {n:number}).n;
 for(let tick=0;tick<500&&(pending()||system.worker.analyses.size);tick++){system.db.prepare("UPDATE inbox_jobs SET next_retry=0 WHERE status IN ('QUEUED','WAITING')").run();system.db.prepare("UPDATE jobs SET next_retry=0 WHERE status='QUEUED'").run();await system.inbox.worker.tick();await system.worker.tick();await Promise.all([...system.worker.analyses]);}
 const label:Record<string,string>={approved:'Approved',needs_review:'Needs review',quarantined:'Quarantined',processing:'Still processing',rejected:'Rejected'};
-for(const test of tests){const id=ids.get(test.id);if(!id)continue;const item=system.inbox.service.project(user,id);const observed=label[item.status]??item.status;rows.push({id:test.id,expected:test.expect,observed,reason:item.approval.reason,ok:observed===test.expect});}
+for(const test of tests){const id=ids.get(test.id);if(!id)continue;const item=system.inbox.service.project(user,id);const observed=label[item.status]??item.status;const want=expected(test),note=want!==test.expect?' (already paid on the platform)':'';rows.push({id:test.id,expected:want+note,observed,reason:item.approval.reason,ok:observed===want&&(!note||item.approval.reason.includes('already been paid'))});}
 rows.sort((a,b)=>a.id.localeCompare(b.id));
 await system.app.close();globalThis.fetch=originalFetch;await rm(dir,{recursive:true,force:true});
 const passed=rows.filter(r=>r.ok).length;

@@ -1,0 +1,449 @@
+{
+  "schemaVersion": "secure-finance.detection-benchmark.v3",
+  "generatedAt": "2026-10-11T08:45:44.404Z",
+  "split": "test",
+  "mode": "full-pipeline",
+  "rulesSha256Prefix": "aed1a851de4d",
+  "corpus": {
+    "items": 4645,
+    "sha256": "12491ce9827b3d53a3efad7cbb0dd659cf15200ae15278f48270522890cb0008",
+    "splitRule": "Nazario: 2015-2020 dev, 2021-2025 test. Enron and synthetic: 50/50 by sha256(id)."
+  },
+  "method": {
+    "wallSeconds": 53.6,
+    "environment": {
+      "node": "v24.14.0",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  "overall": {
+    "items": 4645,
+    "errors": 0,
+    "malicious": 1821,
+    "benign": 2824,
+    "confusion": {
+      "truePositive": 1347,
+      "falsePositive": 43,
+      "trueNegative": 2781,
+      "falseNegative": 474
+    },
+    "securityAlert": {
+      "precision": 0.9691,
+      "precisionCi95": [
+        0.9586,
+        0.977
+      ],
+      "recall": 0.7397,
+      "recallCi95": [
+        0.7191,
+        0.7593
+      ],
+      "falsePositiveRate": 0.0152,
+      "falsePositiveRateCi95": [
+        0.0113,
+        0.0204
+      ],
+      "f1": 0.839,
+      "precisionIfOnePercentMalicious": 0.3292,
+      "precisionIfOnePerThousandMalicious": 0.0464
+    },
+    "workflow": {
+      "maliciousAutoCleared": 46,
+      "maliciousSentToHuman": 428,
+      "maliciousNotAutoClearedRate": 0.9747,
+      "benignAutoClearedRate": 0.6002,
+      "benignHumanReviewRate": 0.3846
+    },
+    "timeToDetect": {
+      "n": 1347,
+      "medianMs": 10.647,
+      "p95Ms": 16.039,
+      "p99Ms": 22.86,
+      "maxMs": 47.085
+    },
+    "timeToDecisionAllItems": {
+      "n": 4645,
+      "medianMs": 10.609,
+      "p95Ms": 16.497,
+      "p99Ms": 23.6,
+      "maxMs": 47.085
+    }
+  },
+  "realDataOnly": {
+    "items": 4062,
+    "errors": 0,
+    "malicious": 1541,
+    "benign": 2521,
+    "confusion": {
+      "truePositive": 1153,
+      "falsePositive": 43,
+      "trueNegative": 2478,
+      "falseNegative": 388
+    },
+    "securityAlert": {
+      "precision": 0.964,
+      "precisionCi95": [
+        0.9519,
+        0.9732
+      ],
+      "recall": 0.7482,
+      "recallCi95": [
+        0.7259,
+        0.7693
+      ],
+      "falsePositiveRate": 0.0171,
+      "falsePositiveRateCi95": [
+        0.0127,
+        0.0229
+      ],
+      "f1": 0.8425,
+      "precisionIfOnePercentMalicious": 0.307,
+      "precisionIfOnePerThousandMalicious": 0.0421
+    },
+    "workflow": {
+      "maliciousAutoCleared": 46,
+      "maliciousSentToHuman": 342,
+      "maliciousNotAutoClearedRate": 0.9701,
+      "benignAutoClearedRate": 0.6616,
+      "benignHumanReviewRate": 0.3213
+    },
+    "timeToDetect": {
+      "n": 1153,
+      "medianMs": 10.742,
+      "p95Ms": 16.402,
+      "p99Ms": 23.291,
+      "maxMs": 47.085
+    },
+    "timeToDecisionAllItems": {
+      "n": 4062,
+      "medianMs": 10.67,
+      "p95Ms": 16.264,
+      "p99Ms": 21.897,
+      "maxMs": 47.085
+    }
+  },
+  "bySource": {
+    "enron": {
+      "items": 2521,
+      "errors": 0,
+      "malicious": 0,
+      "benign": 2521,
+      "confusion": {
+        "truePositive": 0,
+        "falsePositive": 43,
+        "trueNegative": 2478,
+        "falseNegative": 0
+      },
+      "securityAlert": {
+        "precision": 0,
+        "precisionCi95": [
+          0,
+          0.082
+        ],
+        "recall": null,
+        "recallCi95": null,
+        "falsePositiveRate": 0.0171,
+        "falsePositiveRateCi95": [
+          0.0127,
+          0.0229
+        ],
+        "f1": null,
+        "precisionIfOnePercentMalicious": null,
+        "precisionIfOnePerThousandMalicious": null
+      },
+      "workflow": {
+        "maliciousAutoCleared": 0,
+        "maliciousSentToHuman": 0,
+        "maliciousNotAutoClearedRate": null,
+        "benignAutoClearedRate": 0.6616,
+        "benignHumanReviewRate": 0.3213
+      },
+      "timeToDetect": {
+        "n": 0,
+        "medianMs": null,
+        "p95Ms": null,
+        "p99Ms": null,
+        "maxMs": null
+      },
+      "timeToDecisionAllItems": {
+        "n": 2521,
+        "medianMs": 10.661,
+        "p95Ms": 16.479,
+        "p99Ms": 21.948,
+        "maxMs": 37.411
+      }
+    },
+    "nazario": {
+      "items": 1541,
+      "errors": 0,
+      "malicious": 1541,
+      "benign": 0,
+      "confusion": {
+        "truePositive": 1153,
+        "falsePositive": 0,
+        "trueNegative": 0,
+        "falseNegative": 388
+      },
+      "securityAlert": {
+        "precision": 1,
+        "precisionCi95": [
+          0.9967,
+          1
+        ],
+        "recall": 0.7482,
+        "recallCi95": [
+          0.7259,
+          0.7693
+        ],
+        "falsePositiveRate": null,
+        "falsePositiveRateCi95": null,
+        "f1": 0.856,
+        "precisionIfOnePercentMalicious": null,
+        "precisionIfOnePerThousandMalicious": null
+      },
+      "workflow": {
+        "maliciousAutoCleared": 46,
+        "maliciousSentToHuman": 342,
+        "maliciousNotAutoClearedRate": 0.9701,
+        "benignAutoClearedRate": null,
+        "benignHumanReviewRate": null
+      },
+      "timeToDetect": {
+        "n": 1153,
+        "medianMs": 10.742,
+        "p95Ms": 16.402,
+        "p99Ms": 23.291,
+        "maxMs": 47.085
+      },
+      "timeToDecisionAllItems": {
+        "n": 1541,
+        "medianMs": 10.676,
+        "p95Ms": 16.096,
+        "p99Ms": 21.391,
+        "maxMs": 47.085
+      }
+    },
+    "synthetic-ap": {
+      "items": 583,
+      "errors": 0,
+      "malicious": 280,
+      "benign": 303,
+      "confusion": {
+        "truePositive": 194,
+        "falsePositive": 0,
+        "trueNegative": 303,
+        "falseNegative": 86
+      },
+      "securityAlert": {
+        "precision": 1,
+        "precisionCi95": [
+          0.9806,
+          1
+        ],
+        "recall": 0.6929,
+        "recallCi95": [
+          0.6365,
+          0.744
+        ],
+        "falsePositiveRate": 0,
+        "falsePositiveRateCi95": [
+          0,
+          0.0125
+        ],
+        "f1": 0.8186,
+        "precisionIfOnePercentMalicious": 1,
+        "precisionIfOnePerThousandMalicious": 1
+      },
+      "workflow": {
+        "maliciousAutoCleared": 0,
+        "maliciousSentToHuman": 86,
+        "maliciousNotAutoClearedRate": 1,
+        "benignAutoClearedRate": 0.0891,
+        "benignHumanReviewRate": 0.9109
+      },
+      "timeToDetect": {
+        "n": 194,
+        "medianMs": 9.997,
+        "p95Ms": 12.812,
+        "p99Ms": 15.705,
+        "maxMs": 23.888
+      },
+      "timeToDecisionAllItems": {
+        "n": 583,
+        "medianMs": 10.152,
+        "p95Ms": 21.164,
+        "p99Ms": 27.435,
+        "maxMs": 32.041
+      }
+    }
+  },
+  "byCategory": {
+    "enron:business_email": {
+      "items": 2521,
+      "malicious": false,
+      "securityHold": 43,
+      "humanReview": 810,
+      "autoCleared": 1668,
+      "errors": 0
+    },
+    "nazario:real_phishing": {
+      "items": 1541,
+      "malicious": true,
+      "securityHold": 1153,
+      "humanReview": 342,
+      "autoCleared": 46,
+      "errors": 0
+    },
+    "synthetic-ap:ap_credential_phishing": {
+      "items": 2,
+      "malicious": true,
+      "securityHold": 2,
+      "humanReview": 0,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:ap_credential_phishing+obfuscated": {
+      "items": 12,
+      "malicious": true,
+      "securityHold": 12,
+      "humanReview": 0,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:clean_invoice": {
+      "items": 99,
+      "malicious": false,
+      "securityHold": 0,
+      "humanReview": 89,
+      "autoCleared": 10,
+      "errors": 0
+    },
+    "synthetic-ap:executive_impersonation": {
+      "items": 57,
+      "malicious": true,
+      "securityHold": 57,
+      "humanReview": 0,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:executive_impersonation+obfuscated": {
+      "items": 11,
+      "malicious": true,
+      "securityHold": 11,
+      "humanReview": 0,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:inflated_amount": {
+      "items": 60,
+      "malicious": true,
+      "securityHold": 0,
+      "humanReview": 60,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:internal_finance": {
+      "items": 33,
+      "malicious": false,
+      "securityHold": 0,
+      "humanReview": 33,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:invoice_prompt_injection": {
+      "items": 12,
+      "malicious": true,
+      "securityHold": 12,
+      "humanReview": 0,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:silent_recipient_swap": {
+      "items": 24,
+      "malicious": true,
+      "securityHold": 0,
+      "humanReview": 24,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:supplier_account_change": {
+      "items": 60,
+      "malicious": true,
+      "securityHold": 60,
+      "humanReview": 0,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:supplier_account_change+obfuscated": {
+      "items": 17,
+      "malicious": true,
+      "securityHold": 17,
+      "humanReview": 0,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:supplier_correspondence": {
+      "items": 105,
+      "malicious": false,
+      "securityHold": 0,
+      "humanReview": 88,
+      "autoCleared": 17,
+      "errors": 0
+    },
+    "synthetic-ap:tampered_invoice_with_change_note": {
+      "items": 14,
+      "malicious": true,
+      "securityHold": 13,
+      "humanReview": 1,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:voice_impersonation": {
+      "items": 3,
+      "malicious": true,
+      "securityHold": 3,
+      "humanReview": 0,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:voice_impersonation+obfuscated": {
+      "items": 8,
+      "malicious": true,
+      "securityHold": 7,
+      "humanReview": 1,
+      "autoCleared": 0,
+      "errors": 0
+    },
+    "synthetic-ap:voice_routine": {
+      "items": 66,
+      "malicious": false,
+      "securityHold": 0,
+      "humanReview": 66,
+      "autoCleared": 0,
+      "errors": 0
+    }
+  },
+  "falsePositiveReasons": {
+    "UNVERIFIED_LINK": 34,
+    "PHISHING_LANGUAGE": 15,
+    "CREDENTIAL_REQUEST": 3,
+    "EXECUTABLE_CONTENT": 2,
+    "EXECUTIVE_PRESSURE": 2,
+    "EMBEDDED_INSTRUCTIONS": 1,
+    "CLAIMED_APPROVAL": 1
+  },
+  "truePositiveReasons": {
+    "UNVERIFIED_LINK": 1047,
+    "PHISHING_LANGUAGE": 874,
+    "PAYMENT_DESTINATION_CHANGE": 153,
+    "OBFUSCATED_TEXT": 116,
+    "EXECUTIVE_PRESSURE": 48,
+    "CREDENTIAL_REQUEST": 40,
+    "CLAIMED_APPROVAL": 32,
+    "EMBEDDED_INSTRUCTIONS": 12,
+    "POSSIBLE_SPAM": 1
+  },
+  "liveWorker": "not run (add --live)",
+  "errors": []
+}
