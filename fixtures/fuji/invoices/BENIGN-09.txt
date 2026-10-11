@@ -1,0 +1,10 @@
+NORTHSTAR LABS — SYNTHETIC INVOICE
+Invoice reference: NS-2026-0053
+Supplier: Atlas Cloud Services
+Supplier reference: 0xf7850731316551808eb554d30b038e375c94ffe9908f20916ac6ce5885bb75ad
+Invoice date: 2026-10-10
+Amount: 48000.00 DEMO
+Recipient: 0x5d99ddf74ec01f61e37ecae561e60d72bfb81ce4
+Service: Monthly platform engineering and synthetic demonstration services.
+
+Terms: Synthetic data; DEMO has no monetary value.

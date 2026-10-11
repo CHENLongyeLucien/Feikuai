@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "secure-finance.deployment.v1",
+  "environment": "fuji",
+  "chainId": "43113",
+  "rpcUrl": "https://api.avax-test.network/ext/bc/C/rpc",
+  "vault": "0x667ef97b213cfbe3f89ed2fe835c16d11acf6914",
+  "token": "0x4d0328eb76b6409def0b9922931097187210a512",
+  "approver": "0x4ce03c36d63495d58d44573e574600fc43acd0a9",
+  "roles": {
+    "deployer": "0x131fb27f122d19d95e0dc95bdbf0d7ba86abd8d0",
+    "approver": "0x4ce03c36d63495d58d44573e574600fc43acd0a9",
+    "relayer": "0x092f48ce0b6d0f9f88b939483fdc7e51dcffaf36",
+    "suppliers": [
+      "0x5d99ddf74ec01f61e37ecae561e60d72bfb81ce4",
+      "0x7267fbda75617c72fec6f449f2eba065ba7a372d"
+    ]
+  },
+  "maxPerPaymentAtomic": "50000000000",
+  "maxAuthorizationTTL": "600",
+  "registry": [
+    {
+      "supplierKey": "0xf196c9ccdcfccc47a4d0f389d750efffd5445e8db940c805135ca72bc78e8678",
+      "recipient": "0x7267fbda75617c72fec6f449f2eba065ba7a372d"
+    },
+    {
+      "supplierKey": "0xf7850731316551808eb554d30b038e375c94ffe9908f20916ac6ce5885bb75ad",
+      "recipient": "0x5d99ddf74ec01f61e37ecae561e60d72bfb81ce4"
+    }
+  ],
+  "registryHash": "0x5a4400d98cb15f74bc17178f8a4ab62a1bcb7ec3ec42f085b680ff3388ba067a",
+  "policyId": "0x2fdcbab44de14599ea2419207ac739f2be7f0b91ebaa611549a54f8b9cd6936c",
+  "runtimeCodeHash": "0x677f58a9b57b0ed7724e7ed8be307653669f0690b7dc8f2c99c1413c7ddd04c2",
+  "tokenRuntimeCodeHash": "0xdbb64367e83b9b942902c9e4b1f324df653e9581d47b60d7b14eb8dacd56a8f3",
+  "deploymentBlock": "59277926",
+  "transactions": {
+    "token": "0x8979f99e1b34352f07bb3654be744996dc2f3612c994613c17d56f9c6ba5a536",
+    "vault": "0xaf9efa22ca29663e439c6ed3e59f266860ae5084c85492a699903eeb40d5136d",
+    "funding": "0xd6b30fa89c4a0cb9a2ef0c29d812fa794e06a4b8e0a1bf3e301836ca217d5103"
+  },
+  "build": {
+    "solidity": "0.8.37",
+    "openzeppelin": "5.7.0",
+    "evmVersion": "cancun",
+    "optimizerRuns": 200,
+    "viaIR": true,
+    "foundry": "1.8.1"
+  }
+}

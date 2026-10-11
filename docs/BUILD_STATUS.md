@@ -1,5 +1,11 @@
 # Secure Finance build status
 
+## Public Fuji configuration publication — 11 October 2026
+
+Reviewed the remaining local Fuji files for repository publication: the deployment-script path correction, public chain-43113 manifest, synthetic trusted registry and invoice fixtures, and saved deployment preflight report. The preflight report is a historical observation at block 59277926, not a current balance or a new check performed during publication. The application fixes and their 477 unit/API and 30 browser results were already published in commit `98ccac2`.
+
+Publication checks: TypeScript and scoped deployment-script ESLint passed. Offline manifest/policy and registry checks passed: 34 registered fixtures, including 20 exact 10-DEMO records; all 14 legacy Fuji source fixtures match their intended scenarios. Preserved their intentional mixed line endings with Git attributes. No configured secret values, credential-shaped content or private filesystem paths were found in the newly published files. `.env.example` retains empty credential placeholders. Private environments, databases, chain state, wallet material, broadcast journals and saved receipts remain excluded from Git and preserved locally. No deployment, seeding, service restart or payment is performed by publication.
+
 ## Already-paid invoice diagnosis and usable repeat tests — 11 October 2026
 
 The exact `fixtures/user-tests/invoices/01-matching-invoice.pdf` contains valid selectable text and matches **NS-TEST10-0001 / 10 DEMO**. The saved Fuji ledger already records its settlement. Re-uploading it correctly fails the unpaid-invoice check; the defect was a misleading approval action and generic final-audit error. The original PDF and recorded settlement remain unchanged.

@@ -22,7 +22,7 @@ const runFile='contracts/broadcast/DeployFuji.s.sol/43113/run-latest.json';
 const broadcast=process.argv.includes('--broadcast'),resume=process.argv.includes('--resume'),recover=process.argv.includes('--recover-manifest');
 if(existsSync(runFile)&&!resume&&!recover)throw new Error('Prior Fuji broadcast journal exists. Use --recover-manifest to recover receipts or --resume to resume existing transactions after inspection; refusing duplicate vault.');
 if(!recover){
-  const args=['scripts/foundry.mjs','forge','script','--root','contracts','script/DeployFuji.s.sol:DeployFuji','--rpc-url',rpcUrl,'--account','sf-fuji-deployer','--sender',deployer];
+  const args=['scripts/foundry.mjs','forge','script','--root','contracts','contracts/script/DeployFuji.s.sol:DeployFuji','--rpc-url',rpcUrl,'--account','sf-fuji-deployer','--sender',deployer];
   if(broadcast)args.push('--broadcast');if(resume)args.push('--resume');
   const result=spawnSync(process.execPath,args,{stdio:'inherit',env:process.env});if(result.status!==0)process.exit(result.status??1);
   if(!broadcast){console.log('Simulation only; no Fuji manifest or deployment claimed. Review roles and rerun with --broadcast to deploy synthetic DEMO.');process.exit(0);}

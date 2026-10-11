@@ -1,0 +1,94 @@
+{
+  "passed": true,
+  "chainId": "43113",
+  "blockNumber": "59277926",
+  "observedChainTimestamp": "1791660661",
+  "vaultBalanceAtomic": "300000000000",
+  "checks": [
+    {
+      "check": "RPC chain matches pin and P0 allowlist",
+      "pass": true,
+      "actual": "43113"
+    },
+    {
+      "check": "Vault runtime bytecode",
+      "pass": true,
+      "actual": "0x677f58a9b57b0ed7724e7ed8be307653669f0690b7dc8f2c99c1413c7ddd04c2"
+    },
+    {
+      "check": "Token runtime bytecode",
+      "pass": true,
+      "actual": "0xdbb64367e83b9b942902c9e4b1f324df653e9581d47b60d7b14eb8dacd56a8f3"
+    },
+    {
+      "check": "token",
+      "pass": true,
+      "actual": "0x4D0328eb76b6409def0b9922931097187210a512"
+    },
+    {
+      "check": "approver",
+      "pass": true,
+      "actual": "0x4ce03C36d63495D58D44573e574600fC43AcD0a9"
+    },
+    {
+      "check": "maxPerPaymentAtomic",
+      "pass": true,
+      "actual": "50000000000"
+    },
+    {
+      "check": "maxAuthorizationTTL",
+      "pass": true,
+      "actual": "600"
+    },
+    {
+      "check": "registryHash",
+      "pass": true,
+      "actual": "0x5a4400d98cb15f74bc17178f8a4ab62a1bcb7ec3ec42f085b680ff3388ba067a"
+    },
+    {
+      "check": "policyId",
+      "pass": true,
+      "actual": "0x2fdcbab44de14599ea2419207ac739f2be7f0b91ebaa611549a54f8b9cd6936c"
+    },
+    {
+      "check": "TypeScript policy",
+      "pass": true,
+      "actual": "0x2fdcbab44de14599ea2419207ac739f2be7f0b91ebaa611549a54f8b9cd6936c"
+    },
+    {
+      "check": "supplier 0xf196c9ccdcfccc47a4d0f389d750efffd5445e8db940c805135ca72bc78e8678",
+      "pass": true,
+      "actual": "0x7267Fbda75617c72FEc6F449f2EbA065bA7a372d"
+    },
+    {
+      "check": "supplier 0xf7850731316551808eb554d30b038e375c94ffe9908f20916ac6ce5885bb75ad",
+      "pass": true,
+      "actual": "0x5D99DDF74eC01F61E37EcAe561E60d72bfb81cE4"
+    },
+    {
+      "check": "DEMO decimals",
+      "pass": true,
+      "actual": "6"
+    },
+    {
+      "check": "DEMO fixed supply",
+      "pass": true,
+      "actual": "1000000000000"
+    },
+    {
+      "check": "Vault has liquidity",
+      "pass": true,
+      "actual": "300000000000"
+    },
+    {
+      "check": "Relayer gas funded",
+      "pass": true,
+      "actual": "50000000000000000"
+    },
+    {
+      "check": "Approver cancellation gas funded",
+      "pass": true,
+      "actual": "50000000000000000"
+    }
+  ]
+}
