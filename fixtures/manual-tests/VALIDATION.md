@@ -7,7 +7,7 @@ Run 2026-10-11. Each file went through the real intake, both workers, fixture ag
 | ID | Expected | Observed | Reason shown to the user |
 | --- | --- | --- | --- |
 | A1 | Needs review (already paid on the platform) | Needs review | This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test. |
-| A2 | Approved | Approved | Invoice matches the trusted record for this supplier, amount and wallet. Ready for wallet approval; no payment has been sent yet. |
+| A2 | Needs review (already paid on the platform) | Needs review | This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test. |
 | A3 | Approved | Approved | Invoice matches the trusted record for this supplier, amount and wallet. Ready for wallet approval; no payment has been sent yet. |
 | A4 | Approved | Approved | Invoice matches the trusted record for this supplier, amount and wallet. Ready for wallet approval; no payment has been sent yet. |
 | B1 | Needs review (already paid on the platform) | Needs review | This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test. |

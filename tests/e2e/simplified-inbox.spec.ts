@@ -61,28 +61,28 @@ for (const size of sizes) {
     await page.getByRole('button',{name:'Add to inbox',exact:true}).click();
     const dialog=page.getByRole('dialog');
     await expect(dialog.getByRole('heading',{name:'Add to inbox',exact:true})).toBeVisible();
-    await expect(dialog.getByRole('radio',{name:'Invoice',exact:true})).toBeChecked();
-    await expect(dialog.getByRole('button',{name:'Upload file',exact:true})).toHaveAttribute('aria-pressed','true');
+    // One drop zone: no type to choose; each file's type is detected and labelled.
+    await expect(dialog.getByRole('radio')).toHaveCount(0);
     await expect(dialog.getByRole('button',{name:'Add & review',exact:true})).toBeDisabled();
     await capture(page,info,'invoice-upload');
-    for(const source of ['Invoice','Email','Voice','Text']) {
-      await dialog.getByRole('radio',{name:source,exact:true}).check();
-      if(source!=='Text') await dialog.getByRole('button',{name:/^Paste (text|transcript)$/}).click();
-      const textarea=dialog.getByRole('textbox',{name:source==='Email'?'Email message':source==='Voice'?'Transcript':'Source text',exact:true});
-      await textarea.fill(`Synthetic ${source.toLowerCase()} request for unsubmitted interface testing.`);
-      await expect(dialog.getByRole('button',{name:'Add & review',exact:true})).toBeEnabled();
-      await fit(page);
-      if(source!=='Text') {
-        await dialog.getByRole('button',{name:'Upload file',exact:true}).click();
-        const upload=dialog.locator('input[type=file]');
-        await upload.setInputFiles({name:source==='Email'?'example.eml':source==='Voice'?'example.wav':'example.txt',mimeType:source==='Email'?'message/rfc822':source==='Voice'?'audio/wav':'text/plain',buffer:Buffer.from('Synthetic UI file; never submitted.')});
-        await expect(dialog.getByRole('button',{name:'Add & review',exact:true})).toBeEnabled();
-        await dialog.getByRole('button',{name:'Remove file',exact:true}).click();
-        await expect(dialog.getByRole('button',{name:'Add & review',exact:true})).toBeDisabled();
-        await upload.setInputFiles({name:'example.txt',mimeType:'text/plain',buffer:Buffer.from('Same-file retry; never submitted.')});
-        await expect(dialog.getByRole('button',{name:'Add & review',exact:true})).toBeEnabled();
-      }
-    }
+    const upload=dialog.locator('input[type=file]');
+    await upload.setInputFiles([
+     {name:'example.eml',mimeType:'message/rfc822',buffer:Buffer.from('From: a@example.invalid\r\nSubject: Hi\r\n\r\nSynthetic UI file; never submitted.')},
+     {name:'example.wav',mimeType:'audio/wav',buffer:Buffer.from('Synthetic UI file; never submitted.')},
+     {name:'example.txt',mimeType:'text/plain',buffer:Buffer.from('Invoice reference: NS-TEST10-0999\nAmount: 10.00 DEMO')},
+    ]);
+    const files=dialog.getByRole('list',{name:'Files to add'});
+    await expect(files.getByText('Email',{exact:true})).toBeVisible();
+    await expect(files.getByText('Voice',{exact:true})).toBeVisible();
+    await expect(files.getByText('Invoice',{exact:true})).toBeVisible();
+    await expect(dialog.getByRole('button',{name:'Add 3 items',exact:true})).toBeEnabled();
+    await dialog.getByRole('button',{name:'Remove example.wav',exact:true}).click();
+    await expect(dialog.getByRole('button',{name:'Add 2 items',exact:true})).toBeEnabled();
+    await fit(page);
+    await dialog.getByRole('button',{name:'Paste text instead',exact:true}).click();
+    await dialog.getByRole('textbox',{name:/Paste a message/}).fill('Could you please schedule a meeting next week?');
+    await expect(dialog.getByText('Detected: Text',{exact:false})).toBeVisible();
+    await expect(dialog.getByRole('button',{name:'Add & review',exact:true})).toBeEnabled();
     await dialog.getByText('Optional details',{exact:true}).click();
     await dialog.getByRole('textbox',{name:'Title',exact:true}).fill('Synthetic title');
     await dialog.getByRole('textbox',{name:'Sender or speaker',exact:true}).fill('sender@example.invalid');
