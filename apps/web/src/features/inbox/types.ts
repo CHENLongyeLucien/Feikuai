@@ -28,6 +28,7 @@ export type InboxItem = {
   linkedCaseId: string | null;
   payableId: string | null;
   approval: null | {scope: string; decision: string; reason?: string};
+  reviewBlock?: {code: 'INVOICE_ALREADY_SETTLED'; title: string; message: string};
   payment: null | {authorizationStatus: string | null; executionStatus: string; settlementStatus: string; txHash?: string | null; requiresWalletSignature?: boolean; authorityModel?: string};
   createdAt?: string;
   updatedAt?: string;

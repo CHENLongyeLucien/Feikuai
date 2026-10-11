@@ -50,11 +50,11 @@ def paragraph(c, x, y, value, width, size=10, color=FOREST):
     return y
 
 
-def build():
-    OUT.mkdir(parents=True, exist_ok=True)
+def build(cases=CASES, output=OUT):
+    output.mkdir(parents=True, exist_ok=True)
     w, h = A4
-    for name, reference, amount, has_key, service, note in CASES:
-        destination = OUT / (name + ".pdf")
+    for name, reference, amount, has_key, service, note in cases:
+        destination = output / (name + ".pdf")
         c = canvas.Canvas(str(destination), pagesize=A4, invariant=1, pageCompression=1)
         c.setTitle("Synthetic invoice " + reference)
         c.setAuthor("SecureFinance test fixtures")
@@ -111,4 +111,19 @@ def build():
 
 
 if __name__ == "__main__":
-    build()
+    import argparse
+    import re
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--small-reference", help="Create one separate PDF for an existing NS-TEST10-0001 through NS-TEST10-0020 record; does not register or pay it.")
+    args = parser.parse_args()
+    if args.small_reference:
+        reference = args.small_reference
+        if not re.fullmatch(r"NS-TEST10-\d{4}", reference) or not 1 <= int(reference[-4:]) <= 20:
+            parser.error("Use an existing NS-TEST10-0001 through NS-TEST10-0020 reference.")
+        build([(reference, reference, "10.00", True,
+                "Small-value platform engineering test services.",
+                "Please retain this document with the October service records.")],
+              ROOT / "fixtures/user-tests/small-payments")
+    else:
+        build()

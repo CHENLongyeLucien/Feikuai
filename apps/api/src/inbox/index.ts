@@ -10,6 +10,7 @@ import {InboxService,type InboxFile} from './service.js';
 import {InboxWorker} from './worker.js';
 import {inboxChannelSchema,inboxInputSchema,inboxStatusSchema,reviewSchema,type InboxInput,type InboxPayment} from './types.js';
 import {inboxReadingReport,renderReadingPdf} from '../reports/pdf.js';
+import {renderTestInvoicePdf} from './test-invoice.js';
 export * from './types.js';
 export {InboxService} from './service.js';
 
@@ -21,6 +22,13 @@ export async function registerInbox(app:FastifyInstance,payments:Service,db:Db,c
  app.get('/api/v1/inbox/notifications',async req=>({notifications:service.notifications(requireIdentity(db,req).tenantId)}));
  app.post('/api/v1/inbox/notifications/:id/read',async req=>{const user=requireMutation(db,config,req),id=idParam.parse(req.params).id;z.object({}).strict().parse(req.body??{});const notification=db.prepare('SELECT id FROM inbox_notifications WHERE id=? AND tenant_id=?').get(id,user.tenantId);if(!notification)fail('NOT_FOUND','Notification not found.',404);db.prepare('UPDATE inbox_notifications SET is_read=1 WHERE id=? AND tenant_id=?').run(id,user.tenantId);return {id,read:true};});
  app.get('/api/v1/inbox/demo-examples',async req=>{const user=requireIdentity(db,req,['operator','reviewer']);if(config.APP_ENV!=='local'||config.CHAIN_ID!=='31337'||!config.ENABLE_DEMO_ROUTES)fail('DEMO_ROUTE_DISABLED','Synthetic examples are available only in the explicitly configured local demo.',404);return service.demoExamples(user);});
+ app.get('/api/v1/inbox/test-invoice.pdf',async(req,reply)=>{
+  const user=requireIdentity(db,req,['operator','reviewer']);z.object({}).strict().parse(req.query);
+  if(!((config.APP_ENV==='local'&&config.CHAIN_ID==='31337')||(config.APP_ENV==='fuji'&&config.CHAIN_ID==='43113')))fail('TEST_INVOICE_UNAVAILABLE','Test invoices are only available in a local or Fuji test workspace.',404);
+  const payable=db.transaction(()=>service.unusedTestPayable(user,true))();if(!payable)fail('NO_UNUSED_TEST_INVOICE','No unused 10-DEMO test invoice is available. Ask your workspace administrator to register another test invoice.',409);
+  const filename=`test-invoice-${payable.invoiceReference.replace(/[^a-zA-Z0-9_-]/g,'-')}.pdf`;
+  return reply.type('application/pdf').header('Cache-Control','no-store').header('Content-Security-Policy',"default-src 'none'; sandbox").header('Content-Disposition',`attachment; filename="${filename}"`).send(await renderTestInvoicePdf(payable));
+ });
  app.get('/api/v1/inbox/:id',async req=>service.project(requireIdentity(db,req),idParam.parse(req.params).id));
  app.get('/api/v1/inbox/:id/report.pdf',async(req,reply)=>{const user=requireIdentity(db,req),id=idParam.parse(req.params).id,report=db.transaction(()=>inboxReadingReport(service.project(user,id)))();return reply.type('application/pdf').header('Cache-Control','no-store').header('Content-Security-Policy',"default-src 'none'; sandbox").header('Content-Disposition',`attachment; filename="inbox-review-${id}.pdf"`).send(await renderReadingPdf(report));});
  app.get('/api/v1/inbox/:id/incident-report',async(req,reply)=>{const user=requireIdentity(db,req),id=idParam.parse(req.params).id;reply.header('Content-Disposition',`attachment; filename="incident-${id}.json"`);return service.incidentReport(user,id);});

@@ -36,6 +36,12 @@ The small supplier reference at the bottom is a public record identifier used by
 
 ## More 10 DEMO payment tests
 
+For a fresh PDF, choose **Add to inbox → Invoice → Download next 10 DEMO test invoice**, then upload the downloaded file. The application selects an unused registered invoice in your signed-in local or Fuji workspace. Downloading does not reserve or pay it; upload it before downloading the next one. If the registered test pool is exhausted, the application explains this instead of reusing a paid invoice.
+
+`01-matching-invoice.pdf` always refers to **NS-TEST10-0001**. Once that invoice has been paid, its **Already paid** hold is expected. Open **View payment receipt**, or choose **Dismiss duplicate** to close the duplicate review while retaining its history. Do not change a paid invoice's reference to bypass that check.
+
+A separate ready-to-upload PDF is provided at `small-payments/NS-TEST10-0005.pdf`. It passed the finance checks against an isolated copy of the saved Fuji records on 11 October 2026; its availability can change after it is submitted or paid. To regenerate a PDF for another existing small-test reference, run `python scripts/build-user-test-pdfs.py --small-reference NS-TEST10-0006` with ReportLab installed. This creates a document only; it does not add or alter trusted records.
+
 The `small-payments/` folder contains twenty clean text invoices, **NS-TEST10-0001 through NS-TEST10-0020**, each for **10.00 DEMO**. In **Add to inbox → Invoice**, upload a `.txt` or paste its contents. These workspaces now have matching trusted records: Fuji, original local, and saved experience demo. A fresh installation must prepare the records below first.
 
 Use `NS-TEST10-0005.txt` onward after trying the five PDF scenarios; references 0001–0004 are shared with those scenarios. Each invoice can be paid once. To test another payment, use the next unused reference. Re-uploading a paid invoice does not create a second payment. These small-value invoices use the human approval route; existing standing-policy obligations are unchanged.
