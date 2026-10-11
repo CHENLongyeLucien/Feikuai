@@ -1,0 +1,23 @@
+From: Sender <sender@example.invalid>
+To: Northstar Accounts Payable <ap@northstar.example.invalid>
+Subject: Email with a 7z archive attached
+Date: Wed, 14 Oct 2026 09:00:00 +0200
+Message-ID: <manual-b-g2@example.invalid>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="manual-b-G2"
+
+--manual-b-G2
+Content-Type: text/plain; charset=utf-8
+
+Hello,
+
+Please find the updated price list in the attached archive.
+
+Regards
+--manual-b-G2
+Content-Type: application/x-7z-compressed; name="price-list.7z"
+Content-Disposition: attachment; filename="price-list.7z"
+Content-Transfer-Encoding: base64
+
+N3q8ryccAAQAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+--manual-b-G2--

@@ -1,0 +1,15 @@
+From: Sender <sender@example.invalid>
+To: Northstar Accounts Payable <ap@northstar.example.invalid>
+Subject: Meeting notes with a link
+Date: Wed, 14 Oct 2026 09:00:00 +0200
+Message-ID: <manual-b-f4@example.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+Here are the notes from yesterday's call: https://notes.example.invalid/meeting/77
+Let me know if anything is missing.
+
+Thanks

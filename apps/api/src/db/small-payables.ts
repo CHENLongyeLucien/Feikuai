@@ -29,9 +29,11 @@ function checkedRegistry(value:unknown,deployment:Deployment):Registry{
  for(const p of r.payables){const s=r.suppliers.find(candidate=>candidate.id===p.supplierId);if(!s||p.token!==r.token||p.supplierKey!==s.supplierKey||p.recipient!==s.recipient||p.supplierName!==s.name)fail('PAYABLE_SUPPLIER_MISMATCH');}
  return r;
 }
-export function smallPayablesFor(registry:unknown,deployment:Deployment):Payable[]{
+/** count > 20 appends further test invoices (NS-TEST10-0021…); identities are deterministic, so existing rows never change. */
+export function smallPayablesFor(registry:unknown,deployment:Deployment,count=SMALL_TEST_COUNT):Payable[]{
  const r=checkedRegistry(registry,deployment),supplier=r.suppliers.find(s=>s.supplierKey===primaryKey)??fail('ATLAS_SUPPLIER_REQUIRED');
- return Array.from({length:SMALL_TEST_COUNT},(_,index)=>{
+ if(!Number.isInteger(count)||count<1||count>200)fail('SMALL_PAYABLE_COUNT_INVALID');
+ return Array.from({length:count},(_,index)=>{
   const number=String(index+1).padStart(4,'0'),invoiceReference=`NS-TEST10-${number}`,scope=`secure-finance.small-payable.v1:${r.chainId}:${r.vault}:${r.tenantId}:${invoiceReference}`;
   return {id:uuidFor(scope),invoiceKey:keccak256(toHex(scope)),invoiceReference,canonicalPayableId:`AP-TEST10-${number}`,supplierId:supplier.id,supplierKey:supplier.supplierKey,supplierName:supplier.name,recipient:supplier.recipient,amountAtomic:SMALL_TEST_AMOUNT_ATOMIC,token:r.token,version:'1',scenarioId:`SMALL-10-${String(index+1).padStart(2,'0')}`};
  });
@@ -57,7 +59,7 @@ function atomicRegistryWrite(path:string,original:Buffer,registry:Registry){
  try{renameSync(temporary,path);const directory=openSync(dirname(path),'r');try{fsyncSync(directory);}finally{closeSync(directory);}}finally{if(existsSync(temporary))unlinkSync(temporary);}
 }
 export function smallPayableSource(p:Payable){return `NORTHSTAR LABS — SYNTHETIC TEST INVOICE\nSupplier: ${p.supplierName}\nInvoice reference: ${p.invoiceReference}\nSupplier reference: ${p.supplierKey}\nInvoice date: 2026-10-11\nAmount: 10.00 DEMO\nService: Small-value platform engineering test services.\nTerms: Synthetic demonstration data. DEMO has no monetary value.\n`;}
-export type SmallPayablePreparation={registryPath:string;deploymentPath:string;databasePath?:string;sourcesDir?:string;backupDir?:string;apply?:boolean};
+export type SmallPayablePreparation={count?:number;registryPath:string;deploymentPath:string;databasePath?:string;sourcesDir?:string;backupDir?:string;apply?:boolean};
 type PreparationResult={mode:string;chainId:string;tenantId:string;amountAtomic:string;amountDisplay:string;total:number;registryRowsAdded:number;databaseRowsAdded:number;databaseIncluded:boolean;sourceFilesAdded:number;references:string[];historicalRowsChanged:number;onchainActions:number;backups:{registry:string;database?:string}|null};
 /** No config/env loading, RPC, signing, worker startup, migrations or payments. */
 export function prepareSmallPayables(options:SmallPayablePreparation):PreparationResult{
@@ -68,7 +70,7 @@ export function prepareSmallPayables(options:SmallPayablePreparation):Preparatio
   if(options.apply){try{lockFd=openSync(lockPath,'wx',0o600);writeFileSync(lockFd,JSON.stringify({pid:process.pid,startedAt:new Date().toISOString()})+'\n');}catch(error){if((error as NodeJS.ErrnoException).code==='EEXIST')fail('PREPARATION_LOCKED: verify the other preparation finished before removing its lock file');throw error;}}
   if(options.databasePath){db=new Database(resolve(options.databasePath),{readonly:!options.apply,fileMustExist:true});db.pragma('busy_timeout = 5000');if(options.apply)db.pragma('foreign_keys = ON');}
   const run=()=>{
-   const original=readFileSync(registryPath),raw=JSON.parse(original.toString('utf8')),r=checkedRegistry(raw,deployment),expected=smallPayablesFor(r,deployment),newRegistryRows=additions(r,expected),newDatabaseRows=db?inspectDatabase(db,r,expected):[];
+   const original=readFileSync(registryPath),raw=JSON.parse(original.toString('utf8')),r=checkedRegistry(raw,deployment),expected=smallPayablesFor(r,deployment,options.count),newRegistryRows=additions(r,expected),newDatabaseRows=db?inspectDatabase(db,r,expected):[];
    const sourceFiles=options.sourcesDir?expected.map(p=>({path:resolve(options.sourcesDir!,p.invoiceReference+'.txt'),text:smallPayableSource(p)})):[];
    for(const source of sourceFiles)if(existsSync(source.path)&&readFileSync(source.path,'utf8')!==source.text)fail('SOURCE_FILE_CONFLICT: existing source would be changed');
    const newSources=sourceFiles.filter(source=>!existsSync(source.path));
@@ -79,7 +81,7 @@ export function prepareSmallPayables(options:SmallPayablePreparation):Preparatio
     if(db)for(const p of newDatabaseRows)db.prepare('INSERT INTO payables(id,tenant_id,source_system,canonical_payable_id,invoice_key,supplier_id,invoice_reference,amount_atomic,token,version,scenario_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)').run(...Object.values(expectedRow(p,r.tenantId)));
     if(newSources.length){mkdirSync(resolve(options.sourcesDir!),{recursive:true,mode:0o700});for(const source of newSources)writeFileSync(source.path,source.text,{flag:'wx',mode:0o600});}
    }
-   return {mode:options.apply?'APPLIED':'DRY_RUN',chainId:r.chainId,tenantId:r.tenantId,amountAtomic:SMALL_TEST_AMOUNT_ATOMIC,amountDisplay:'10.00 DEMO',total:SMALL_TEST_COUNT,registryRowsAdded:newRegistryRows.length,databaseRowsAdded:newDatabaseRows.length,databaseIncluded:!!db,sourceFilesAdded:newSources.length,references:expected.map(p=>p.invoiceReference),historicalRowsChanged:0,onchainActions:0};
+   return {mode:options.apply?'APPLIED':'DRY_RUN',chainId:r.chainId,tenantId:r.tenantId,amountAtomic:SMALL_TEST_AMOUNT_ATOMIC,amountDisplay:'10.00 DEMO',total:options.count??SMALL_TEST_COUNT,registryRowsAdded:newRegistryRows.length,databaseRowsAdded:newDatabaseRows.length,databaseIncluded:!!db,sourceFilesAdded:newSources.length,references:expected.map(p=>p.invoiceReference),historicalRowsChanged:0,onchainActions:0};
   };
   const preview=options.apply?prepareSmallPayables({...options,apply:false}):null;
   let backups:{registry:string;database?:string}|null=null;

@@ -27,6 +27,8 @@
     "deploy:vercel": "tsx scripts/deploy-vercel.ts",
     "fixtures:demo": "tsx scripts/demo-pack/generate.ts",
     "test:demo-pack": "tsx scripts/manual-tests/validate.ts --pack demo",
+    "fixtures:manual-b": "tsx scripts/manual-tests-b/generate.ts",
+    "test:manual-pack-b": "tsx scripts/manual-tests/validate.ts --pack b",
     "history:reset": "tsx scripts/reset-history.ts",
     "doctor": "tsx scripts/doctor.ts",
     "db:migrate": "tsx scripts/db.ts migrate",

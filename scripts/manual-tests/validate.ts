@@ -10,10 +10,10 @@ import {join,resolve} from 'node:path';
 import {buildApp} from '../../apps/api/src/app.js';
 import {envSchema} from '../../apps/api/src/config.js';
 import {DomainError} from '../../apps/api/src/domain/errors.js';
-const demo=process.argv.includes('--pack')&&process.argv[process.argv.indexOf('--pack')+1]==='demo';
-const {tests}=demo?await import('../demo-pack/generate.js'):await import('./generate.js');
+const pack=process.argv.includes('--pack')?process.argv[process.argv.indexOf('--pack')+1]:'manual',demo=pack==='demo';
+const {tests}=demo?await import('../demo-pack/generate.js'):pack==='b'?await import('../manual-tests-b/generate.js'):await import('./generate.js');
 
-const root=resolve(demo?'fixtures/demo-pack':'fixtures/manual-tests'),dir=await mkdtemp(join(tmpdir(),'feikuai-manual-'));
+const root=resolve(demo?'fixtures/demo-pack':pack==='b'?'fixtures/manual-tests-b':'fixtures/manual-tests'),dir=await mkdtemp(join(tmpdir(),'feikuai-manual-'));
 const source=new Database(resolve('var/fuji/secure-finance.sqlite'),{readonly:true});await source.backup(join(dir,'fuji.sqlite'));source.close();
 const deployment=JSON.parse(await readFile('deployments/fuji.json','utf8'));deployment.rpcUrl='http://127.0.0.1:9';await writeFile(join(dir,'deployment.json'),JSON.stringify(deployment));
 const originalFetch=globalThis.fetch;globalThis.fetch=async()=>{throw new Error('NETWORK_DISABLED_IN_VALIDATION');};
@@ -42,6 +42,6 @@ for(const test of tests){const id=ids.get(test.id);if(!id)continue;const item=sy
 rows.sort((a,b)=>a.id.localeCompare(b.id));
 await system.app.close();globalThis.fetch=originalFetch;await rm(dir,{recursive:true,force:true});
 const passed=rows.filter(r=>r.ok).length;
-await writeFile(join(root,'VALIDATION.md'),`# ${demo?'Demo pack':'Manual test pack'}: automated check\n\nRun ${new Date().toISOString().slice(0,10)}. Each file was submitted without a type (as the drop zone does) and went through the real intake, both workers, fixture agents, trusted-record checks and the final audit, using a **temporary copy** of the Fuji database (live data untouched, no network, no payment).\n\n**${passed}/${rows.length} files behaved as documented.**\n\n| ID | Expected | Observed | Reason shown to the user |\n| --- | --- | --- | --- |\n${rows.map(r=>`| ${r.id} | ${r.expected} | ${r.ok?'':'❌ '}${r.observed} | ${r.reason.replace(/\|/g,'/').replace(/\n/g,' ')} |`).join('\n')}\n\nThe live platform runs the same rules. On the real platform the payment step for group 1 also needs your approver wallet signature and a Fuji transaction, which this check does not perform.\n`);
+await writeFile(join(root,'VALIDATION.md'),`# ${demo?'Demo pack':pack==='b'?'Manual test pack B':'Manual test pack'}: automated check\n\nRun ${new Date().toISOString().slice(0,10)}. Each file was submitted without a type (as the drop zone does) and went through the real intake, both workers, fixture agents, trusted-record checks and the final audit, using a **temporary copy** of the Fuji database (live data untouched, no network, no payment).\n\n**${passed}/${rows.length} files behaved as documented.**\n\n| ID | Expected | Observed | Reason shown to the user |\n| --- | --- | --- | --- |\n${rows.map(r=>`| ${r.id} | ${r.expected} | ${r.ok?'':'❌ '}${r.observed} | ${r.reason.replace(/\|/g,'/').replace(/\n/g,' ')} |`).join('\n')}\n\nThe live platform runs the same rules. On the real platform the payment step for group 1 also needs your approver wallet signature and a Fuji transaction, which this check does not perform.\n`);
 console.log(`${passed}/${rows.length} as documented`);for(const r of rows.filter(r=>!r.ok))console.log(`${r.id}: expected ${r.expected}, observed ${r.observed} — ${r.reason}`);
 if(passed!==rows.length)process.exitCode=1;
