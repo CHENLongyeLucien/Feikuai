@@ -6,12 +6,12 @@ Run 2026-10-11. Each file went through the real intake, both workers, fixture ag
 
 | ID | Expected | Observed | Reason shown to the user |
 | --- | --- | --- | --- |
-| A1 | Needs review (already paid on the platform) | Needs review | This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test. |
-| A2 | Needs review (already paid on the platform) | Needs review | This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test. |
+| A1 | Approved | Approved | Invoice matches the trusted record for this supplier, amount and wallet. Ready for wallet approval; no payment has been sent yet. |
+| A2 | Approved | Approved | Invoice matches the trusted record for this supplier, amount and wallet. Ready for wallet approval; no payment has been sent yet. |
 | A3 | Approved | Approved | Invoice matches the trusted record for this supplier, amount and wallet. Ready for wallet approval; no payment has been sent yet. |
 | A4 | Approved | Approved | Invoice matches the trusted record for this supplier, amount and wallet. Ready for wallet approval; no payment has been sent yet. |
-| B1 | Needs review (already paid on the platform) | Needs review | This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test. |
-| B2 | Needs review | Needs review | This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test. |
+| B1 | Approved | Approved | Invoice matches the trusted record for this supplier, amount and wallet. Ready for wallet approval; no payment has been sent yet. |
+| B2 | Needs review | Needs review | Automatic clearance stopped: Duplicate request: invoice NS-TEST10-0019 is already being processed from another inbox item ("B1-original-invoice-0019.pdf"). Review that item; no second payment case was created. |
 | C1 | Needs review | Needs review | This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test. |
 | D1 | Needs review | Needs review | Payment paused: the requested payout wallet differs from the verified wallet on file for Atlas Cloud Services; the finance specialist recommended holding this payment; the finance specialist reported an unresolved discrepancy. No payment has been sent. Confirm the details with the supplier using the contact already in your records, then upload a corrected invoice. |
 | D2 | Needs review | Needs review | Payment paused: the amount differs from the registered invoice amount. No payment has been sent. Confirm the details with the supplier using the contact already in your records, then upload a corrected invoice. |

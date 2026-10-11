@@ -1,6 +1,6 @@
 # Manual test pack
 
-Files for testing the Feikuai platform by hand on the **Fuji workspace**. Every invoice matches a real trusted Fuji record (NS-TEST10-0005 to 0016, Atlas Cloud Services, 10 DEMO). All data is synthetic, and DEMO tokens have no value.
+Files for testing the Feikuai platform by hand on the **Fuji workspace**. Every invoice matches a real trusted Fuji record (NS-TEST10-0017 to 0016, Atlas Cloud Services, 10 DEMO). All data is synthetic, and DEMO tokens have no value.
 
 ## Before you start
 
@@ -12,7 +12,7 @@ Files for testing the Feikuai platform by hand on the **Fuji workspace**. Every 
 
 - **A paid invoice can be paid only once.** After A1 is paid, uploading it again shows "Already paid". That is correct.
 - **Upload B1 before B2.**
-- Each finance-check and attack file uses its own invoice number, so the tests do not interfere with each other. NS-TEST10-0017 to 0020 are left free as spares.
+- Each finance-check and attack file uses its own invoice number, so the tests do not interfere with each other. NS-TEST10-0002 to 0004 and 0020 are left free as spares. Already paid on Fuji: 0001 (used on purpose by C1), 0005, 0006 and 0009.
 - **Approved** means workflow clearance only. For invoices it unlocks the wallet approval step; it never pays by itself.
 - To start over with a clean inbox, use `pnpm history:reset var/fuji/secure-finance.sqlite var/fuji/artifacts --yes` with the server stopped. It makes a backup first and keeps real settlements.
 
@@ -20,12 +20,12 @@ Files for testing the Feikuai platform by hand on the **Fuji workspace**. Every 
 
 | ID | File | How to submit | Expected | What you should see |
 | --- | --- | --- | --- | --- |
-| A1 | [A1-clean-invoice-0005.pdf](1-payments/A1-clean-invoice-0005.pdf) | Add item → drop the file | **Approved** | Exact match with the trusted payable NS-TEST10-0005 and the verified Atlas recipient.<br>**Then:** Open the payment, click "Approve & pay 10 DEMO to Atlas Cloud Services", connect the approver wallet, sign. Expect Paid with a Fuji transaction after the receipt is verified. |
-| A2 | [A2-clean-invoice-0006.pdf](1-payments/A2-clean-invoice-0006.pdf) | Add item → drop the file | **Approved** | Exact match with NS-TEST10-0006. Use it for a second payment run or a rehearsal.<br>**Then:** Same as A1. |
+| A1 | [A1-clean-invoice-0017.pdf](1-payments/A1-clean-invoice-0017.pdf) | Add item → drop the file | **Approved** | Exact match with the trusted payable NS-TEST10-0017 and the verified Atlas recipient.<br>**Then:** Open the payment, click "Approve & pay 10 DEMO to Atlas Cloud Services", connect the approver wallet, sign. Expect Paid with a Fuji transaction after the receipt is verified. |
+| A2 | [A2-clean-invoice-0018.pdf](1-payments/A2-clean-invoice-0018.pdf) | Add item → drop the file | **Approved** | Exact match with NS-TEST10-0018. Use it for a second payment run or a rehearsal.<br>**Then:** Same as A1. |
 | A3 | [A3-french-invoice-0007.pdf](1-payments/A3-french-invoice-0007.pdf) | Add item → drop the file | **Approved** | French labels and the comma decimal "10,00" describe the same exact obligation (NS-TEST10-0007).<br>**Then:** Optional: pay it like A1. |
 | A4 | [A4-invoice-email-with-pdf-0008.eml](1-payments/A4-invoice-email-with-pdf-0008.eml) | Add item → drop the file | **Approved** | The attached PDF is extracted and matched to NS-TEST10-0008. Sender identity stays unverified.<br>**Then:** Optional: pay it like A1. |
-| B1 | [B1-original-invoice-0009.pdf](2-duplicates/B1-original-invoice-0009.pdf) | Add item → drop the file | **Approved** | Exact match with NS-TEST10-0009. |
-| B2 | [B2-resent-duplicate-0009.pdf](2-duplicates/B2-resent-duplicate-0009.pdf) | Drop after B1 | **Needs review** | "Duplicate request": NS-TEST10-0009 is already being processed from B1. No second payment case is opened. |
+| B1 | [B1-original-invoice-0019.pdf](2-duplicates/B1-original-invoice-0019.pdf) | Add item → drop the file | **Approved** | Exact match with NS-TEST10-0019. |
+| B2 | [B2-resent-duplicate-0019.pdf](2-duplicates/B2-resent-duplicate-0019.pdf) | Drop after B1 | **Needs review** | "Duplicate request": NS-TEST10-0019 is already being processed from B1. No second payment case is opened. |
 | C1 | [C1-already-paid-0001.pdf](2-duplicates/C1-already-paid-0001.pdf) | Add item → drop the file | **Needs review** | "Already paid": NS-TEST10-0001 has a verified Fuji settlement, so a second payment is blocked. |
 | D1 | [D1-recipient-one-character-changed-0010.pdf](3-finance-checks/D1-recipient-one-character-changed-0010.pdf) | Add item → drop the file | **Needs review** | The recipient differs from the verified Atlas wallet by one character. The payment is paused and the trusted record is not changed. |
 | D2 | [D2-amount-10.50-0011.pdf](3-finance-checks/D2-amount-10.50-0011.pdf) | Add item → drop the file | **Needs review** | 10.50 DEMO does not equal the registered 10.00 DEMO. |

@@ -1,6 +1,6 @@
 /**
  * Builds fixtures/manual-tests: files a person uploads by hand into the Fuji workspace.
- * Every invoice uses a real trusted Fuji payable (NS-TEST10-0005..0016) so outcomes are meaningful.
+ * Every invoice uses a real trusted Fuji payable (NS-TEST10-0017..0016) so outcomes are meaningful.
  * Usage: tsx scripts/manual-tests/generate.ts
  */
 import {mkdir,readFile,rm,writeFile} from 'node:fs/promises';
@@ -12,7 +12,7 @@ const root=resolve('fixtures/manual-tests');
 const registry=JSON.parse(await readFile('fixtures/trusted-registry.fuji.json','utf8')) as {suppliers:Array<{name:string;supplierKey:string;recipient:string}>;payables:Array<{invoiceReference:string;supplierName:string;supplierKey:string;recipient:string}>};
 const ref=(n:number)=>`NS-TEST10-${String(n).padStart(4,'0')}`;
 const payable=(n:number)=>{const p=registry.payables.find(x=>x.invoiceReference===ref(n));if(!p)throw new Error(`Missing Fuji payable ${ref(n)}`);return p;};
-const atlas=payable(5);
+const atlas=payable(17);
 const attacker='0x5a0b54d5dc17e0aadc383d2db43b0a0d3e029c4c';
 function invoice(n:number,o:{amount?:string;recipient?:string|null;reference?:string;extra?:string;french?:boolean}={}){
  const p=payable(Math.min(n,20));
@@ -21,13 +21,13 @@ function invoice(n:number,o:{amount?:string;recipient?:string|null;reference?:st
 }
 export const tests:ManualTest[]=[
  // A: legitimate invoices that complete a real Fuji payment (each can be paid once).
- {id:'A1',file:'1-payments/A1-clean-invoice-0005.pdf',channel:'invoice',title:'Clean invoice — full payment',how:'Add item → drop the file',expect:'Approved',why:'Exact match with the trusted payable NS-TEST10-0005 and the verified Atlas recipient.',then:'Open the payment, click "Approve & pay 10 DEMO to Atlas Cloud Services", connect the approver wallet, sign. Expect Paid with a Fuji transaction after the receipt is verified.',body:invoice(5)},
- {id:'A2',file:'1-payments/A2-clean-invoice-0006.pdf',channel:'invoice',title:'Second clean invoice',how:'Add item → drop the file',expect:'Approved',why:'Exact match with NS-TEST10-0006. Use it for a second payment run or a rehearsal.',then:'Same as A1.',body:invoice(6)},
+ {id:'A1',file:'1-payments/A1-clean-invoice-0017.pdf',channel:'invoice',title:'Clean invoice — full payment',how:'Add item → drop the file',expect:'Approved',why:'Exact match with the trusted payable NS-TEST10-0017 and the verified Atlas recipient.',then:'Open the payment, click "Approve & pay 10 DEMO to Atlas Cloud Services", connect the approver wallet, sign. Expect Paid with a Fuji transaction after the receipt is verified.',body:invoice(17)},
+ {id:'A2',file:'1-payments/A2-clean-invoice-0018.pdf',channel:'invoice',title:'Second clean invoice',how:'Add item → drop the file',expect:'Approved',why:'Exact match with NS-TEST10-0018. Use it for a second payment run or a rehearsal.',then:'Same as A1.',body:invoice(18)},
  {id:'A3',file:'1-payments/A3-french-invoice-0007.pdf',channel:'invoice',title:'French invoice (facture)',how:'Add item → drop the file',expect:'Approved',why:'French labels and the comma decimal "10,00" describe the same exact obligation (NS-TEST10-0007).',then:'Optional: pay it like A1.',body:invoice(7,{french:true})},
  {id:'A4',file:'1-payments/A4-invoice-email-with-pdf-0008.eml',channel:'email',title:'Supplier email with the invoice attached',how:'Add item → drop the file',expect:'Approved',why:'The attached PDF is extracted and matched to NS-TEST10-0008. Sender identity stays unverified.',then:'Optional: pay it like A1.',kind:'eml',body:'Hello Northstar team,\n\nPlease find attached our October invoice.\n\nKind regards,\nAtlas Cloud Services billing',attachment:{name:'NS-TEST10-0008.pdf',mime:'application/pdf',pdfBody:invoice(8)}},
  // B/C: duplicates and already-paid invoices.
- {id:'B1',file:'2-duplicates/B1-original-invoice-0009.pdf',channel:'invoice',title:'Original invoice (upload first)',how:'Add item → drop the file',expect:'Approved',why:'Exact match with NS-TEST10-0009.',body:invoice(9)},
- {id:'B2',file:'2-duplicates/B2-resent-duplicate-0009.pdf',channel:'invoice',title:'Same invoice sent again',how:'Drop after B1',expect:'Needs review',why:'"Duplicate request": NS-TEST10-0009 is already being processed from B1. No second payment case is opened.',body:invoice(9,{extra:'Resent copy for your records.'})},
+ {id:'B1',file:'2-duplicates/B1-original-invoice-0019.pdf',channel:'invoice',title:'Original invoice (upload first)',how:'Add item → drop the file',expect:'Approved',why:'Exact match with NS-TEST10-0019.',body:invoice(19)},
+ {id:'B2',file:'2-duplicates/B2-resent-duplicate-0019.pdf',channel:'invoice',title:'Same invoice sent again',how:'Drop after B1',expect:'Needs review',why:'"Duplicate request": NS-TEST10-0019 is already being processed from B1. No second payment case is opened.',body:invoice(19,{extra:'Resent copy for your records.'})},
  {id:'C1',file:'2-duplicates/C1-already-paid-0001.pdf',channel:'invoice',title:'Invoice that was already paid on Fuji',how:'Add item → drop the file',expect:'Needs review',why:'"Already paid": NS-TEST10-0001 has a verified Fuji settlement, so a second payment is blocked.',body:invoice(1)},
  // D: finance discrepancies.
  {id:'D1',file:'3-finance-checks/D1-recipient-one-character-changed-0010.pdf',channel:'invoice',title:'Recipient wallet changed by one character',how:'Add item → drop the file',expect:'Needs review',why:'The recipient differs from the verified Atlas wallet by one character. The payment is paused and the trusted record is not changed.',body:invoice(10,{recipient:atlas.recipient.slice(0,-1)+(atlas.recipient.endsWith('4')?'5':'4')})},
@@ -80,7 +80,7 @@ if(process.argv[1]?.endsWith('generate.ts')){
  const rows=tests.map(t=>`| ${t.id} | [${t.file.split('/').at(-1)}](${t.file}) | ${t.how} | **${t.expect}** | ${t.why}${t.then?`<br>**Then:** ${t.then}`:''} |`).join('\n');
  await writeFile(resolve(root,'README.md'),`# Manual test pack
 
-Files for testing the Feikuai platform by hand on the **Fuji workspace**. Every invoice matches a real trusted Fuji record (NS-TEST10-0005 to 0016, Atlas Cloud Services, 10 DEMO). All data is synthetic, and DEMO tokens have no value.
+Files for testing the Feikuai platform by hand on the **Fuji workspace**. Every invoice matches a real trusted Fuji record (NS-TEST10-0017 to 0016, Atlas Cloud Services, 10 DEMO). All data is synthetic, and DEMO tokens have no value.
 
 ## Before you start
 
@@ -92,7 +92,7 @@ Files for testing the Feikuai platform by hand on the **Fuji workspace**. Every 
 
 - **A paid invoice can be paid only once.** After A1 is paid, uploading it again shows "Already paid". That is correct.
 - **Upload B1 before B2.**
-- Each finance-check and attack file uses its own invoice number, so the tests do not interfere with each other. NS-TEST10-0017 to 0020 are left free as spares.
+- Each finance-check and attack file uses its own invoice number, so the tests do not interfere with each other. NS-TEST10-0002 to 0004 and 0020 are left free as spares. Already paid on Fuji: 0001 (used on purpose by C1), 0005, 0006 and 0009.
 - **Approved** means workflow clearance only. For invoices it unlocks the wallet approval step; it never pays by itself.
 - To start over with a clean inbox, use \`pnpm history:reset var/fuji/secure-finance.sqlite var/fuji/artifacts --yes\` with the server stopped. It makes a backup first and keeps real settlements.
 
