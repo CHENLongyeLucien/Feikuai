@@ -1,6 +1,6 @@
 # Manual test pack: automated check
 
-Run 2026-10-11. Each file went through the real intake, both workers, fixture agents, trusted-record checks and the final audit, using a **temporary copy** of the Fuji database (live data untouched, no network, no payment).
+Run 2026-10-11. Each file was submitted without a type (as the drop zone does) and went through the real intake, both workers, fixture agents, trusted-record checks and the final audit, using a **temporary copy** of the Fuji database (live data untouched, no network, no payment).
 
 **27/27 files behaved as documented.**
 

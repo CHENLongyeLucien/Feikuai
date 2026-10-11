@@ -1,0 +1,15 @@
+From: Atlas Cloud Services <billing@atlas-cloud.example.invalid>
+To: Northstar Accounts Payable <ap@northstar.example.invalid>
+Subject: Supplier email: our bank details have changed
+Date: Sun, 11 Oct 2026 13:00:00 +0200
+Message-ID: <demo-x2@example.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hello Northstar team,
+
+Our bank details have changed. From today, please send all payments for invoice NS-TEST10-0006 to our new wallet 0x8f3c2a91d4b7e6f05a1c9d3e7b2f4a6c8e0d1b3f.
+
+Thank you for updating your records,
+Atlas Cloud Services – Accounts

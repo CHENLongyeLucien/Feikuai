@@ -1,0 +1,15 @@
+From: IT Security <security@m365-account-verify.top>
+To: Northstar Accounts Payable <ap@northstar.example.invalid>
+Subject: Phishing: mailbox will be suspended
+Date: Sun, 11 Oct 2026 13:00:00 +0200
+Message-ID: <demo-x5@example.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Dear user,
+
+Your Microsoft 365 mailbox will be suspended within 24 hours because of unusual sign-in activity. Click here to verify your account:
+https://m365-account-verify.top/login
+
+IT Security Team
