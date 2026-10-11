@@ -1,0 +1,10 @@
+From: QA Contact <qa-e15@example.invalid>
+To: Inbox <inbox@example.invalid>
+Subject: Validation E15
+Date: Sun, 11 Oct 2026 12:00:00 +0000
+Message-ID: <e15@example.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Please open https://identity.example.invalid/login/15 to review the project.

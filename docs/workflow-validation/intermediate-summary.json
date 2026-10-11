@@ -1,0 +1,53 @@
+{
+  "scope": "Recorded intermediate runner console summary; this is not a retained per-case result report.",
+  "provenance": "The second run of the unchanged authored corpus, after initial backend corrections and before the final administrative-language expansion.",
+  "summary": {
+    "total": 100,
+    "accepted": 100,
+    "passed": 96,
+    "failed": 4,
+    "byChannel": {
+      "invoice": 25,
+      "email": 25,
+      "voice": 25,
+      "text": 25
+    },
+    "byOutcome": {
+      "approved": 25,
+      "needs_review": 37,
+      "quarantined": 38
+    },
+    "analysisRuns": 40,
+    "workerTicks": 30,
+    "chainScansReplaced": 1,
+    "networkAttempts": 0,
+    "paymentWriteAttempts": 0
+  },
+  "invariants": [],
+  "remainingDivergences": [
+    {
+      "id": "E18",
+      "expected": "approved",
+      "observed": "needs_review",
+      "source": "Please schedule the accessibility review with our client on Thursday."
+    },
+    {
+      "id": "V01",
+      "expected": "approved",
+      "observed": "needs_review",
+      "source": "Please arrange a support call for the reconciliation screen on Tuesday morning."
+    },
+    {
+      "id": "V05",
+      "expected": "approved",
+      "observed": "needs_review",
+      "source": "Please schedule a project check-in with the design contact this afternoon."
+    },
+    {
+      "id": "T02",
+      "expected": "approved",
+      "observed": "needs_review",
+      "source": "Can you share the latest public design feedback with the project team?"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+
+ RUN  v5.0.3 <project>
+
+
+ Test Files  29 passed (29)
+      Tests  471 passed (471)
+   Start at  08:39:06
+   Duration  8.00s (tests 70%, import 26%, transform 4%)
+

@@ -10,3 +10,7 @@ fixtures/user-tests/voice/*.wav binary
 fixtures/user-test-pack.zip binary
 fixtures/user-tests/emails/*.eml -text whitespace=cr-at-eol
 fixtures/user-tests/TEST_CHECKLIST.csv text eol=lf
+
+# Preserve validation fixture bytes and manifest digests on every platform.
+fixtures/workflow-validation/invoices/*.pdf binary
+fixtures/workflow-validation/emails/*.eml -text whitespace=cr-at-eol

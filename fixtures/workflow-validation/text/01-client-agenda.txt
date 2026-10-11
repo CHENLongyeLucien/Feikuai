@@ -1,0 +1,1 @@
+Please add the release checklist to the client agenda for QA-TEXT-01.

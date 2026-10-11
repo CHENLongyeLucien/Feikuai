@@ -1,6 +1,6 @@
-export type WorkflowPanel = 'reports'|'alerts'|'settings';
+export type WorkflowPanel = 'dashboard'|'reports'|'alerts'|'settings';
 export type WorkflowLocation = {itemId:string|null;caseId:string|null;panel:WorkflowPanel|null;filter:'all'|'review'|'payments';compose:'invoice'|'email'|'voice'|'text'|null};
-const validPanels = new Set(['reports','alerts','settings']);
+const validPanels = new Set(['dashboard','reports','alerts','settings']);
 const decode=(value:string)=>{try{return decodeURIComponent(value);}catch{return value;}};
 const validSources = new Set(['invoice','email','voice','text']);
 /** Old bookmarks retain their context inside the single workspace. */
@@ -12,6 +12,7 @@ export function normalizeLocation(input:string):string {
  if(invoice){url.searchParams.set('case',decode(invoice[1]!));url.searchParams.delete('item');}
  if(url.pathname==='/review')url.searchParams.set('filter','review');
  if(['/workspace','/payments'].includes(url.pathname))url.searchParams.set('filter','payments');
+ if(url.pathname==='/dashboard')url.searchParams.set('panel','dashboard');
  if(url.pathname==='/evidence')url.searchParams.set('panel','reports');
  if(url.pathname==='/notifications')url.searchParams.set('panel','alerts');
  if(url.pathname==='/settings')url.searchParams.set('panel','settings');

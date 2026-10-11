@@ -44,5 +44,6 @@ export type WorkflowStatus=z.infer<typeof workflowStatusSchema>;
 export type AuthorizationStatus='AWAITING_SIGNATURE'|'VALID'|'EXPIRED'|'CANCELLATION_PENDING'|'CANCELLED'|'CONSUMED';
 export type ExecutionStatus='NONE'|'PREPARING'|'PREPARED'|'SUBMITTED'|'PENDING'|'UNKNOWN'|'REVERTED'|'CONFIRMED'|'INCONSISTENT';
 export type SettlementStatus='UNSETTLED'|'SETTLED';
+export type {DashboardDTO} from './dashboard.js';
 export const signatureFileSchema=z.object({schemaVersion:z.literal('secure-finance.approval-signature.v1'),proposalId:z.string().uuid(),typedDigest:hex32Schema,signer:addressSchema,signature:z.string().regex(/^0x[0-9a-fA-F]{130}$/)}).strict();
 export const cancellationFileSchema=z.object({schemaVersion:z.literal('secure-finance.cancellation-observation.v1'),proposalId:z.string().uuid(),chainId:z.enum(['31337','43113']),vault:addressSchema,authorizationNonce:positiveUintSchema,transactionHash:hex32Schema}).strict();

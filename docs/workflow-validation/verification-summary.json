@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-11",
+  "workflow": {
+    "accepted": 100,
+    "matchedExpectations": 100,
+    "cleared": 29,
+    "review": 33,
+    "quarantined": 38,
+    "paymentAttempts": 0,
+    "networkAttempts": 0
+  },
+  "unitApi": {
+    "filesPassed": 29,
+    "testsPassed": 471,
+    "failed": 0
+  },
+  "dashboardBrowser": {
+    "startTime": "2026-10-11T06:42:30.529Z",
+    "duration": 45209.839,
+    "expected": 27,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "staticChecks": {
+    "typecheck": "PASS",
+    "repositoryLint": "PASS",
+    "productionBuild": "PASS",
+    "buildWarning": "Existing approver bundle exceeds 500 kB"
+  },
+  "scope": "Temporary API/worker databases; fixture agents; 25 PDF + 25 EML + 25 voice transcripts + 25 text inputs. Browser API observations intercepted and synthetic. No live model, transcription, chain execution or payment tests in this update.",
+  "state": "Private environments, Anvil state, databases and receipts preserved; no new funding or credentials required."
+}
