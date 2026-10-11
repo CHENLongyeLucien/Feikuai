@@ -144,7 +144,7 @@ function fastRow(item: CorpusItem): Row {
   const text = [item.title ? `Subject: ${item.title.slice(0, 160)}` : '', item.sender ? `From: ${item.sender.slice(0, 254)}` : '', item.text].filter(Boolean).join('\n');
   const started = performance.now();
   const classification = classify(text, item.channel), security = securityReview(text, classification);
-  const finance = financeDecision(text, classification, null);
+  const finance = financeDecision(text, classification, null, item.channel);
   const decisionMs = performance.now() - started;
   return {id: item.id, source: item.source, category: item.category, channel: item.channel, malicious: item.malicious, outcome: security.risks.length ? 'security_hold' : finance.clear ? 'auto_cleared' : 'human_review', risks: security.risks.map(r => r.code), classification: classification.category, linkedCase: false, decisionMs, analysisMs: 0};
 }

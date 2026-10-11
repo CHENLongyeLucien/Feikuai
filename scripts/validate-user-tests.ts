@@ -80,7 +80,7 @@ for (const sample of samples) {
   assert.deepEqual(security.risks.map(risk=>risk.code).sort(),[...sample.risks].sort(),sample.file);
   // Projection assumes fresh, matching, unpaid records. This is not an end-to-end settlement test.
   const projection = pdf && clear ? {id:'offline-fixture',invoiceKey:'offline-only',workflowStatus:'READY_FOR_REVIEW',settlementStatus:'NONE',executionStatus:'NONE',checks:[{passed:true}]} : null;
-  const finance = financeDecision(text,classification,projection);
+  const finance = financeDecision(text,classification,projection,sample.channel);
   const outcome = security.risks.length ? 'quarantined' : finance.clear ? 'approved' : 'needs_review';
   assert.equal(outcome,sample.outcome,sample.file);
   console.log(`PASS ${sample.file}: ${outcome}${sample.fact?' / '+sample.fact:''}${sample.risks.length?' / '+sample.risks.join(', '):''}`);
