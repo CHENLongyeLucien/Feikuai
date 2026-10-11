@@ -1,0 +1,9 @@
+From: QA <qa-e23@example.invalid>
+To: Inbox <inbox@example.invalid>
+Subject: Validation E23
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+
+This is not!! valid base64 ***
+

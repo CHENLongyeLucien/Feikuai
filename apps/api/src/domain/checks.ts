@@ -18,6 +18,9 @@ export function businessChecks(input:{intake:IntakeResult;finance:FinanceResult;
  add('RECORD_VERSIONS',f.payableRecordVersion===p.version&&f.supplierRecordVersion===s.version,'Agent record versions must remain current.');
  add('SOURCE_POINTERS',i.fieldSources.every(x=>validateSourceSpan(x.span,input.pages.map(p=>p.text)))&&i.suspiciousInstructions.every(x=>validateSourceSpan(x.span,input.pages.map(p=>p.text))),'All quoted source spans must match stored UTF-16 page text.');
  for(const field of ['invoiceReference','supplierReference','amountDecimalCandidate','displayedAsset','claimedRecipient'] as const){if(i[field]!==null)add(`SOURCE_${field}`,i.fieldSources.some(x=>x.field===field&&x.span.quote===i[field]),`Extracted ${field} must have an exact supporting source quote.`);}
+ // A finance-agent hold or open discrepancy must reach the payment decision; only suspicious prose stays an acknowledgeable attention item.
+ add('FINANCE_RECOMMENDATION',f.recommendation==='READY_FOR_HUMAN_REVIEW','The finance specialist must not have recommended a hold or requested more information.');
+ add('FINANCE_DISCREPANCIES',f.discrepancies.every(x=>x.code==='SUSPICIOUS_INSTRUCTION'),'Every finance discrepancy must be resolved before a payment can be proposed.');
  add('UNSETTLED',!input.settled,'A verified settlement prevents another proposal.');add('NO_UNRESOLVED_EXECUTION',!input.unresolved,'Unknown or pending execution must be reconciled first.');
  add('DOCUMENT_INSTRUCTIONS',i.suspiciousInstructions.length===0,'Suspicious source prose requires explicit human attention and conveys no authority.','ATTENTION');
  return checks;

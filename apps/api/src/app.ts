@@ -26,7 +26,7 @@ export async function buildApp(options:{config?:Config;worker?:boolean;logger?:b
  app.addHook('onSend',async(req,reply,payload)=>{reply.header('X-Content-Type-Options','nosniff').header('Cache-Control','no-store');return payload;});
  await registerNetworkActivity(app);
  if(config.SEED_ON_START)seed(db,config);
- const chain=new ChainService(db,config),service=new Service(db,config,chain),worker=new WorkerLoop(db,service,chain);await registerAuth(app,db,config);await registerDemoAuth(app,db,config);await registerApi(app,service,db,config,{automationAvailable:()=>automation.available});
+ const chain=new ChainService(db,config),service=new Service(db,config,chain);chain.preExecutionAudit=(tenantId,caseId,packet,executionId)=>service.preExecutionAudit(tenantId,caseId,packet,executionId);const worker=new WorkerLoop(db,service,chain);await registerAuth(app,db,config);await registerDemoAuth(app,db,config);await registerApi(app,service,db,config,{automationAvailable:()=>automation.available});
  const inbox=await registerInbox(app,service,db,config,{startWorker:options.worker!==false});
  await registerInboxWebhook(app,db,config,inbox.service);
  const automation=new AutomationService(db,config,inbox.service,service);inbox.service.options.paymentFor=(itemId,tenantId)=>automation.project(itemId,tenantId);

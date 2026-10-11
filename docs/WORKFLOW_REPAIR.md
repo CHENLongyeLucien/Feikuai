@@ -35,3 +35,16 @@ The initial run matched 81/100 expectations, the intermediate run 96/100, and th
 Run `pnpm test:workflow` to repeat the isolated corpus. `pnpm test` includes the same 100 scenarios, their global invariant check, intake recovery, PDF extraction and dashboard regressions. Browser checks are under `tests/e2e/dashboard.config.ts`; these intercept read-only synthetic API responses and test UI behavior separately from the real API tests.
 
 This is measured regression coverage, not production fraud accuracy. Live model behavior, real audio transcription, sender/speaker authentication, OCR, mailbox synchronization and isolated URL/malware scanning are not demonstrated by this run. Voice samples are transcripts. Scanned/encrypted PDFs need a supported text-based replacement. Unknown invoice references need a corresponding independently trusted payable; the 100-test registry exists only inside the isolated runner. No credentials or testnet funding are needed for these tests or for the dashboard. Live provider/transcription testing requires privately configured provider credentials and model settings. No new wallet transfer or Fuji deployment was performed.
+
+## Reset-brief repairs (11 October 2026, second pass)
+
+These repairs follow the eight-stage workflow in the Feikuai reset brief. [v2 results for 100 new inputs](workflow-validation-v2/README.md).
+
+| Stage | Problem | Correction |
+| --- | --- | --- |
+| 4 Finance | A finance-agent `HOLD`/`NEEDS_INFORMATION` recommendation, or an open discrepancy, did not block the case. A live model's hold could disappear before the payment decision (brief P0.2). | New hard checks `FINANCE_RECOMMENDATION` and `FINANCE_DISCREPANCIES`. Only suspicious prose stays an acknowledgeable attention item. The hold reason now names the failed checks. |
+| 4 Finance | Submitting the same unpaid invoice twice opened a second payment case, and both could be workflow-cleared. | The second submission is held as a duplicate that names the original item. No second case is created. Already-paid invoices keep their receipt view. |
+| 6 Final check | Execution relied on a stored `READY_FOR_REVIEW` flag and only rechecked the document version. | `Service.preExecutionAudit` runs when execution is requested and again just before the relayer signs. It recomputes business checks from current records and requires current payable, supplier and document versions. It confirms the signed terms equal the trusted payable and deployment, finds no other unresolved execution, and checks that the source inbox item is not quarantined or rejected. Failure is permanent (`PRE_EXECUTION_AUDIT_FAILED`). |
+| 3 Security | Spoken credential requests ("read me the code", "tell me your recovery phrase", access codes), remote-access tooling and "ignore your rules" injections were missed. A French reschedule was falsely held. | Narrow rule additions with false-positive regression tests (`tests/api/detection-rules.test.ts`). |
+
+Platform history can be cleared with `pnpm history:reset <db> <artifact-root> --yes`. It backs up the database and artifacts to `var/backups/history-reset/`. It keeps verified settlements, because they mirror irreversible on-chain payments.

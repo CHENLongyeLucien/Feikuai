@@ -11,6 +11,8 @@ import {usesStandingPolicy} from '../automation/policy.js';
 const zeroHash='0x'+'0'.repeat(64);
 export class ChainService{
  public client:any;public chain:any;
+ /** Stage 6 hook installed by the application: throws when the final pre-execution audit fails. */
+ preExecutionAudit?:(tenantId:string,caseId:string,packet:any,executionId:string)=>void;
  constructor(public db:Db,public config:Config){this.chain=defineChain({id:Number(config.CHAIN_ID),name:config.APP_ENV==='local'?'Local Anvil':'Avalanche Fuji',nativeCurrency:{name:'Test AVAX',symbol:'AVAX',decimals:18},rpcUrls:{default:{http:[config.RPC_URL]}}});this.client=createPublicClient({chain:this.chain,transport:http(config.RPC_URL,{timeout:7000,retryCount:0})});}
  deployment(){const d=loadDeployment(this.config);if(!d)fail('DEPLOYMENT_REQUIRED','Deploy and pin a PaymentGuard manifest first.',503);return d!;}
  async assertConfiguration(){
@@ -43,6 +45,7 @@ export class ChainService{
   const caseRow=this.db.prepare('SELECT workflow_status,hold_reason,document_version FROM cases WHERE id=?').get(e.case_id) as any;const authorizationObservation=this.db.prepare('SELECT status FROM authorization_observations WHERE proposal_id=? ORDER BY rowid DESC LIMIT 1').get(e.proposal_id) as any;if(['CANCELLATION_PENDING','CANCELLED','EXPIRED'].includes(authorizationObservation?.status))fail('AUTHORIZATION_UNAVAILABLE','Cancellation or expiry observation prohibits new submission; reconciliation continues.',409);
   if(caseRow.workflow_status!=='READY_FOR_REVIEW'||caseRow.hold_reason)fail('BUSINESS_CHECK_FAILED','Current hold prevents submission. Continue observation of already broadcast transactions.',409);
   if(String(caseRow.document_version)!==e.packet.manifest.recordVersions.documentVersion)fail('VERSION_CONFLICT','Document changed after approval; submission stopped.',409);
+  this.preExecutionAudit?.(e.tenant_id,e.case_id,e.packet,e.id);
   const auth=this.db.prepare('SELECT signature FROM authorizations WHERE id=?').get(e.authorization_id) as any;if(!auth)fail('INVALID_SIGNATURE','No verified authorization exists.');const d=await this.assertConfiguration();
   if(!/^0x[0-9a-fA-F]{64}$/.test(this.config.RELAYER_PRIVATE_KEY))fail('RELAYER_KEY_MISSING','Configure only the dedicated relayer key on the server.',503);
   const account=privateKeyToAccount(this.config.RELAYER_PRIVATE_KEY as Hex);if(account.address.toLowerCase()!==d.roles.relayer||account.address.toLowerCase()===d.approver)fail('RELAYER_ROLE_MISMATCH','Configured key is not the dedicated pinned relayer.',503);

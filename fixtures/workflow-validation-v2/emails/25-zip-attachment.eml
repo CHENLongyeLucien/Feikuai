@@ -1,0 +1,19 @@
+From: QA Contact <qa-e25@example.invalid>
+To: Inbox <inbox@example.invalid>
+Subject: Validation E25
+Date: Mon, 12 Oct 2026 09:00:00 +0000
+Message-ID: <e25@example.invalid>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="QA-E25-mixed"
+
+--QA-E25-mixed
+Content-Type: text/plain; charset=utf-8
+
+Please see the attached archive with our updated documents.
+--QA-E25-mixed
+Content-Type: application/zip; name="documents.zip"
+Content-Disposition: attachment; filename="documents.zip"
+Content-Transfer-Encoding: base64
+
+UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==
+--QA-E25-mixed--

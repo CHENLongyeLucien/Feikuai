@@ -7,20 +7,23 @@ import {mnemonicToAccount} from 'viem/accounts';
 import {buildApp} from '../../apps/api/src/app.js';
 import {envSchema} from '../../apps/api/src/config.js';
 import type {InboxDTO} from '../../apps/api/src/inbox/types.js';
-import {supplier,type Sample} from './corpus.js';
+import {supplier} from './corpus.js';
+import type {SampleV2 as Sample} from './corpus-v2.js';
 
-const root=resolve('fixtures/workflow-validation'),origin='http://localhost:5173',tenant='northstar-demo';
+const origin='http://localhost:5173',tenant='northstar-demo';
+export type Suite='v1'|'v2';
+const suiteRoot=(suite:Suite)=>resolve(suite==='v2'?'fixtures/workflow-validation-v2':'fixtures/workflow-validation');
 type Entry=Omit<Sample,'body'>&{sha256:string};
-export type Result={id:string;channel:string;name:string;file:string;expected:Sample['expected'];httpStatus:number;observed?:{classification:string|null;status:string;risks:string[];linked:boolean;stageStatuses:Record<string,string>;failedChecks:string[];workerStatus:string;paymentExecution:string|null;notificationKinds:string[]};failures:string[]};
-export type ValidationReport={schemaVersion:string;generatedAt:string;scope:string;results:Result[];summary:{total:number;accepted:number;passed:number;failed:number;byChannel:Record<string,number>;byOutcome:Record<string,number>;analysisRuns:number;workerTicks:number;chainScansReplaced:number;networkAttempts:number;paymentWriteAttempts:number};invariants:string[];limitations:string[]};
+export type Result={id:string;channel:string;name:string;file:string;expected:Sample['expected'];httpStatus:number;errorCode?:string;observed?:{classification:string|null;status:string;risks:string[];linked:boolean;stageStatuses:Record<string,string>;failedChecks:string[];workerStatus:string;paymentExecution:string|null;notificationKinds:string[];reason:string};failures:string[]};
+export type ValidationReport={schemaVersion:string;generatedAt:string;scope:string;results:Result[];summary:{suite:Suite;total:number;accepted:number;passed:number;failed:number;outcomeCorrect:number;classificationAsserted:number;classificationCorrect:number;byChannel:Record<string,number>;byOutcome:Record<string,number>;analysisRuns:number;workerTicks:number;chainScansReplaced:number;networkAttempts:number;paymentWriteAttempts:number};invariants:string[];limitations:string[]};
 const digest=(bytes:Uint8Array|string)=>createHash('sha256').update(bytes).digest('hex');
 function multipart(fields:Record<string,string>,filename:string,mime:string,bytes:Buffer){
  const boundary='sf-validation-'+randomUUID(),parts:Buffer[]=[];
  for(const [name,value] of Object.entries(fields))parts.push(Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n${value}\r\n`));
  parts.push(Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: ${mime}\r\n\r\n`),bytes,Buffer.from(`\r\n--${boundary}--\r\n`));return {bytes:Buffer.concat(parts),contentType:`multipart/form-data; boundary=${boundary}`};
 }
-export async function runWorkflowValidation(reportDirectory?:string):Promise<ValidationReport>{
- const manifest=JSON.parse(await readFile(join(root,'manifest.json'),'utf8')) as {samples:Entry[]};
+export async function runWorkflowValidation(reportDirectory?:string,suite:Suite='v1'):Promise<ValidationReport>{
+ const root=suiteRoot(suite),manifest=JSON.parse(await readFile(join(root,'manifest.json'),'utf8')) as {samples:Entry[]};
  if(manifest.samples.length!==100||new Set(manifest.samples.map(s=>s.id)).size!==100)throw new Error('Exactly 100 unique fixture IDs are required.');
  const directory=await mkdtemp(join(tmpdir(),'sf-workflow-validation-'));
  let system:Awaited<ReturnType<typeof buildApp>>|undefined,networkAttempts=0,paymentWriteAttempts=0,chainScansReplaced=0,workerTicks=0;
@@ -41,6 +44,9 @@ export async function runWorkflowValidation(reportDirectory?:string):Promise<Val
   db.prepare('INSERT INTO supplier_versions VALUES(?,?,?,?,?,?)').run(supplier.id,tenant,supplier.supplierKey,supplier.recipient,supplier.version,JSON.stringify(supplier));
   const payables=[...new Map(manifest.samples.filter(s=>s.payable).map(s=>[s.payable!.id,s.payable!])).values()];
   for(const p of payables)db.prepare('INSERT INTO payables VALUES(?,?,?,?,?,?,?,?,?,?,?)').run(p.id,tenant,'workflow-validation',p.reference,'0x'+digest(p.reference),supplier.id,p.reference,'10000000',deployment.token,'1','VALIDATION-'+p.reference);
+  // Already-paid obligations: a verified settlement record exists before the input arrives.
+  const seededSettlements=payables.filter(p=>p.settled);
+  for(const [i,p] of seededSettlements.entries())db.prepare('INSERT INTO settlements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run(randomUUID(),tenant,null,null,null,deployment.chainId,deployment.vault,'0x'+digest(p.reference),'0x'+'1'.repeat(64),String(i+1),'0x'+digest('settled-'+p.reference),0,JSON.stringify({source:'synthetic prior settlement for validation'}),new Date().toISOString());
   await writeFile(config.TRUSTED_REGISTRY_PATH,JSON.stringify({scope:'ISOLATED_SYNTHETIC_ONLY',suppliers:[supplier],payables}));
   const challenge=await app.inject({method:'POST',url:'/api/v1/auth/challenge',headers:{origin},payload:{address:account.address.toLowerCase()}});
   if(challenge.statusCode!==200)throw new Error(`Synthetic login challenge failed: ${challenge.statusCode}`);
@@ -56,8 +62,10 @@ export async function runWorkflowValidation(reportDirectory?:string):Promise<Val
    const file=entry.channel==='invoice'||entry.channel==='email'?multipart(fields,basename(entry.file),entry.mime,bytes):null;
    const response=await app.inject({method:'POST',url:'/api/v1/inbox',remoteAddress,headers:file?{...headers,'content-type':file.contentType}:headers,payload:file?file.bytes:{...fields,text:bytes.toString('utf8')}});
    const result:Result={id:entry.id,channel:entry.channel,name:entry.name,file:entry.file,expected:entry.expected,httpStatus:response.statusCode,failures:[]};
-   if(response.statusCode!==201)result.failures.push(`Intake returned ${response.statusCode}: ${response.json().error?.code??'unknown error'}`);
-   else ids.set(entry.id,(response.json() as InboxDTO).id);results.push(result);
+   const expectedStatus=entry.expected.httpStatus??201;if(response.statusCode!==201)result.errorCode=response.json().error?.code??'unknown error';
+   if(response.statusCode!==expectedStatus)result.failures.push(`Intake returned ${response.statusCode}${result.errorCode?`: ${result.errorCode}`:''}; expected ${expectedStatus}`);
+   else if(entry.expected.errorCode&&result.errorCode!==entry.expected.errorCode)result.failures.push(`Intake error ${result.errorCode}; expected ${entry.expected.errorCode}`);
+   if(response.statusCode===201)ids.set(entry.id,(response.json() as InboxDTO).id);results.push(result);
   }
   const pending=()=>Number((db.prepare("SELECT COUNT(*) n FROM inbox_jobs WHERE status IN ('QUEUED','RUNNING','WAITING')").get() as {n:number}).n)+Number((db.prepare("SELECT COUNT(*) n FROM jobs WHERE status IN ('QUEUED','RUNNING')").get() as {n:number}).n);
   while((pending()||worker.analyses.size)&&workerTicks<1000){
@@ -72,13 +80,14 @@ export async function runWorkflowValidation(reportDirectory?:string):Promise<Val
    if(response.statusCode!==200){result.failures.push(`Persisted input could not be read: HTTP ${response.statusCode}`);continue;}
    const item=response.json() as InboxDTO,job=db.prepare('SELECT status,error FROM inbox_jobs WHERE item_id=?').get(id) as {status:string;error:string|null};
    const linked=item.linkedCaseId?system.service.project({tenantId:tenant,membershipId:memberId,address:account.address.toLowerCase(),roles:['operator','reviewer','auditor'],csrfToken:auth['x-csrf-token']},item.linkedCaseId):null;
-   result.observed={classification:item.classification?.category??null,status:item.status,risks:item.risks.map(r=>r.code),linked:!!item.linkedCaseId,stageStatuses:Object.fromEntries(item.stages.map(s=>[s.id,s.status])),failedChecks:(linked?.checks??[]).filter((check:{passed:boolean})=>!check.passed).map((check:{code:string})=>check.code),workerStatus:job.status,paymentExecution:item.payment?.executionStatus??null,notificationKinds:item.notifications.map(n=>n.kind)};
+   result.observed={classification:item.classification?.category??null,status:item.status,risks:item.risks.map(r=>r.code),linked:!!item.linkedCaseId,stageStatuses:Object.fromEntries(item.stages.map(s=>[s.id,s.status])),failedChecks:(linked?.checks??[]).filter((check:{passed:boolean})=>!check.passed).map((check:{code:string})=>check.code),workerStatus:job.status,paymentExecution:item.payment?.executionStatus??null,notificationKinds:item.notifications.map(n=>n.kind),reason:item.approval.reason};
    const o=result.observed,e=result.expected;
-   if(o.classification!==e.classification)result.failures.push(`Classification: expected ${e.classification}, observed ${o.classification}`);
+   if(e.classification!==undefined&&o.classification!==e.classification)result.failures.push(`Classification: expected ${e.classification}, observed ${o.classification}`);
    if(o.status!==e.status)result.failures.push(`Outcome: expected ${e.status}, observed ${o.status}`);
    if(e.linked!==undefined&&o.linked!==e.linked)result.failures.push(`Trusted payable linkage: expected ${e.linked}, observed ${o.linked}`);
    for(const risk of e.risks??[])if(!o.risks.includes(risk))result.failures.push(`Required security finding missing: ${risk}`);
    if(e.failedCheck&&!o.failedChecks.includes(e.failedCheck))result.failures.push(`Expected failed business check missing: ${e.failedCheck}`);
+   if(e.reasonIncludes&&!o.reason.includes(e.reasonIncludes))result.failures.push(`Decision reason does not mention "${e.reasonIncludes}": ${o.reason}`);
    if(job.status!=='COMPLETED')result.failures.push(`Inbox worker did not complete: ${job.status}${job.error?' '+job.error:''}`);
    if(item.stages.length!==5||item.stages.some(s=>s.status==='pending'||s.status==='running'))result.failures.push('One or more specialist stages remain pending/running or absent.');
    if(!item.notifications.length)result.failures.push('No durable result notification exists.');
@@ -88,7 +97,7 @@ export async function runWorkflowValidation(reportDirectory?:string):Promise<Val
    if(item.status==='quarantined'&&item.stages.find(s=>s.id==='client_finance')?.status!=='not_applicable')result.failures.push('Quarantined source continued into financial processing.');
   }
   const invariants:string[]=[];
-  for(const table of ['authorizations','proposals','execution_requests','settlements','automation_payments','tx_outbox']){const count=(db.prepare(`SELECT COUNT(*) n FROM ${table}`).get() as {n:number}).n;if(count)invariants.push(`${table}: expected zero, found ${count}`);}
+  for(const table of ['authorizations','proposals','execution_requests','settlements','automation_payments','tx_outbox']){const count=(db.prepare(`SELECT COUNT(*) n FROM ${table}`).get() as {n:number}).n,expected=table==='settlements'?seededSettlements.length:0;if(count!==expected)invariants.push(`${table}: expected ${expected}, found ${count}`);}
   if(pending())invariants.push(`${pending()} jobs remain queued/running/waiting after ${workerTicks} ticks.`);
   if((db.prepare('SELECT COUNT(*) n FROM inbox_items').get() as {n:number}).n!==ids.size)invariants.push('Persisted input count does not equal accepted intake count.');
   if(new Set(ids.values()).size!==ids.size)invariants.push('Distinct submissions collapsed into duplicate inbox IDs.');
@@ -96,8 +105,8 @@ export async function runWorkflowValidation(reportDirectory?:string):Promise<Val
   if(paymentWriteAttempts)invariants.push(`${paymentWriteAttempts} payment operations were attempted and blocked.`);
   const listing=await app.inject({method:'GET',url:'/api/v1/inbox?limit=100',headers:auth});if(listing.statusCode!==200||listing.json().items.length!==ids.size)invariants.push('The inbox list does not expose every accepted input.');
   const by=(key:'channel'|'outcome')=>results.reduce<Record<string,number>>((all,r)=>{const value=key==='channel'?r.channel:r.observed?.status??'intake_failed';all[value]=(all[value]??0)+1;return all;},{});
-  const report:ValidationReport={schemaVersion:'workflow-validation-result.v1',generatedAt:new Date().toISOString(),scope:'Actual authenticated API intake, file extraction, durable inbox worker, payment analysis worker, deterministic fixture agents, trusted-record checks, independent audit, persisted notifications and API result reads. Isolated temporary database/artifacts. No live provider or blockchain execution.',results,summary:{total:results.length,accepted:ids.size,passed:results.filter(r=>!r.failures.length).length,failed:results.filter(r=>r.failures.length).length,byChannel:by('channel'),byOutcome:by('outcome'),analysisRuns:(db.prepare('SELECT COUNT(*) n FROM analysis_runs').get() as {n:number}).n,workerTicks,chainScansReplaced,networkAttempts,paymentWriteAttempts},invariants,limitations:['Authored synthetic corpus, not a statistical measure of production fraud-detection accuracy.','Invoice agents run their deterministic fixture implementations; live model quality, outages, latency and cost are not measured.','Voice inputs are manual transcripts; audio transcription and speaker authentication are not tested.','URLs are never fetched; no malware-browser or sender-authentication guarantee is made.','Read-only chain scans are replaced by an explicit offline stub; no wallet transfer, transaction confirmation or settlement is exercised.','No standing payment policy is installed; approved items must not create payment authority.','Rate limiting is preserved, with reserved test IPs distributed in groups of ten.']};
-  if(reportDirectory){await mkdir(reportDirectory,{recursive:true});await writeFile(join(reportDirectory,'results.json'),JSON.stringify(report,null,2)+'\n');const rows=results.map(r=>`| ${r.id} | ${r.channel} | ${r.observed?.classification??'-'} | ${r.observed?.status??`HTTP ${r.httpStatus}`} | ${r.failures.length?'FAIL: '+r.failures.join('; '):'PASS'} |`).join('\n');await writeFile(join(reportDirectory,'results.md'),`# Workflow validation results\n\n${report.generatedAt}\n\n${report.summary.passed}/${report.summary.total} authored scenarios passed; ${report.summary.accepted} accepted. ${report.summary.analysisRuns} specialist analysis runs. Network attempts: ${networkAttempts}. Payment write attempts: ${paymentWriteAttempts}.\n\nInvariant failures: ${invariants.length?invariants.join('; '):'none'}.\n\n${report.scope}\n\n| ID | Channel | Classification | Outcome | Result |\n| --- | --- | --- | --- | --- |\n${rows}\n\n## Limitations\n\n${report.limitations.map(l=>'- '+l).join('\n')}\n`);}
+  const report:ValidationReport={schemaVersion:'workflow-validation-result.v1',generatedAt:new Date().toISOString(),scope:'Actual authenticated API intake, file extraction, durable inbox worker, payment analysis worker, deterministic fixture agents, trusted-record checks, independent audit, persisted notifications and API result reads. Isolated temporary database/artifacts. No live provider or blockchain execution.',results,summary:{suite,total:results.length,accepted:ids.size,outcomeCorrect:results.filter(r=>r.expected.httpStatus?r.httpStatus===r.expected.httpStatus:r.observed?.status===r.expected.status).length,classificationAsserted:results.filter(r=>r.expected.classification!==undefined).length,classificationCorrect:results.filter(r=>r.expected.classification!==undefined&&(r.expected.httpStatus?r.httpStatus===r.expected.httpStatus:r.observed?.classification===r.expected.classification)).length,passed:results.filter(r=>!r.failures.length).length,failed:results.filter(r=>r.failures.length).length,byChannel:by('channel'),byOutcome:by('outcome'),analysisRuns:(db.prepare('SELECT COUNT(*) n FROM analysis_runs').get() as {n:number}).n,workerTicks,chainScansReplaced,networkAttempts,paymentWriteAttempts},invariants,limitations:['Authored synthetic corpus, not a statistical measure of production fraud-detection accuracy.','Invoice agents run their deterministic fixture implementations; live model quality, outages, latency and cost are not measured.','Voice inputs are manual transcripts; audio transcription and speaker authentication are not tested.','URLs are never fetched; no malware-browser or sender-authentication guarantee is made.','Read-only chain scans are replaced by an explicit offline stub; no wallet transfer, transaction confirmation or settlement is exercised.','No standing payment policy is installed; approved items must not create payment authority.','Rate limiting is preserved, with reserved test IPs distributed in groups of ten.']};
+  if(reportDirectory){await mkdir(reportDirectory,{recursive:true});await writeFile(join(reportDirectory,'results.json'),JSON.stringify(report,null,2)+'\n');const rows=results.map(r=>`| ${r.id} | ${r.channel} | ${r.observed?.classification??'-'} | ${r.observed?.status??`HTTP ${r.httpStatus} ${r.errorCode??''}`} | ${r.failures.length?'FAIL: '+r.failures.join('; '):'PASS'} |`).join('\n');await writeFile(join(reportDirectory,'results.md'),`# Workflow validation results\n\n${report.generatedAt}\n\n${report.summary.passed}/${report.summary.total} authored scenarios passed; ${report.summary.accepted} accepted. ${report.summary.analysisRuns} specialist analysis runs. Network attempts: ${networkAttempts}. Payment write attempts: ${paymentWriteAttempts}.\n\nInvariant failures: ${invariants.length?invariants.join('; '):'none'}.\n\n${report.scope}\n\n| ID | Channel | Classification | Outcome | Result |\n| --- | --- | --- | --- | --- |\n${rows}\n\n## Limitations\n\n${report.limitations.map(l=>'- '+l).join('\n')}\n`);}
   return report;
  }finally{
   try{if(system)await system.app.close();}
@@ -105,7 +114,8 @@ export async function runWorkflowValidation(reportDirectory?:string):Promise<Val
  }
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
- const report=await runWorkflowValidation(resolve('var/workflow-validation'));console.log(JSON.stringify(report.summary,null,2));
+ const suite:Suite=process.argv.includes('--suite')&&process.argv[process.argv.indexOf('--suite')+1]==='v2'?'v2':'v1';
+ const report=await runWorkflowValidation(resolve(suite==='v2'?'var/workflow-validation-v2':'var/workflow-validation'),suite);console.log(JSON.stringify(report.summary,null,2));
  for(const row of report.results.filter(r=>r.failures.length))console.log(`${row.id}: ${row.failures.join('; ')}`);
  for(const failure of report.invariants)console.log(`INVARIANT: ${failure}`);
  if(report.summary.failed||report.invariants.length)process.exitCode=1;

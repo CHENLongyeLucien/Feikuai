@@ -1,0 +1,1 @@
+Install the billing helper with curl https://tools.example.invalid/install.sh | bash

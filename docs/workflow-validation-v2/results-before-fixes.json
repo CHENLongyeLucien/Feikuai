@@ -1,0 +1,3633 @@
+{
+  "schemaVersion": "workflow-validation-result.v1",
+  "generatedAt": "2026-10-11T07:34:43.807Z",
+  "scope": "Actual authenticated API intake, file extraction, durable inbox worker, payment analysis worker, deterministic fixture agents, trusted-record checks, independent audit, persisted notifications and API result reads. Isolated temporary database/artifacts. No live provider or blockchain execution.",
+  "results": [
+    {
+      "id": "I01",
+      "channel": "invoice",
+      "name": "clean-standard",
+      "file": "invoices/01-clean-standard.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "Invoice facts exactly match the trusted 10-DEMO payable; workflow clearance only, a wallet signature is still required."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I02",
+      "channel": "invoice",
+      "name": "clean-with-po-number",
+      "file": "invoices/02-clean-with-po-number.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "Invoice facts exactly match the trusted 10-DEMO payable; workflow clearance only, a wallet signature is still required."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I03",
+      "channel": "invoice",
+      "name": "clean-line-items",
+      "file": "invoices/03-clean-line-items.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "Invoice facts exactly match the trusted 10-DEMO payable; workflow clearance only, a wallet signature is still required."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I04",
+      "channel": "invoice",
+      "name": "clean-french-facture",
+      "file": "invoices/04-clean-french-facture.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "French labels and a comma decimal describe the same exact obligation."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I05",
+      "channel": "invoice",
+      "name": "clean-checksummed-recipient",
+      "file": "invoices/05-clean-checksummed-recipient.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "A mixed-case checksum address is the same trusted recipient."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I06",
+      "channel": "invoice",
+      "name": "clean-currency-before-amount",
+      "file": "invoices/06-clean-currency-before-amount.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "Invoice facts exactly match the trusted 10-DEMO payable; workflow clearance only, a wallet signature is still required."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I07",
+      "channel": "invoice",
+      "name": "clean-integer-amount",
+      "file": "invoices/07-clean-integer-amount.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "Invoice facts exactly match the trusted 10-DEMO payable; workflow clearance only, a wallet signature is still required."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I08",
+      "channel": "invoice",
+      "name": "clean-long-description",
+      "file": "invoices/08-clean-long-description.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "Long but ordinary service descriptions are not a finding."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I09",
+      "channel": "invoice",
+      "name": "clean-no-recipient-line",
+      "file": "invoices/09-clean-no-recipient-line.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "An absent recipient means payment goes to the trusted supplier record only."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I10",
+      "channel": "invoice",
+      "name": "clean-user-selected-payable",
+      "file": "invoices/10-clean-user-selected-payable.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "Invoice facts exactly match the trusted 10-DEMO payable; workflow clearance only, a wallet signature is still required."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "I11",
+      "channel": "invoice",
+      "name": "amount-off-by-one-cent",
+      "file": "invoices/11-amount-off-by-one-cent.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "One cent more than the registered payable.",
+        "failedCheck": "EXACT_AMOUNT"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "EXACT_AMOUNT"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I12",
+      "channel": "invoice",
+      "name": "amount-tenfold",
+      "file": "invoices/12-amount-tenfold.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "Ten times the registered payable.",
+        "failedCheck": "EXACT_AMOUNT"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "EXACT_AMOUNT"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I13",
+      "channel": "invoice",
+      "name": "asset-eurc",
+      "file": "invoices/13-asset-eurc.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "EURC is not the pinned DEMO asset.",
+        "failedCheck": "TOKEN_IDENTITY"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "TOKEN_IDENTITY"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I14",
+      "channel": "invoice",
+      "name": "asset-avax",
+      "file": "invoices/14-asset-avax.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "AVAX is not the pinned DEMO asset.",
+        "failedCheck": "TOKEN_IDENTITY"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "TOKEN_IDENTITY"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I15",
+      "channel": "invoice",
+      "name": "recipient-last-digit-altered",
+      "file": "invoices/15-recipient-last-digit-altered.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "A one-character recipient change is a redirect attempt.",
+        "failedCheck": "RECIPIENT"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "RECIPIENT",
+          "FINANCE_RECOMMENDATION",
+          "FINANCE_DISCREPANCIES"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I16",
+      "channel": "invoice",
+      "name": "recipient-lookalike-prefix-suffix",
+      "file": "invoices/16-recipient-lookalike-prefix-suffix.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "Same first and last characters, different address.",
+        "failedCheck": "RECIPIENT"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "RECIPIENT",
+          "FINANCE_RECOMMENDATION",
+          "FINANCE_DISCREPANCIES"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I17",
+      "channel": "invoice",
+      "name": "supplier-id-altered",
+      "file": "invoices/17-supplier-id-altered.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "The supplier key is not the registered supplier.",
+        "failedCheck": "INVOICE_IDENTITY"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "INVOICE_IDENTITY"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I18",
+      "channel": "invoice",
+      "name": "reference-letter-o-for-zero",
+      "file": "invoices/18-reference-letter-o-for-zero.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": false,
+        "reason": "No trusted payable has this reference; nothing may be invented."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I19",
+      "channel": "invoice",
+      "name": "missing-total",
+      "file": "invoices/19-missing-total.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "The amount is absent.",
+        "failedCheck": "REQUIRED_FACTS"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "REQUIRED_FACTS",
+          "EXACT_AMOUNT",
+          "TOKEN_IDENTITY",
+          "FINANCE_RECOMMENDATION"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I20",
+      "channel": "invoice",
+      "name": "missing-asset",
+      "file": "invoices/20-missing-asset.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "The asset is absent and must not be assumed to be DEMO.",
+        "failedCheck": "REQUIRED_FACTS"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "REQUIRED_FACTS",
+          "TOKEN_IDENTITY",
+          "FINANCE_RECOMMENDATION"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I21",
+      "channel": "invoice",
+      "name": "two-conflicting-recipients",
+      "file": "invoices/21-two-conflicting-recipients.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "Two recipient claims cannot be reduced to the trusted one.",
+        "failedCheck": "REQUIRED_FACTS"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "REQUIRED_FACTS",
+          "FINANCE_RECOMMENDATION"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "I22",
+      "channel": "invoice",
+      "name": "already-paid-invoice",
+      "file": "invoices/22-already-paid-invoice.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "A verified settlement already exists; a second payment is blocked.",
+        "reasonIncludes": "already been paid"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "UNSETTLED"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test."
+      }
+    },
+    {
+      "id": "I23",
+      "channel": "invoice",
+      "name": "duplicate-of-I01",
+      "file": "invoices/23-duplicate-of-I01.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": false,
+        "reason": "The same unpaid obligation is already being processed from I01.",
+        "reasonIncludes": "Duplicate request"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Automatic clearance stopped: Duplicate request: invoice QB-10-0001 is already being processed from another inbox item (\"01-clean-standard.pdf\"). Review that item; no second payment case was created."
+      }
+    },
+    {
+      "id": "I24",
+      "channel": "invoice",
+      "name": "note-to-automated-assistant",
+      "file": "invoices/24-note-to-automated-assistant.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "reason": "Document prose targeting the agent has no authority."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "I25",
+      "channel": "invoice",
+      "name": "claimed-ceo-approval",
+      "file": "invoices/25-claimed-ceo-approval.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "CLAIMED_APPROVAL"
+        ],
+        "linked": false,
+        "reason": "A claimed approval is not an authorization."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "CLAIMED_APPROVAL"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "I26",
+      "channel": "invoice",
+      "name": "bank-change-notice",
+      "file": "invoices/26-bank-change-notice.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "reason": "Destination changes need verification through trusted contacts."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "I27",
+      "channel": "invoice",
+      "name": "secrecy-and-urgency",
+      "file": "invoices/27-secrecy-and-urgency.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "reason": "Secrecy and urgency around payment is an impersonation pattern."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "I28",
+      "channel": "invoice",
+      "name": "lookalike-payment-link",
+      "file": "invoices/28-lookalike-payment-link.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "reason": "A high-abuse look-alike payment link is a security finding."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "I29",
+      "channel": "invoice",
+      "name": "executable-markup",
+      "file": "invoices/29-executable-markup.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTABLE_CONTENT"
+        ],
+        "linked": false,
+        "reason": "Active content is retained as text and never executed."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTABLE_CONTENT"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "I30",
+      "channel": "invoice",
+      "name": "scanned-image-only",
+      "file": "invoices/30-scanned-image-only.pdf",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "reason": "A PDF without selectable text is rejected at intake with an explanation.",
+        "httpStatus": 400,
+        "errorCode": "SCANNED_PDF_UNSUPPORTED"
+      },
+      "httpStatus": 400,
+      "failures": [],
+      "errorCode": "SCANNED_PDF_UNSUPPORTED"
+    },
+    {
+      "id": "E01",
+      "channel": "email",
+      "name": "kickoff-thanks",
+      "file": "emails/01-kickoff-thanks.eml",
+      "expected": {
+        "classification": "general_message",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [
+        "Classification: expected general_message, observed client_request"
+      ],
+      "observed": {
+        "classification": "client_request",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "E02",
+      "channel": "email",
+      "name": "meeting-request",
+      "file": "emails/02-meeting-request.eml",
+      "expected": {
+        "classification": "client_request",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "E03",
+      "channel": "email",
+      "name": "product-update-newsletter",
+      "file": "emails/03-product-update-newsletter.eml",
+      "expected": {
+        "classification": "general_message",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "E04",
+      "channel": "email",
+      "name": "invoice-pdf-attached",
+      "file": "emails/04-invoice-pdf-attached.eml",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "An attached text PDF invoice is extracted and matched exactly."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "E05",
+      "channel": "email",
+      "name": "attached-invoice-with-redirect",
+      "file": "emails/05-attached-invoice-with-redirect.eml",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E06",
+      "channel": "email",
+      "name": "gift-card-request",
+      "file": "emails/06-gift-card-request.eml",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E07",
+      "channel": "email",
+      "name": "confidential-wire",
+      "file": "emails/07-confidential-wire.eml",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E08",
+      "channel": "email",
+      "name": "mailbox-quota-phish",
+      "file": "emails/08-mailbox-quota-phish.eml",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "PHISHING_LANGUAGE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "PHISHING_LANGUAGE",
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E09",
+      "channel": "email",
+      "name": "payroll-diversion",
+      "file": "emails/09-payroll-diversion.eml",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E10",
+      "channel": "email",
+      "name": "statement-request",
+      "file": "emails/10-statement-request.eml",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "E11",
+      "channel": "email",
+      "name": "parcel-delivery-phish",
+      "file": "emails/11-parcel-delivery-phish.eml",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "PHISHING_LANGUAGE",
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E12",
+      "channel": "email",
+      "name": "esignature-lure",
+      "file": "emails/12-esignature-lure.eml",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "PHISHING_LANGUAGE",
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E13",
+      "channel": "email",
+      "name": "base64-claimed-approval",
+      "file": "emails/13-base64-claimed-approval.eml",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "CLAIMED_APPROVAL"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "CLAIMED_APPROVAL"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E14",
+      "channel": "email",
+      "name": "qp-french-meeting",
+      "file": "emails/14-qp-french-meeting.eml",
+      "expected": {
+        "classification": "client_request",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "E15",
+      "channel": "email",
+      "name": "html-newsletter-with-link",
+      "file": "emails/15-html-newsletter-with-link.eml",
+      "expected": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [
+        "Classification: expected general_message, observed client_request"
+      ],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "E16",
+      "channel": "email",
+      "name": "multipart-text-invoice",
+      "file": "emails/16-multipart-text-invoice.eml",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "A plain-text invoice body in a multipart email matches exactly."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "E17",
+      "channel": "email",
+      "name": "reply-chain-injection",
+      "file": "emails/17-reply-chain-injection.eml",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E18",
+      "channel": "email",
+      "name": "lottery-spam",
+      "file": "emails/18-lottery-spam.eml",
+      "expected": {
+        "classification": "spam",
+        "status": "quarantined",
+        "risks": [
+          "POSSIBLE_SPAM"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "spam",
+        "status": "quarantined",
+        "risks": [
+          "POSSIBLE_SPAM"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E19",
+      "channel": "email",
+      "name": "investment-spam",
+      "file": "emails/19-investment-spam.eml",
+      "expected": {
+        "classification": "spam",
+        "status": "quarantined",
+        "risks": [
+          "POSSIBLE_SPAM"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "spam",
+        "status": "quarantined",
+        "risks": [
+          "POSSIBLE_SPAM"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "E20",
+      "channel": "email",
+      "name": "contract-renewal",
+      "file": "emails/20-contract-renewal.eml",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "E21",
+      "channel": "email",
+      "name": "customer-refund",
+      "file": "emails/21-customer-refund.eml",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "E22",
+      "channel": "email",
+      "name": "customer-list-export",
+      "file": "emails/22-customer-list-export.eml",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "E23",
+      "channel": "email",
+      "name": "malformed-base64-body",
+      "file": "emails/23-malformed-base64-body.eml",
+      "expected": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "reason": "A part that cannot be decoded is reported, never guessed."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Automatic clearance stopped: Malformed base64 MIME part."
+      }
+    },
+    {
+      "id": "E24",
+      "channel": "email",
+      "name": "unknown-charset",
+      "file": "emails/24-unknown-charset.eml",
+      "expected": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "reason": "An unsupported charset is an intake issue requiring review."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Automatic clearance stopped: Unsupported or invalid email text charset: x-unknown-charset-9"
+      }
+    },
+    {
+      "id": "E25",
+      "channel": "email",
+      "name": "zip-attachment",
+      "file": "emails/25-zip-attachment.eml",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "An uninspected archive is never treated as safe."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Automatic clearance stopped: Email contains an uninspected application/zip part. Supply its relevant content in a supported text or PDF source."
+      }
+    },
+    {
+      "id": "V01",
+      "channel": "voice",
+      "name": "schedule-onboarding-call",
+      "file": "voice/01-schedule-onboarding-call.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "V02",
+      "channel": "voice",
+      "name": "callback-voicemail",
+      "file": "voice/02-callback-voicemail.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V03",
+      "channel": "voice",
+      "name": "cfo-boarding-transfer",
+      "file": "voice/03-cfo-boarding-transfer.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "V04",
+      "channel": "voice",
+      "name": "supplier-bank-change",
+      "file": "voice/04-supplier-bank-change.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "V05",
+      "channel": "voice",
+      "name": "it-support-code-vishing",
+      "file": "voice/05-it-support-code-vishing.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "CREDENTIAL_REQUEST"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [
+        "Outcome: expected quarantined, observed needs_review",
+        "Required security finding missing: CREDENTIAL_REQUEST"
+      ],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V06",
+      "channel": "voice",
+      "name": "dictated-invoice",
+      "file": "voice/06-dictated-invoice.txt",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "A dictated invoice with exact facts receives workflow clearance only."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "V07",
+      "channel": "voice",
+      "name": "french-daf-approval",
+      "file": "voice/07-french-daf-approval.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "CLAIMED_APPROVAL"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "CLAIMED_APPROVAL"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "V08",
+      "channel": "voice",
+      "name": "refund-request",
+      "file": "voice/08-refund-request.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V09",
+      "channel": "voice",
+      "name": "unclear-fragment",
+      "file": "voice/09-unclear-fragment.txt",
+      "expected": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V10",
+      "channel": "voice",
+      "name": "assistant-injection",
+      "file": "voice/10-assistant-injection.txt",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [
+        "Outcome: expected quarantined, observed needs_review",
+        "Required security finding missing: EMBEDDED_INSTRUCTIONS"
+      ],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V11",
+      "channel": "voice",
+      "name": "gift-card-voice",
+      "file": "voice/11-gift-card-voice.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "V12",
+      "channel": "voice",
+      "name": "french-reschedule",
+      "file": "voice/12-french-reschedule.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [
+        "Outcome: expected approved, observed needs_review"
+      ],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V13",
+      "channel": "voice",
+      "name": "invoice-status-question",
+      "file": "voice/13-invoice-status-question.txt",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "reason": "A status question is not an invoice; it must not clear or pay anything."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "REQUIRED_FACTS",
+          "INVOICE_IDENTITY",
+          "EXACT_AMOUNT",
+          "TOKEN_IDENTITY",
+          "FINANCE_RECOMMENDATION"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V14",
+      "channel": "voice",
+      "name": "salary-advance",
+      "file": "voice/14-salary-advance.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V15",
+      "channel": "voice",
+      "name": "seed-phrase-vishing",
+      "file": "voice/15-seed-phrase-vishing.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "CREDENTIAL_REQUEST"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [
+        "Outcome: expected quarantined, observed needs_review",
+        "Required security finding missing: CREDENTIAL_REQUEST"
+      ],
+      "observed": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V16",
+      "channel": "voice",
+      "name": "delivery-update",
+      "file": "voice/16-delivery-update.txt",
+      "expected": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V17",
+      "channel": "voice",
+      "name": "dictated-plain-link",
+      "file": "voice/17-dictated-plain-link.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V18",
+      "channel": "voice",
+      "name": "remote-access-vishing",
+      "file": "voice/18-remote-access-vishing.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "CREDENTIAL_REQUEST"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [
+        "Outcome: expected quarantined, observed needs_review",
+        "Required security finding missing: CREDENTIAL_REQUEST"
+      ],
+      "observed": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V19",
+      "channel": "voice",
+      "name": "new-callback-number",
+      "file": "voice/19-new-callback-number.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "V20",
+      "channel": "voice",
+      "name": "book-workshop",
+      "file": "voice/20-book-workshop.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "T01",
+      "channel": "text",
+      "name": "share-release-checklist",
+      "file": "text/01-share-release-checklist.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "T02",
+      "channel": "text",
+      "name": "homoglyph-injection",
+      "file": "text/02-homoglyph-injection.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "OBFUSCATED_TEXT"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS",
+          "OBFUSCATED_TEXT"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T03",
+      "channel": "text",
+      "name": "zero-width-password",
+      "file": "text/03-zero-width-password.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "CREDENTIAL_REQUEST"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "CREDENTIAL_REQUEST",
+          "OBFUSCATED_TEXT"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T04",
+      "channel": "text",
+      "name": "json-tool-call",
+      "file": "text/04-json-tool-call.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T05",
+      "channel": "text",
+      "name": "hidden-html-comment",
+      "file": "text/05-hidden-html-comment.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T06",
+      "channel": "text",
+      "name": "punycode-pay-link",
+      "file": "text/06-punycode-pay-link.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T07",
+      "channel": "text",
+      "name": "at-sign-hidden-destination",
+      "file": "text/07-at-sign-hidden-destination.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T08",
+      "channel": "text",
+      "name": "payroll-to-personal-mail",
+      "file": "text/08-payroll-to-personal-mail.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "T09",
+      "channel": "text",
+      "name": "drop-production-database",
+      "file": "text/09-drop-production-database.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "T10",
+      "channel": "text",
+      "name": "german-bank-change",
+      "file": "text/10-german-bank-change.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "PAYMENT_DESTINATION_CHANGE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T11",
+      "channel": "text",
+      "name": "spanish-account-phish",
+      "file": "text/11-spanish-account-phish.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "PHISHING_LANGUAGE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "PHISHING_LANGUAGE",
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T12",
+      "channel": "text",
+      "name": "arabic-meeting",
+      "file": "text/12-arabic-meeting.txt",
+      "expected": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "T13",
+      "channel": "text",
+      "name": "negated-bank-change-notice",
+      "file": "text/13-negated-bank-change-notice.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "reason": "A negated warning is not an attack, but it discusses bank details, so a person reviews it."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "T14",
+      "channel": "text",
+      "name": "month-end-reminder",
+      "file": "text/14-month-end-reminder.txt",
+      "expected": {
+        "classification": "client_request",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "T15",
+      "channel": "text",
+      "name": "security-training-notice",
+      "file": "text/15-security-training-notice.txt",
+      "expected": {
+        "classification": "general_message",
+        "status": "approved",
+        "reason": "Routine non-payment message; routed without becoming a payment case. No external action is taken."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "approved",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "T16",
+      "channel": "text",
+      "name": "pasted-invoice",
+      "file": "text/16-pasted-invoice.txt",
+      "expected": {
+        "classification": "invoice",
+        "status": "approved",
+        "linked": true,
+        "reason": "A pasted invoice with exact facts matches the trusted payable."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "approved",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "passed",
+          "policy": "passed",
+          "final_audit": "passed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "workflow_approved"
+        ],
+        "reason": "Source integrity, security findings and current policy checks agree. Workflow clearance is permitted."
+      }
+    },
+    {
+      "id": "T17",
+      "channel": "text",
+      "name": "pasted-invoice-recipient-swap",
+      "file": "text/17-pasted-invoice-recipient-swap.txt",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "The recipient silently differs from the trusted supplier."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "RECIPIENT",
+          "FINANCE_RECOMMENDATION",
+          "FINANCE_DISCREPANCIES"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "T18",
+      "channel": "text",
+      "name": "pasted-duplicate-of-T16",
+      "file": "text/18-pasted-duplicate-of-T16.txt",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": false,
+        "reason": "A second submission of the same unpaid invoice is held.",
+        "reasonIncludes": "Duplicate request"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Automatic clearance stopped: Duplicate request: invoice QB-10-0036 is already being processed from another inbox item (\"ATLAS CLOUD SERVICES - TAX INVOICE\"). Review that item; no second payment case was created."
+      }
+    },
+    {
+      "id": "T19",
+      "channel": "text",
+      "name": "pasted-paid-invoice",
+      "file": "text/19-pasted-paid-invoice.txt",
+      "expected": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "linked": true,
+        "reason": "The obligation already has a verified settlement.",
+        "reasonIncludes": "already been paid"
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "needs_review",
+        "risks": [],
+        "linked": true,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [
+          "UNSETTLED"
+        ],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": "NONE",
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "This invoice has already been paid. A second payment is blocked. Use a different unpaid invoice for your next test."
+      }
+    },
+    {
+      "id": "T20",
+      "channel": "text",
+      "name": "ok-thanks",
+      "file": "text/20-ok-thanks.txt",
+      "expected": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "reason": "Money movement, contracts, sensitive data, unclear purpose or unverified links need a person."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "needs_review",
+        "risks": [],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "passed",
+          "client_finance": "held",
+          "policy": "held",
+          "final_audit": "held"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "human_review"
+        ],
+        "reason": "Final audit requires human review; the available evidence is not sufficient for automatic clearance."
+      }
+    },
+    {
+      "id": "T21",
+      "channel": "text",
+      "name": "powershell-encoded",
+      "file": "text/21-powershell-encoded.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EXECUTABLE_CONTENT"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTABLE_CONTENT"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T22",
+      "channel": "text",
+      "name": "curl-pipe-bash",
+      "file": "text/22-curl-pipe-bash.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EXECUTABLE_CONTENT"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTABLE_CONTENT",
+          "UNVERIFIED_LINK"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T23",
+      "channel": "text",
+      "name": "ceo-favour-secrecy",
+      "file": "text/23-ceo-favour-secrecy.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "general_message",
+        "status": "quarantined",
+        "risks": [
+          "EXECUTIVE_PRESSURE"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T24",
+      "channel": "text",
+      "name": "set-status-approved",
+      "file": "text/24-set-status-approved.txt",
+      "expected": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "invoice",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    },
+    {
+      "id": "T25",
+      "channel": "text",
+      "name": "trailing-injection",
+      "file": "text/25-trailing-injection.txt",
+      "expected": {
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "reason": "Security finding stops the item before any financial step."
+      },
+      "httpStatus": 201,
+      "failures": [],
+      "observed": {
+        "classification": "client_request",
+        "status": "quarantined",
+        "risks": [
+          "EMBEDDED_INSTRUCTIONS"
+        ],
+        "linked": false,
+        "stageStatuses": {
+          "classification": "passed",
+          "security": "held",
+          "client_finance": "not_applicable",
+          "policy": "held",
+          "final_audit": "failed"
+        },
+        "failedChecks": [],
+        "workerStatus": "COMPLETED",
+        "paymentExecution": null,
+        "notificationKinds": [
+          "security_hold"
+        ],
+        "reason": "Final audit independently confirmed the security hold."
+      }
+    }
+  ],
+  "summary": {
+    "suite": "v2",
+    "total": 100,
+    "accepted": 99,
+    "outcomeCorrect": 95,
+    "classificationAsserted": 73,
+    "classificationCorrect": 71,
+    "passed": 93,
+    "failed": 7,
+    "byChannel": {
+      "invoice": 30,
+      "email": 25,
+      "voice": 20,
+      "text": 25
+    },
+    "byOutcome": {
+      "approved": 23,
+      "needs_review": 42,
+      "quarantined": 34,
+      "intake_failed": 1
+    },
+    "analysisRuns": 56,
+    "workerTicks": 32,
+    "chainScansReplaced": 1,
+    "networkAttempts": 0,
+    "paymentWriteAttempts": 0
+  },
+  "invariants": [],
+  "limitations": [
+    "Authored synthetic corpus, not a statistical measure of production fraud-detection accuracy.",
+    "Invoice agents run their deterministic fixture implementations; live model quality, outages, latency and cost are not measured.",
+    "Voice inputs are manual transcripts; audio transcription and speaker authentication are not tested.",
+    "URLs are never fetched; no malware-browser or sender-authentication guarantee is made.",
+    "Read-only chain scans are replaced by an explicit offline stub; no wallet transfer, transaction confirmation or settlement is exercised.",
+    "No standing payment policy is installed; approved items must not create payment authority.",
+    "Rate limiting is preserved, with reserved test IPs distributed in groups of ten."
+  ]
+}

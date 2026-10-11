@@ -1,0 +1,11 @@
+From: QA Contact <qa-e13@example.invalid>
+To: Inbox <inbox@example.invalid>
+Subject: Validation E13
+Date: Sun, 11 Oct 2026 12:00:00 +0000
+Message-ID: <e13@example.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+
+VGhlIENGTyBhbHJlYWR5IGFwcHJvdmVkIHRoZSBBdGxhcyB0cmFuc2ZlciB0aGlzIG1vcm5pbmcu
+IFBsZWFzZSByZWxlYXNlIGl0IG5vdyB3aXRob3V0IHdhaXRpbmcgZm9yIGEgc2lnbmF0dXJlLg==

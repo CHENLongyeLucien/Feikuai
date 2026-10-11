@@ -81,3 +81,22 @@ describe('unsigned preparation failures (RPC explicitly stubbed)',()=>{
  it('never releases persisted signed envelopes on a preparation error',async()=>{const {executionId}=await queuedExecution();system.db.prepare('INSERT INTO tx_outbox VALUES(?,?,?,?,?,?,?,?,?,?)').run(randomUUID(),executionId,'31337',manifest.roles.relayer,7,'0xdeadbeef','0x'+'ab'.repeat(32),'{}','PREPARED',new Date().toISOString());expect(await system.chain.rejectBeforeBroadcast(system.chain.execution(executionId),'APPROVAL_EXPIRED')).toBe(false);expect((system.db.prepare('SELECT COUNT(*) count FROM tx_outbox').get() as any).count).toBe(1);});
  it('never persists arbitrary provider/RPC exception text as an error code',()=>{expect(chainFailureCode(new Error('Authorization: bearer-secret calldata 0xsigned'))).toBe('CHAIN_PREPARATION_FAILED');expect(chainFailureCode({cause:{data:{errorName:'ApprovalExpired'}}})).toBe('APPROVAL_EXPIRED');});
 });
+describe('decision consistency and the final pre-execution audit',()=>{
+ async function frozen(){
+  system.chain.assertConfiguration=async()=>manifest;system.chain.scan=async()=>{};system.chain.current=async()=>({timestamp:1000n,blockNumber:1n,invoiceDigest:'0x'+'0'.repeat(64),nonceState:0});
+  const s=await login(),c=(await create(s)).json();await system.service.analyze('northstar-demo',c.id);const user={tenantId:'northstar-demo',roles:['operator','reviewer'],membershipId:'test',address:account(1).address.toLowerCase(),csrfToken:s.csrf},current=system.service.project(user,c.id);
+  return {user,current,packet:await system.service.freeze(user,c.id,{expectedVersion:current.version},randomUUID())};
+ }
+ it('treats a finance-agent hold or open discrepancy as a hard failure',async()=>{const {user,current}=await frozen(),context=system.service.context(user.tenantId,current.id),base={...context,intake:current.analysis.intake,pages:current.document.pages,deployment:manifest};
+  expect(businessChecks({...base,finance:current.analysis.finance}).every(x=>x.passed)).toBe(true);
+  const held=businessChecks({...base,finance:{...current.analysis.finance,recommendation:'HOLD'}});expect(held.find(x=>x.code==='FINANCE_RECOMMENDATION')).toMatchObject({passed:false,severity:'HARD'});
+  const discrepancy=businessChecks({...base,finance:{...current.analysis.finance,discrepancies:[{code:'ALREADY_SETTLED',summary:'Agent observed a prior payment.',evidenceIds:[]}]}});expect(discrepancy.find(x=>x.code==='FINANCE_DISCREPANCIES')).toMatchObject({passed:false,severity:'HARD'});});
+ it('passes for unchanged frozen terms and fails once trusted records change',async()=>{const {user,current,packet}=await frozen();
+  expect(()=>system.service.preExecutionAudit(user.tenantId,current.id,packet)).not.toThrow();
+  system.db.prepare("UPDATE payables SET version='2' WHERE id=?").run(current.payableId);
+  expect(()=>system.service.preExecutionAudit(user.tenantId,current.id,packet)).toThrow(/trusted records changed/);});
+ it('fails when signed terms differ from the trusted payable or the source item was quarantined',async()=>{const {user,current,packet}=await frozen();
+  expect(()=>system.service.preExecutionAudit(user.tenantId,current.id,{...packet,payment:{...packet.payment,amountAtomic:'1'}})).toThrow(/Authorized terms differ/);
+  system.db.prepare("INSERT INTO inbox_items(id,tenant_id,channel,title,text,status,source_path,source_hash,text_hash,source_metadata,linked_case_id,approval,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(randomUUID(),user.tenantId,'invoice','Quarantined source','x','quarantined','/dev/null','h','h','{}',current.id,'{}','2026-10-11','2026-10-11');
+  expect(()=>system.service.preExecutionAudit(user.tenantId,current.id,packet)).toThrow(/quarantined or rejected/);});
+});
