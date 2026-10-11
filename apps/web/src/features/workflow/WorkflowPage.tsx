@@ -14,6 +14,7 @@ import {normalizeLocation,readWorkflowLocation,workflowUrl} from './location';
 import {workflowReviewQueue} from './review-queue';
 import WorkflowMap from './WorkflowMap';
 import AuthoritySummary from './AuthoritySummary';
+import BatchTracker from './BatchTracker';
 import './workflow.css';
 const EvidenceVerifier=lazy(()=>import('../evidence/EvidenceVerifier'));
 const DashboardPanel=lazy(()=>import('../dashboard/DashboardPanel'));
@@ -28,6 +29,9 @@ export default function WorkflowPage(props:Props){
  const {location,navigate,authenticated,cases,payables,onLogin,onNotice}=props;
  const state=readWorkflowLocation(location),inbox=useInbox(authenticated),items=authenticated?inbox.data?.items||[]:[];
  const [search,setSearch]=useState(''),[listVisible,setListVisible]=useState(false);
+ // The latest multi-document upload, kept across reloads until dismissed.
+ const [batch,setBatchState]=useState<string[]>(()=>{try{const saved=JSON.parse(sessionStorage.getItem('sf-batch')||'[]');return Array.isArray(saved)?saved.filter((id:unknown)=>typeof id==='string').slice(0,20):[];}catch{return [];}});
+ const setBatch=(ids:string[])=>{setBatchState(ids);try{if(ids.length)sessionStorage.setItem('sf-batch',JSON.stringify(ids));else sessionStorage.removeItem('sf-batch');}catch{/* storage unavailable: the tracker still works for this view */}};
  const panelFocus=useRef<string|null>(null),searchFrame=useRef<number>(0);
  const reviewRef=useRef<HTMLDivElement>(null),paymentRef=useRef<HTMLDivElement>(null),searchRef=useRef<HTMLInputElement>(null);
  const reduced=useUI(s=>s.reduced);
@@ -85,6 +89,7 @@ export default function WorkflowPage(props:Props){
      </div>
     </aside>
     <div className="wf-content" ref={reviewRef} data-testid="workflow-review">
+     {authenticated&&batch.length>1&&<BatchTracker ids={batch} onOpen={id=>choose(id,null)} onDismiss={()=>setBatch([])}/>}
      {selected&&<div className="wf-selected-heading"><div><span className="wf-eyebrow">FOLLOWING THIS ITEM</span><h2>{clean(title)}</h2></div><button onClick={()=>{reviewRef.current?.querySelector('.wf-review-body')?.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});}} aria-label="Go to review"><ArrowDown size={18}/></button></div>}
      <WorkflowMap key={`${state.itemId||''}:${state.caseId||''}`} journey={journey} onOpenStage={openStage}/>
      {selected&&<AuthoritySummary key={`authority-${state.itemId||state.caseId}`} itemId={state.itemId} caseId={caseId||state.caseId}/>}
@@ -96,7 +101,7 @@ export default function WorkflowPage(props:Props){
    </div>
   </main>
   <Dialog.Root open={state.panel!==null} onOpenChange={open=>!open&&closePanel()}><Dialog.Portal><Dialog.Overlay className="wf-drawer-overlay"/><Dialog.Content className="wf-drawer" data-panel={state.panel} data-testid="workflow-drawer" onCloseAutoFocus={event=>{event.preventDefault();const name=panelFocus.current;document.querySelector<HTMLButtonElement>(`.wf-header-nav button[aria-label="${name?name[0]!.toUpperCase()+name.slice(1):'Settings'}"]`)?.focus({preventScroll:true});}}><header><div><Dialog.Title>{state.panel==='dashboard'?'Dashboard':state.panel==='reports'?'Reports':state.panel==='alerts'?'Alerts':'Settings'}</Dialog.Title><Dialog.Description>{state.panel==='dashboard'?'Your workspace activity and recorded finances.':state.panel==='reports'?'Your reviews and downloadable PDF reports.':state.panel==='alerts'?'Updates that need your attention.':'Make this workspace feel right for you.'}</Dialog.Description></div><Dialog.Close aria-label="Close panel"><X size={20}/></Dialog.Close></header><div className="wf-drawer-content">{state.panel==='dashboard'?<Suspense fallback={<p role="status">Loading Dashboard…</p>}><DashboardPanel authenticated={authenticated} navigate={navigateInside} onLogin={()=>{closePanel();onLogin();}}/></Suspense>:state.panel==='reports'?<Suspense fallback={<p>Loading reports…</p>}><EvidenceVerifier cases={cases} authenticated={authenticated} onNotice={onNotice} navigate={navigateInside}/></Suspense>:state.panel==='alerts'?<Notifications authenticated={authenticated} navigate={navigateInside} onLogin={onLogin} onNotice={onNotice} embedded/>:<Preferences config={props.config} session={props.session} connected={props.connected}/>}</div></Dialog.Content></Dialog.Portal></Dialog.Root>
-  {authenticated&&<IntakeDialog channel={state.compose} onChannelChange={channel=>update({new:channel})} onClose={()=>update({new:null})} payables={payables} onNotice={onNotice} onComplete={id=>{update({item:id,case:null,new:null,panel:null});setListVisible(false);}}/>}
+  {authenticated&&<IntakeDialog channel={state.compose} onChannelChange={channel=>update({new:channel})} onClose={()=>update({new:null})} payables={payables} onNotice={onNotice} onComplete={id=>{update({item:id,case:null,new:null,panel:null});setListVisible(false);}} onBatch={(ids,options)=>{setBatch(ids);if(!options?.keepOpen){update({item:null,case:null,new:null,panel:null});setListVisible(false);}}}/>}
   {!authenticated&&state.compose&&<div className="wf-compose-prompt"><p>Sign in to add your {state.compose}.</p><button onClick={onLogin}>Sign in</button><button aria-label="Dismiss add item" onClick={()=>update({new:null})}><X size={16}/></button></div>}
  </div>;
 }

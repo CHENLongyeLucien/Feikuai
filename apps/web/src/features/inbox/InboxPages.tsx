@@ -13,7 +13,7 @@ export type InboxPagesProps = {path: string; navigate: (path: string) => void; a
 export type Example = {id: string; title: string; channel: InboxChannel; text: string; payableId?: string; sender?: string};
 export type InboxDetailProps = Pick<InboxPagesProps,'authenticated'|'navigate'|'onLogin'|'onNotice'|'embedded'> & {id:string;paymentEmbedded?:boolean};
 export type NotificationsProps = Pick<InboxPagesProps,'authenticated'|'navigate'|'onLogin'|'onNotice'|'embedded'>;
-export type IntakeDialogProps = {channel:InboxChannel|null;onChannelChange:(channel:InboxChannel)=>void;onClose:()=>void;payables:Payable[];example?:Example;onNotice:(message:string)=>void;onComplete:(id:string)=>void};
+export type IntakeDialogProps = {channel:InboxChannel|null;onChannelChange:(channel:InboxChannel)=>void;onClose:()=>void;payables:Payable[];example?:Example;onNotice:(message:string)=>void;onComplete:(id:string)=>void;onBatch?:(ids:string[],options?:{keepOpen?:boolean})=>void};
 const sourceIcons = {invoice: FileText, email: Mail, voice: AudioLines, text: MessageSquare};
 const stageIcons: Record<string, typeof Shield> = {classification: Inbox, security: ShieldCheck, client_finance: UserRound, policy: ClipboardCheck, final_audit: CheckCheck};
 async function downloadNextTestInvoice() {
@@ -128,7 +128,7 @@ async function previewDetection(file:File):Promise<Entry['detected']>{
  if(file.size<=2*1024*1024&&(/\.txt$/i.test(file.name)||file.type.startsWith('text/')))return detectFromText(await file.text());
  return null;
 }
-export function IntakeDialog({channel,onClose,payables,example,onNotice,onComplete}:IntakeDialogProps){
+export function IntakeDialog({channel,onClose,payables,example,onNotice,onComplete,onBatch}:IntakeDialogProps){
   const [title,setTitle]=useState(''),[sender,setSender]=useState(''),[text,setText]=useState(''),[payableId,setPayableId]=useState(''),[entries,setEntries]=useState<Entry[]>([]),[mode,setMode]=useState<'files'|'text'>('files'),[dragging,setDragging]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState('');
   const [testInvoiceBusy,setTestInvoiceBusy]=useState(false),[testInvoiceMessage,setTestInvoiceMessage]=useState('');
   const testInvoiceLock=useRef(false),fileInput=useRef<HTMLInputElement>(null),opener=useRef<HTMLElement|null>(null);
@@ -150,14 +150,15 @@ export function IntakeDialog({channel,onClose,payables,example,onNotice,onComple
    setBusy(true);setError('');
    try{
     if(mode==='text'){const result=await post<InboxItem|{item:InboxItem}>('/inbox',{title:title.trim()||undefined,sender:sender.trim()||undefined,text:text.trim(),payableId:invoiceLikely?payableId||undefined:undefined});const item='item'in result?result.item:result;onComplete(item.id);onNotice(`Added to your inbox · detected as ${channelNames[item.channel].toLowerCase()}.`);return;}
-    let lastId='',done=0,failed=0;const kinds:string[]=[];
+    let lastId='',done=0,failed=0;const kinds:string[]=[],added:string[]=entries.filter(e=>e.result).map(e=>e.result!.id);
     for(const entry of entries){
      if(entry.result)continue;
      const body=new FormData();if(single&&title.trim())body.append('title',title.trim());if(sender.trim())body.append('sender',sender.trim());if(single&&invoiceLikely&&payableId)body.append('payableId',payableId);body.append('file',entry.file);
-     try{const result=await request<InboxItem|{item:InboxItem}>('/inbox',{method:'POST',body});const item='item'in result?result.item:result;lastId=item.id;done++;kinds.push(channelNames[item.channel].toLowerCase());setEntries(current=>current.map(e=>e.key===entry.key?{...e,result:{channel:item.channel,id:item.id},error:undefined}:e));}
+     try{const result=await request<InboxItem|{item:InboxItem}>('/inbox',{method:'POST',body});const item='item'in result?result.item:result;lastId=item.id;added.push(item.id);done++;kinds.push(channelNames[item.channel].toLowerCase());setEntries(current=>current.map(e=>e.key===entry.key?{...e,result:{channel:item.channel,id:item.id},error:undefined}:e));}
      catch(e){failed++;const message=publicText(e instanceof Error?e.message:'Upload failed.');setEntries(current=>current.map(x=>x.key===entry.key?{...x,error:message}:x));}
     }
-    if(failed){setError(`${failed} file${failed===1?'':'s'} could not be added. The others were added and are being checked.`);return;}
+    if(failed){setError(`${failed} file${failed===1?'':'s'} could not be added. The others were added and are being checked.`);if(added.length>1)onBatch?.(added,{keepOpen:true});return;}
+    if(added.length>1&&onBatch){onBatch(added);onNotice(`${done} items added · ${[...new Set(kinds)].join(', ')}. Follow them in the batch tracker.`);return;}
     if(lastId){onComplete(lastId);onNotice(done===1?`Added to your inbox · detected as ${kinds[0]}.`:`${done} items added · ${[...new Set(kinds)].join(', ')}. Each is checked separately.`);}
    }catch(e){setError(publicText(e instanceof Error?e.message:'The source could not be added. Please try again.'));}finally{setBusy(false);}
   }

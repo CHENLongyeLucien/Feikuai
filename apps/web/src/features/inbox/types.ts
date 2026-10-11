@@ -32,7 +32,7 @@ export type InboxItem = {
   payment: null | {authorizationStatus: string | null; executionStatus: string; settlementStatus: string; txHash?: string | null; requiresWalletSignature?: boolean; authorityModel?: string};
   createdAt?: string;
   updatedAt?: string;
-  source: {sha256: string; textHash: string; filename: string | null; mimeType: string; extraction: string; sizeBytes?: number; senderAuthentication: string; transcription: {mode: string; model: string | null}};
+  source: {sha256: string; textHash: string; filename: string | null; mimeType: string; extraction: string; sizeBytes?: number; senderAuthentication: string; channelDetection?: {mode: 'automatic' | 'specified'; channel: InboxChannel; reason?: string}; transcription: {mode: string; model: string | null}};
   reviewHistory: {decision: string; note: string; reviewer: string; createdAt: string}[];
 };
 export type InboxList = {items: InboxItem[]; total: number};
