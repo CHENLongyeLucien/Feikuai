@@ -36,7 +36,10 @@
     "demo:configure:local": "tsx scripts/configure-local.ts",
     "contracts:golden": "tsx scripts/chain-local-test.ts --golden-only",
     "chain:snapshot": "tsx scripts/chain-snapshot.ts",
-    "demo:start": "tsx scripts/demo-start.ts"
+    "demo:start": "tsx scripts/demo-start.ts",
+    "benchmark:fetch": "tsx scripts/benchmark/fetch-corpus.ts && python3 -I scripts/benchmark/parse_nazario.py var/benchmark-data/nazario var/benchmark-data/nazario.jsonl && python3 -I scripts/benchmark/sample_enron.py var/benchmark-data/enron var/benchmark-data/enron-sample.jsonl 5000",
+    "benchmark:detection": "tsx scripts/benchmark/detection.ts",
+    "benchmark:chain": "tsx scripts/benchmark/chain-escape.ts"
   },
   "dependencies": {
     "@fastify/cookie": "11.1.3",

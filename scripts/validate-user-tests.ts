@@ -18,7 +18,7 @@ const samples:Sample[] = [
   {file:'emails/01-routine-client-request.eml',channel:'email',outcome:'approved',risks:[]},
   {file:'emails/02-incomplete-invoice-request.eml',channel:'email',outcome:'needs_review',risks:[]},
   {file:'emails/03-urgent-ceo-payment-request.eml',channel:'email',outcome:'quarantined',risks:['CLAIMED_APPROVAL','PAYMENT_DESTINATION_CHANGE']},
-  {file:'emails/04-phishing-login-request.eml',channel:'email',outcome:'quarantined',risks:['CREDENTIAL_REQUEST','UNVERIFIED_LINK']},
+  {file:'emails/04-phishing-login-request.eml',channel:'email',outcome:'quarantined',risks:['CREDENTIAL_REQUEST','PHISHING_LANGUAGE','UNVERIFIED_LINK']},
   {file:'emails/05-embedded-agent-instructions.eml',channel:'email',outcome:'quarantined',risks:['EMBEDDED_INSTRUCTIONS']},
   {file:'voice/01-support-call.txt',channel:'voice',outcome:'approved',risks:[]},
   {file:'voice/02-urgent-transfer.txt',channel:'voice',outcome:'needs_review',risks:[]},
