@@ -1,121 +1,110 @@
-import {Suspense,createContext,useContext,useEffect,useMemo,useRef,useState,type ComponentProps,type RefObject} from 'react';
+import {Suspense,useEffect,useMemo,useRef,useState,type RefObject} from 'react';
 import {Canvas,useFrame,useThree,type ThreeEvent} from '@react-three/fiber';
-import {CameraControls,Html,Line} from '@react-three/drei';
+import {Html,Line} from '@react-three/drei';
 import * as THREE from 'three';
-import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
-import type {CaseDTO,Selection} from '../app/types';
 import {useUI} from '../app/store';
-import {deriveSceneState} from './state';
-import {paymentPresentation,registeredSupplierName} from '../app/payment-presentation';
-import {packetPositions,routes,stations,type Station,type V3} from './config';
-const LabelPortal=createContext<RefObject<HTMLDivElement|null>|undefined>(undefined);
-function CampusLabel(props:ComponentProps<typeof Html>){const portal=useContext(LabelPortal);return <Html {...props} portal={portal as RefObject<HTMLElement>|undefined}/>;}
-const palette={blue:'#08735d',navy:'#173e34',white:'#edf0da',road:'#e5e6c9',ground:'#8eac6e',line:'#f3efd7',teal:'#6b9e78',yellow:'#dfb766',water:'#528f85',roof:'#08735d'};
-const cube=new THREE.BoxGeometry(1,1,1);const cyl=new THREE.CylinderGeometry(1,1,1,12);const disk=new THREE.CylinderGeometry(1,1,1,64);const sphere=new THREE.IcosahedronGeometry(1,1);const promenade=new THREE.RingGeometry(.89,1,96);const ripple=new THREE.RingGeometry(.995,1,96);
-const gable=new THREE.BufferGeometry();gable.setAttribute('position',new THREE.Float32BufferAttribute([-.5,0,-.5,.5,0,-.5,-.5,1,0,.5,1,0,-.5,0,.5,.5,0,.5],3));gable.setIndex([0,2,1,1,2,3,2,4,3,3,4,5,0,4,2,1,3,5,0,1,4,1,5,4]);gable.computeVertexNormals();
-type StaticPart={p:V3;s:V3;c:string;r?:V3;geometry?:THREE.BufferGeometry;roughness?:number;castShadow?:boolean};
-function mergeStaticParts(parts:StaticPart[]){
- const groups=new Map<string,{roughness:number;castShadow:boolean;parts:THREE.BufferGeometry[]}>();
- const transform=new THREE.Object3D();
- for(const part of parts){
-  const roughness=part.roughness??.8,castShadow=part.castShadow??part.s[1]>.3,key=`${roughness}:${castShadow}`;
-  const source=part.geometry??cube,geometry=source.index?source.toNonIndexed():source.clone();
-  // No part has a texture. Uniform attributes let boxes, gables and planters share a draw.
-  for(const name of Object.keys(geometry.attributes))if(name!=='position'&&name!=='normal')geometry.deleteAttribute(name);
-  transform.position.set(...part.p);transform.scale.set(...part.s);transform.rotation.set(...(part.r??[0,0,0]));transform.updateMatrix();geometry.applyMatrix4(transform.matrix);
-  const color=new THREE.Color(part.c),colors=new Float32Array(geometry.getAttribute('position').count*3);
-  for(let i=0;i<colors.length;i+=3){colors[i]=color.r;colors[i+1]=color.g;colors[i+2]=color.b;}
-  geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
-  let group=groups.get(key);if(!group){group={roughness,castShadow,parts:[]};groups.set(key,group);}group.parts.push(geometry);
- }
- return Array.from(groups,([key,group])=>{
-  const geometry=mergeGeometries(group.parts,false);group.parts.forEach(part=>part.dispose());
-  if(!geometry)throw new Error('Campus geometry attributes differ');
-  geometry.computeBoundingBox();geometry.computeBoundingSphere();
-  return {key,geometry,roughness:group.roughness,castShadow:group.castShadow};
- });
+import {processStageLabel,type ProcessStage,type ProcessStageId} from './process';
+import {ProcessEquipment,ProcessPlatform} from './ProcessModels';
+import ProcessCamera from './ProcessCamera';
+import {PROCESS_HOME_POSITION,PROCESS_HOME_TARGET,PROCESS_LABEL_HEIGHT,PROCESS_STAGE_ORDER,getProcessLayout,type ProcessPoint,type ProcessRoute} from './process-layout';
+
+type CampusProps={stages:ProcessStage[];selectedStage:ProcessStageId|null;onSelectStage:(id:ProcessStageId)=>void;onFailure:()=>void;overview?:boolean};
+const colors={complete:'#247f63',active:'#38ae82',attention:'#bd8046',waiting:'#aebbb2',unavailable:'#c8d1ca'};
+const selectionOutline:ProcessPoint[]=[];
+for(let corner=0;corner<4;corner++){
+  const centers:[[number,number],[number,number],[number,number],[number,number]]=[[3.67,3.12],[-3.67,3.12],[-3.67,-3.12],[3.67,-3.12]];
+  const [x,z]=centers[corner]!;
+  for(let step=0;step<=8;step++){const angle=corner*Math.PI/2+step/8*Math.PI/2;selectionOutline.push([x+Math.cos(angle)*.64,.69,z+Math.sin(angle)*.64]);}
 }
-function StaticAssembly({parts}:{parts:StaticPart[]}){
- const meshes=useMemo(()=>mergeStaticParts(parts),[parts]);
- useEffect(()=>()=>meshes.forEach(mesh=>mesh.geometry.dispose()),[meshes]);
- return <>{meshes.map(mesh=><mesh key={mesh.key} geometry={mesh.geometry} castShadow={mesh.castShadow} receiveShadow><meshStandardMaterial vertexColors roughness={mesh.roughness}/></mesh>)}</>;
+selectionOutline.push(selectionOutline[0]!);
+
+function Station({stage,index,selected,onSelectStage,portal,overview,position}:{stage:ProcessStage;index:number;selected:boolean;position:ProcessPoint;onSelectStage:(id:ProcessStageId)=>void;portal:RefObject<HTMLDivElement|null>;overview:boolean}){
+  const cameraTo=useUI(state=>state.cameraTo);
+  const {gl}=useThree();
+  const accent=overview?'#277d61':colors[stage.status];
+  const select=(event:ThreeEvent<MouseEvent>)=>{event.stopPropagation();onSelectStage(stage.id);};
+  const focus=()=>cameraTo({kind:'focus',target:stage.id});
+  return <group position={position} onClick={select} onDoubleClick={event=>{event.stopPropagation();onSelectStage(stage.id);focus();}} onPointerOver={event=>{event.stopPropagation();gl.domElement.style.cursor='pointer';}} onPointerOut={()=>{gl.domElement.style.cursor='auto';}}>
+    <ProcessPlatform accent={accent} selected={selected}/>
+    <ProcessEquipment stage={stage.id} accent={accent}/>
+    {selected&&<Line points={selectionOutline} color={accent} lineWidth={2.5} transparent opacity={.9} depthTest={false}/>}
+    <Html portal={portal as RefObject<HTMLElement>} position={[0,PROCESS_LABEL_HEIGHT,0]} center zIndexRange={[20,0]}>
+      <button type="button" className={`pm-node pm-status-${stage.status} ${selected?'is-selected':''} ${overview?'is-overview':''}`} data-stage={stage.id} aria-pressed={selected} aria-label={`${index+1}. ${stage.title}. ${overview?'Explore stage':processStageLabel(stage)}`} title={stage.summary} onClick={()=>onSelectStage(stage.id)} onDoubleClick={focus}>
+        <span className="pm-node-number">{String(index+1).padStart(2,'0')}</span><span className="pm-node-copy"><strong>{stage.title}</strong><small className="pm-node-status">{overview?'Explore':processStageLabel(stage)}</small></span>
+      </button>
+    </Html>
+  </group>;
 }
-function roofParts(w:number,h:number,d:number,color:string):StaticPart[]{
- const rise=d*.26,angle=Math.atan2(rise,d/2),slope=Math.hypot(d/2,rise)+.43;
- return [
-  {p:[0,h,0],s:[w,rise,d],c:palette.white,geometry:gable,roughness:.9,castShadow:true},
-  ...[-1,1].map(side=>({p:[0,h+rise/2+.1,side*d/4] as V3,s:[w+.65,.16,slope] as V3,r:[side*angle,0,0] as V3,c:color,roughness:.86,castShadow:true})),
-  {p:[0,h+rise+.13,0],s:[w+.8,.14,.16],c:'#156a51'},
- ];
+
+function DirectedParticles({curve,color}:{curve:THREE.CatmullRomCurve3;color:string}){
+  const group=useRef<THREE.Group>(null),progress=useRef(0);
+  const paused=useUI(state=>state.paused||state.reduced);
+  const {invalidate}=useThree();
+  const length=useMemo(()=>curve.getLength(),[curve]);
+  const position=useMemo(()=>new THREE.Vector3(),[]);
+  useEffect(()=>{invalidate();},[paused,curve,invalidate]);
+  useFrame((_,delta)=>{
+    if(paused||document.hidden||!group.current)return;
+    progress.current=(progress.current+Math.min(delta,.05)*.65/length)%1;
+    group.current.children.forEach((child,index)=>{curve.getPointAt((progress.current+index/3)%1,position);child.position.copy(position);child.position.y+=.23;});
+    invalidate();
+  });
+  return <group ref={group}>{[0,1,2].map(index=><mesh key={index} position={curve.getPointAt(index/3).add(new THREE.Vector3(0,.23,0))}><sphereGeometry args={[.1,10,8]}/><meshStandardMaterial color="#e4ffe9" emissive={color} emissiveIntensity={1.7} roughness={.3} toneMapped={false}/></mesh>)}</group>;
 }
-function Block({p,s,c,r=0,...props}:{p:V3;s:V3;c:string;r?:number;onClick?:(e:ThreeEvent<MouseEvent>)=>void;onDoubleClick?:(e:ThreeEvent<MouseEvent>)=>void}){return <mesh geometry={cube} position={p} scale={s} rotation={[0,r,0]} castShadow={s[1]>.3} receiveShadow {...props}><meshStandardMaterial color={c} roughness={.8}/></mesh>}
-function Batch({items,color,geometry=cube}:{items:{p:V3;s:V3;r?:V3}[];color:string;geometry?:THREE.BufferGeometry}){const ref=useRef<THREE.InstancedMesh>(null);useEffect(()=>{if(!ref.current)return;const dummy=new THREE.Object3D();items.forEach((item,index)=>{dummy.position.set(...item.p);dummy.scale.set(...item.s);dummy.rotation.set(...(item.r||[0,0,0]));dummy.updateMatrix();ref.current!.setMatrixAt(index,dummy.matrix)});ref.current.instanceMatrix.needsUpdate=true},[items]);return <instancedMesh ref={ref} args={[geometry,undefined,items.length]} castShadow={geometry===sphere||geometry===cyl} receiveShadow><meshStandardMaterial color={color} roughness={.83}/></instancedMesh>}
-function Round({p,s,c,geometry=disk}:{p:V3;s:V3;c:string;geometry?:THREE.BufferGeometry}){return <mesh position={p} scale={s} geometry={geometry} receiveShadow><meshStandardMaterial color={c} roughness={.88}/></mesh>}
-function CampusGround(){return <>
- <Round p={[0,-1.15,0]} s={[300,.15,300]} c={palette.water}/>
- <Round p={[0,-.68,0]} s={[24.6,.84,17.8]} c="#7a9b79"/>
- <Round p={[0,-.32,0]} s={[24.45,.26,17.6]} c="#dfdfba"/>
- <Round p={[0,-.12,0]} s={[24.05,.25,17.15]} c={palette.ground}/>
- <mesh position={[0,-1.055,0]} rotation={[-Math.PI/2,0,0]} scale={[26,19,1]} geometry={ripple}><meshBasicMaterial color="#a4c5b0" transparent opacity={.5}/></mesh>
- <mesh position={[0,-1.05,0]} rotation={[-Math.PI/2,0,0]} scale={[27.4,20.2,1]} geometry={ripple}><meshBasicMaterial color="#92bcac" transparent opacity={.3}/></mesh>
- <Round p={[-12,.025,5]} s={[4.9,.06,4.2]} c="#e9e7c9"/><Round p={[-6,.025,-3]} s={[4.4,.06,3.7]} c="#e9e7c9"/>
- <Round p={[3,.025,5]} s={[4.2,.06,3.8]} c="#e9e7c9"/><Round p={[12,.025,-1]} s={[4.3,.06,4]} c="#e9e7c9"/>
- <Round p={[2,.025,-9]} s={[4.2,.06,3.3]} c="#e9e7c9"/>
- </>}
-function RoadNetwork(){const stones=useMemo(()=>{const items:{p:V3;s:V3;r:V3}[]=[];for(let i=0;i<66;i++){const a=i/66*Math.PI*2;items.push({p:[Math.cos(a)*24.12,-.01,Math.sin(a)*17.24],s:[.3+(i%3)*.12,.2+(i%2)*.08,.24],r:[0,-a,.15]})}return items},[]);const slabs=useMemo<StaticPart[]>(()=>[
- {p:[0,.025,10],s:[34,.055,1.75],c:palette.road},{p:[-8,.025,5],s:[1.8,.055,11],c:palette.road},{p:[-2,.025,5],s:[1.65,.055,10.8],c:palette.road},{p:[9,.025,6],s:[1.8,.055,10],c:palette.road},{p:[4,.025,.4],s:[29,.055,1.8],c:palette.road},{p:[17.8,.025,-2],s:[1.6,.055,12],c:palette.road},
- {p:[-12,.025,8.6],s:[1.8,.055,3.5],c:palette.road},{p:[3,.025,8],s:[1.8,.055,4.5],c:palette.road},{p:[13.2,.025,2.9],s:[10,.055,1.65],c:palette.road},{p:[2,.025,-4.5],s:[1.6,.055,6],c:palette.road},{p:[14.6,.025,-7],s:[6.5,.055,1.7],c:palette.road},
- ],[]);return <>
- <mesh position={[0,.035,0]} rotation={[-Math.PI/2,0,0]} scale={[22.8,15.9,1]} geometry={promenade} receiveShadow><meshStandardMaterial color={palette.road} roughness={1}/></mesh>
- <StaticAssembly parts={slabs}/>
- <Batch items={stones} geometry={sphere} color="#b8c799"/>
- </>}
-function SelectionMarker({size=[6,4.5],color=palette.blue}:{size?:[number,number];color?:string}){const [w,d]=size;const parts=useMemo<StaticPart[]>(()=>[-1,1].flatMap(x=>[-1,1].flatMap(z=>[{p:[x*(w/2-.35),0,z*d/2] as V3,s:[.75,.04,.055] as V3,c:color},{p:[x*w/2,0,z*(d/2-.35)] as V3,s:[.055,.04,.75] as V3,c:color}])),[w,d,color]);return <group position={[0,.1,0]}><StaticAssembly parts={parts}/></group>}
-function PitchedRoof({w,h,d,color}:{w:number;h:number;d:number;color:string}){const parts=useMemo(()=>roofParts(w,h,d,color),[w,h,d,color]);return <StaticAssembly parts={parts}/>;}
-function StationBuilding({station,selected}:{station:Station;selected:boolean}){
- const select=useUI(s=>s.select),cameraTo=useUI(s=>s.cameraTo);const [w,h,d]=station.size;
- const click=(e:ThreeEvent<MouseEvent>)=>{e.stopPropagation();select({kind:'station',id:station.id})};
- const focus=(e:ThreeEvent<MouseEvent>)=>{e.stopPropagation();cameraTo({kind:'focus',target:station.id})};
- const parts=useMemo<StaticPart[]>(()=>{
-  const windows:{p:V3;s:V3}[]=[];
-  for(const x of [-w*.32,w*.32]){windows.push({p:[x,h*.6,d/2+.032],s:[.64,.96,.065]});if(station.id==='finance')windows.push({p:[x,h*.27,d/2+.035],s:[.64,.64,.065]});}
-  for(let z=-d/2+.85;z<d/2-.4;z+=1.2)windows.push({p:[w/2+.035,h*.59,z],s:[.065,.91,.61]});
-  const frames=windows.flatMap(({p,s})=>s[0]<.1?[{p:[p[0]+.018,p[1],p[2]] as V3,s:[.055,s[1],.05] as V3},{p:[p[0]+.018,p[1],p[2]] as V3,s:[.055,.045,s[2]] as V3}]:[{p:[p[0],p[1],p[2]+.04] as V3,s:[.045,s[1],.055] as V3},{p:[p[0],p[1],p[2]+.04] as V3,s:[s[0],.045,.055] as V3}]);
-  return [
-   {p:[0,.13,0],s:[w+.3,.26,d+.3],c:'#c3c39a'},{p:[0,h/2+.08,0],s:[w,h,d],c:palette.white},
-   {p:[0,.38,0],s:[w+.045,.28,d+.045],c:'#dedebc'},
-   ...roofParts(w,h,d,station.color),
-   ...windows.map(part=>({...part,c:'#4c7460',roughness:.83,castShadow:false})),
-   ...frames.map(part=>({...part,c:'#e4e7cc',roughness:.83,castShadow:false})),
-   {p:[0,.99,d/2+.04],s:[1.1,1.85,.13],c:'#bfbf96'},{p:[0,.98,d/2+.12],s:[.84,1.76,.07],c:'#345e49'},{p:[.23,.98,d/2+.17],s:[.055,.14,.04],c:'#d8be78'},
-   {p:[0,.11,d/2+.66],s:[2.2,.2,1.16],c:'#e0dcc0'},
-   {p:[0,2.08,d/2+.4],s:[1.65,.13,.85],c:station.color},
-   ...[-1,1].flatMap(side=>[
-    {p:[side*(w/2+.43),.27,d/2-.22] as V3,s:[.32,.44,.32] as V3,c:'#c4ae83',geometry:disk,roughness:.88,castShadow:false},
-    {p:[side*(w/2+.43),.67,d/2-.22] as V3,s:[.5,.57,.5] as V3,c:'#668d4f',geometry:sphere,roughness:.88,castShadow:false},
-   ]),
-   ...(station.id==='finance'?[
-    {p:[-w*.29,h+.5,-d*.15] as V3,s:[.52,1.3,.6] as V3,c:'#e0d9b6'},
-    {p:[-w*.29,h+1.2,-d*.15] as V3,s:[.68,.18,.73] as V3,c:'#b7b491'},
-   ]:[]),
-  ];
- },[w,h,d,station.id,station.color]);
- return <group position={station.position} onClick={click} onDoubleClick={focus}>
- <StaticAssembly parts={parts}/>
- {selected&&<SelectionMarker size={[w+1.4,d+1.3]} color="#0c7458"/>}
- <CampusLabel position={[0,h+d*.26+.62,0]} center zIndexRange={[20,0]}><button className={`scene-label ${selected?'selected':''}`} title={station.name} onClick={()=>select({kind:'station',id:station.id})} onDoubleClick={()=>cameraTo({kind:'focus',target:station.id})}><span className="station-dot"/>{station.name}</button></CampusLabel>
- </group>}
-function VaultBuilding({station,selected}:{station:Station;selected:boolean}){return <><StationBuilding station={station} selected={selected}/><group position={station.position}><Block p={[0,1.07,2.32]} s={[1.48,1.84,.14]} c="#345a49"/><Block p={[0,1.07,2.43]} s={[1.18,1.52,.12]} c="#a4b595"/><mesh position={[0,1.1,2.53]} rotation={[Math.PI/2,0,0]} scale={[.31,.075,.31]} geometry={cyl}><meshStandardMaterial color="#507561" metalness={.15} roughness={.6}/></mesh><Block p={[0,1.1,2.6]} s={[.48,.075,.045]} c="#e3dab5"/><Block p={[0,1.1,2.62]} s={[.075,.48,.045]} c="#e3dab5"/></group></>}
-function SupplierDock({recipients,cases}:{recipients:string[];cases:CaseDTO[]}){const positions:[number,number][]=[[14,-9],[18,-9]];return <group>{positions.map(([x,z],i)=><group key={x} position={[x,0,z]}><Round p={[0,.05,0]} s={[2,.12,2.3]} c="#e6e4c6"/><Block p={[0,1.06,-.8]} s={[2.65,2.12,1.75]} c={palette.white}/><PitchedRoof w={2.65} h={2.12} d={1.75} color={i?'#4d8967':palette.roof}/><Block p={[0,.82,.11]} s={[.96,1.55,.075]} c="#577e63"/><Block p={[0,.1,.5]} s={[1.3,.14,.8]} c="#d3d3af"/><CampusLabel position={[0,3.03,-.8]} center><span className="scene-label supplier">{registeredSupplierName(cases,recipients[i],i)}</span></CampusLabel></group>)}</group>}
-function TreeCluster(){const positions=[[-18,-9],[-15,-9],[-12,-9],[-17,2],[-18,6],[-18,8],[-13,-2],[-11,-4],[-10,-6],[6,-3],[7,-8],[-3,-9],[-3,-6],[11,-8],[9,-10],[-4,7],[-4,4],[15,7],[16,5],[13,8],[-8,12],[2,12],[10,11],[-17,-5],[-9,-12],[5,-12],...Array.from({length:32},(_,i)=>{const a=i/32*Math.PI*2;return [Math.cos(a)*20.7,Math.sin(a)*14.1]})];const crowns=useMemo(()=>positions.map(([x,z],i)=>({p:[x!,1.72+(i%3)*.14,z!] as V3,s:[.7,.86,.7] as V3})),[]);const tops=useMemo(()=>positions.map(([x,z],i)=>({p:[x!-.15,2.05+(i%3)*.14,z!-.08] as V3,s:[.52,.62,.54] as V3})),[]);const trunks=useMemo(()=>positions.map(([x,z])=>({p:[x!,.69,z!] as V3,s:[.105,1.36,.105] as V3})),[]);const shrubs=useMemo(()=>positions.flatMap(([x,z],i)=>[{p:[x!+.55,.3,z!+.37] as V3,s:[.5,.4,.49] as V3},{p:[x!-.5,.25,z!-.37] as V3,s:[.44,.31,.42] as V3}]),[]);const palms=useMemo(()=>[[-18,-7],[-16.8,10],[17.4,7],[8,-10.5]].map(([x,z])=>({p:[x!,1.55,z!] as V3,s:[.12,3.1,.12] as V3})),[]);const fronds=useMemo(()=>palms.flatMap(({p},i)=>Array.from({length:6},(_,n)=>{const a=n*Math.PI/3+i*.3;return {p:[p[0]+Math.cos(a)*.72,3.16,p[2]+Math.sin(a)*.72] as V3,s:[1.18,.17,.36] as V3,r:[0,-a,.16] as V3}})),[palms]);return <><Batch items={crowns} color="#346244" geometry={sphere}/><Batch items={tops} color="#63824c" geometry={sphere}/><Batch items={trunks} color="#9f8963" geometry={cyl}/><Batch items={shrubs} color="#7f9c5c" geometry={sphere}/><Batch items={palms} color="#af9970" geometry={cyl}/><Batch items={fronds} color="#2f8057" geometry={sphere}/></>}
-function AgentCarrier({id,active,selected}:{id:'intake'|'finance';active:boolean;selected:boolean}){const ref=useRef<THREE.Group>(null);const phase=useRef(0);const {invalidate}=useThree();const paused=useUI(s=>s.paused||s.reduced),select=useUI(s=>s.select);const base:V3=id==='intake'?[-15.8,0,8.4]:[-3.3,0,.4];useFrame((_,delta)=>{if(active&&!paused&&!document.hidden&&ref.current){phase.current+=Math.min(delta,.05);ref.current.position.x=base[0]+Math.sin(phase.current*1.25)*.55;ref.current.rotation.y=Math.sin(phase.current*.6)*.12;invalidate()}});useEffect(()=>{if(active)invalidate()},[active,paused,invalidate]);const wheels=useMemo(()=>[-.58,.58].flatMap(x=>[-.62,.62].map(z=>({p:[x,.35,z] as V3,s:[.29,.15,.29] as V3,r:[0,0,Math.PI/2] as V3}))),[]);return <group ref={ref} position={base} onClick={e=>{e.stopPropagation();select({kind:'agent',id})}}><Block p={[0,.54,0]} s={[1.12,.7,1.65]} c={id==='intake'?palette.yellow:palette.teal}/><Block p={[0,.87,-.47]} s={[1.04,.25,.55]} c={palette.blue}/><Batch items={wheels} geometry={cyl} color="#29483b"/><Block p={[0,1.72,.06]} s={[1.25,.14,1.5]} c={palette.navy}/>{[-.5,.5].flatMap(x=>[-.5,.6].map(z=><Block key={`${x}${z}`} p={[x,1.25,z]} s={[.1,1,.1]} c={palette.navy}/>))}<Block p={[0,1.12,-.55]} s={[.92,.51,.045]} c="#a9c4a1"/><Block p={[0,1.15,.91]} s={[1.05,1.65,.12]} c={palette.navy}/><Block p={[-.38,.2,1.32]} s={[.13,.13,.9]} c={palette.navy}/><Block p={[.38,.2,1.32]} s={[.13,.13,.9]} c={palette.navy}/>{selected&&<SelectionMarker size={[1.7,2.7]}/>}<CampusLabel position={[0,2.35,0]} center zIndexRange={[20,0]}><button className={`scene-label agent ${selected?'selected':''}`} onClick={()=>select({kind:'agent',id})}><span className={active?'working-dot':'station-dot'}/>{id==='intake'?'Intake agent':'Finance agent'} · {active?'Working':'Idle'}</button></CampusLabel></group>}
-function InvoicePacket({item,index,selected,supplierRecipients}:{item:CaseDTO;index:number;selected:boolean;supplierRecipients:string[]}){const state=deriveSceneState(item);const offset=(index%3)*.85;const dockIndex=supplierRecipients.findIndex(r=>r.toLowerCase()===paymentPresentation(item).recipient?.toLowerCase());const target:V3=state.station==='supplier'?[dockIndex===1?18:14,.55,-7]:packetPositions[state.station];const ref=useRef<THREE.Group>(null);const previous=useRef(state.station);const progress=useRef(1);const path=useRef<V3[]>([]);const pathLength=useRef(0);const paused=useUI(s=>s.paused||s.reduced),select=useUI(s=>s.select);const {invalidate}=useThree();useEffect(()=>{if(!ref.current)return;if(previous.current!==state.station){const route=state.route?routes[state.route]?.map((point,i,all)=>state.route==='delivery'&&i===all.length-1?[target[0],point[1],target[2]] as V3:point):undefined;path.current=route?[...route.map(p=>[p[0]+offset,.6,p[2]] as V3),[target[0]+offset,.6,target[2]]]:[[ref.current.position.x,.6,ref.current.position.z],[target[0]+offset,.6,target[2]]];pathLength.current=0;for(let i=1;i<path.current.length;i++)pathLength.current+=Math.hypot(path.current[i]![0]-path.current[i-1]![0],path.current[i]![2]-path.current[i-1]![2]);progress.current=paused?1:0;previous.current=state.station;invalidate()}if(paused||progress.current===1){progress.current=1;ref.current.position.set(target[0]+offset,.6,target[2])}},[state.station,paused,target,offset,state.route,invalidate]);useFrame((_,delta)=>{if(paused||progress.current>=1||!ref.current||document.hidden)return;progress.current=Math.min(1,progress.current+Math.min(delta,.05)/1.4);const points=path.current;const total=pathLength.current;let remaining=total*progress.current;for(let i=1;i<points.length;i++){const a=points[i-1]!,b=points[i]!,distance=Math.hypot(b[0]-a[0],b[2]-a[2]);if(remaining<=distance||i===points.length-1){const t=distance?Math.min(1,remaining/distance):1;ref.current.position.set(a[0]+(b[0]-a[0])*t,.6,a[2]+(b[2]-a[2])*t);ref.current.rotation.y=Math.atan2(b[0]-a[0],b[2]-a[2]);break}remaining-=distance}invalidate()});return <group ref={ref} position={[target[0]+offset,.6,target[2]]} onClick={e=>{e.stopPropagation();select({kind:'case',id:item.id})}}><Block p={[0,0,0]} s={[.78,1,.68]} c="#f9f6e9"/><Block p={[0,-.5,0]} s={[.89,.1,.79]} c={state.tone==='red'?'#ba737b':palette.blue}/><Block p={[0,.01,.35]} s={[.04,1,.025]} c="#c5b998"/><Block p={[0,.16,.37]} s={[.46,.3,.03]} c="#ffffff"/>{selected&&<><group position={[0,-.58,0]}><SelectionMarker size={[1.25,1.15]}/></group><CampusLabel position={[0,1.08,0]} center><button className={`scene-label packet ${state.tone}`} onClick={()=>select({kind:'case',id:item.id})}>{item.invoiceReference} · {state.status}</button></CampusLabel></>}</group>}
-function WorkflowRoute({item,supplierRecipients}:{item:CaseDTO|undefined;supplierRecipients:string[]}){if(!item)return null;const state=deriveSceneState(item);const dockIndex=supplierRecipients.findIndex(r=>r.toLowerCase()===paymentPresentation(item).recipient?.toLowerCase());const points=state.route?routes[state.route]?.map((point,i,all)=>state.route==='delivery'&&i===all.length-1?[dockIndex===1?18:14,point[1],-7] as V3:point):undefined;if(!points)return null;return <Line points={points} color="#156f53" lineWidth={3} dashed dashSize={.3} gapSize={.12} transparent opacity={.8}/>}
-function GardenCourt(){const benchSeats=useMemo(()=>[[5.2,-4.1],[5.2,-2.4],[-.9,-4.9]].map(([x,z],i)=>({p:[x!,.51,z!] as V3,s:[1.55,.15,.5] as V3,r:[0,i===2?0:Math.PI/2,0] as V3})),[]);const benchLegs=useMemo(()=>benchSeats.flatMap(({p,r})=>[-1,1].map(side=>({p:[p[0]+(r[1]?0:side*.53),.27,p[2]+(r[1]?side*.53:0)] as V3,s:[.13,.5,.32] as V3,r}))),[benchSeats]);return <>
- <group position={[2,0,-3.7]}><Round p={[0,.07,0]} s={[2.5,.11,2.2]} c="#e5e4c9"/><Round p={[0,.22,0]} s={[1.55,.32,1.55]} c="#c8c9a8"/><Round p={[0,.39,0]} s={[1.29,.035,1.29]} c="#75aca0"/><Round p={[0,.77,0]} s={[.19,.85,.19]} c="#e1ddbd"/><Round p={[0,1.2,0]} s={[.72,.18,.72]} c="#d7d8b6"/><Round p={[0,1.3,0]} s={[.59,.027,.59]} c="#8bbcaf"/><Round p={[0,1.53,0]} s={[.045,.44,.045]} c="#bddaca"/><Round p={[0,1.76,0]} s={[.09,.13,.09]} c="#d0e4cf" geometry={sphere}/></group>
- <Batch items={benchSeats} color="#bca679"/><Batch items={benchLegs} color="#506b4f"/>
- </>}
-function Props(){const packages=useMemo(()=>[-16.5,-15.8,-15.1].flatMap(x=>[3.2,4].map(z=>({p:[x,.4,z] as V3,s:[.5,.7,.5] as V3}))),[]);const hedges=useMemo(()=>[{p:[-6,.43,-5.8] as V3,s:[5.5,.65,.65] as V3},{p:[-12,.37,1.6] as V3,s:[5,.55,.58] as V3},{p:[3,.37,2.2] as V3,s:[4.2,.55,.55] as V3}],[]);const flowerBeds=useMemo(()=>Array.from({length:18},(_,i)=>({p:[-14.5+(i%9)*.6,.35,1.35+Math.floor(i/9)*.43] as V3,s:[.2,.24,.19] as V3})),[]);const lights=useMemo(()=>[[-10.5,10],[5.9,10],[10.4,3],[16,-6],[-5.5,.6],[-16,-1]].map(([x,z])=>({p:[x!,.69,z!] as V3,s:[.08,1.35,.08] as V3})),[]);const lamps=useMemo(()=>lights.map(({p})=>({p:[p[0],1.37,p[2]] as V3,s:[.2,.3,.2] as V3})),[lights]);return <><GardenCourt/><Batch items={packages} color="#d5bf8c"/><Batch items={hedges} color="#6b9155"/><Batch items={flowerBeds} color="#d5bf79" geometry={sphere}/><Batch items={lights} color="#4b6c4d"/><Batch items={lamps} color="#f2e7b9"/><Round p={[7,.065,7.8]} s={[1.45,.13,1.5]} c="#ded0a8"/><CampusLabel position={[7,.8,8]} center><span className="scene-label exception">Exception garden</span></CampusLabel></>}
-function CameraRig({selection,cases}:{selection:Selection;cases:CaseDTO[]}){const control=useRef<CameraControls>(null);const command=useUI(s=>s.camera);const reduced=useUI(s=>s.reduced);const {size,camera:activeCamera}=useThree();useEffect(()=>{if(activeCamera instanceof THREE.OrthographicCamera){activeCamera.setViewOffset(size.width,size.height,window.innerWidth>1200?(size.width>1000?175:135):0,window.innerWidth>1200?-40:-35,size.width,size.height);activeCamera.updateProjectionMatrix()}},[activeCamera,size]);useEffect(()=>{const c=control.current;if(!c)return;const smooth=!reduced&&command.nonce>0;if(command.kind==='rotate'){void c.rotate((command.value||1)*Math.PI/4,0,smooth);return}if(command.kind==='zoom'){void c.zoomTo(c.camera.zoom*(command.value===-1?.8:1.2),smooth);return}let position:V3=[30,30,30],target:V3=[0,0,0];if(command.kind==='focus'){let id=command.target;if(id==='selected'){if(selection?.kind==='station')id=selection.id;else if(selection?.kind==='agent')id=selection.id;else {const item=cases.find(x=>x.id===selection?.id||x.latestExecution?.id===selection?.id);if(item)id=deriveSceneState(item).station}}const station=stations.find(s=>s.id===id);if(station){target=station.position;position=station.camera}else if(id==='supplier'){target=[15,0,-8];position=[25,13,4]}}const zoom=command.kind==='focus'?Math.min(size.height/24,42):window.innerWidth<=1200?Math.min((size.width-36)/52,(size.height-155)/35):Math.min((size.width-430)/48,(size.height-290)/35);void c.setLookAt(...position,...target,smooth);void c.zoomTo(Math.max(4.7,zoom),smooth)},[command,reduced,size.width,size.height]);return <CameraControls ref={control} makeDefault minPolarAngle={Math.PI/6} maxPolarAngle={Math.PI/2.6} minZoom={4.7} maxZoom={64} dollySpeed={.5} truckSpeed={1.3} smoothTime={reduced?0:.32} draggingSmoothTime={0} boundaryFriction={.9} onStart={()=>control.current?.stop()} mouseButtons={{left:2,middle:8,right:1,wheel:16}}/>}
-function Scene({cases,onFailure,supplierRecipients}:{cases:CaseDTO[];onFailure:()=>void;supplierRecipients:string[]}){const selection=useUI(s=>s.selection);const selected=cases.find(c=>c.id===selection?.id||c.latestExecution?.id===selection?.id);const {gl,invalidate,camera}=useThree();useFrame(()=>{gl.domElement.dataset.camera=JSON.stringify({position:camera.position.toArray(),zoom:camera.zoom,drawCalls:gl.info.render.calls})});useEffect(()=>{const canvas=gl.domElement;const lost=(event:Event)=>{event.preventDefault();onFailure()};canvas.addEventListener('webglcontextlost',lost);const visible=()=>{if(!document.hidden)invalidate()};document.addEventListener('visibilitychange',visible);return()=>{canvas.removeEventListener('webglcontextlost',lost);document.removeEventListener('visibilitychange',visible)}},[gl,onFailure,invalidate]);return <><color attach="background" args={[palette.water]}/><ambientLight intensity={1}/><hemisphereLight args={['#fff3d4','#6f9471',.75]}/><directionalLight position={[-14,30,12]} color="#fff4dd" intensity={2} castShadow shadow-mapSize={[1024,1024]} shadow-camera-left={-28} shadow-camera-right={28} shadow-camera-top={25} shadow-camera-bottom={-25} shadow-normalBias={.045} shadow-radius={4} shadow-bias={-.00015}/><CameraRig selection={selection} cases={cases}/><CampusGround/><RoadNetwork/><TreeCluster/><Props/>{stations.map(s=>s.id==='vault'?<VaultBuilding key={s.id} station={s} selected={selection?.kind==='station'&&selection.id===s.id}/>:<StationBuilding key={s.id} station={s} selected={selection?.kind==='station'&&selection.id===s.id}/>)}<SupplierDock recipients={supplierRecipients} cases={cases}/><AgentCarrier id="intake" active={cases.some(c=>c.workflowStatus==='EXTRACTING')} selected={selection?.kind==='agent'&&selection.id==='intake'}/><AgentCarrier id="finance" active={cases.some(c=>c.workflowStatus==='CHECKING')} selected={selection?.kind==='agent'&&selection.id==='finance'}/><WorkflowRoute item={selected} supplierRecipients={supplierRecipients}/>{cases.slice(0,12).map((c,i)=><InvoicePacket key={c.id} item={c} index={i} selected={selected?.id===c.id} supplierRecipients={supplierRecipients}/>)}</>}
-export default function CampusCanvas({cases,onFailure,supplierRecipients=[]}:{cases:CaseDTO[];onFailure:()=>void;supplierRecipients?:string[]}){const labelPortal=useRef<HTMLDivElement>(null);const [available]=useState(()=>{try{const c=document.createElement('canvas');return !!(c.getContext('webgl2')||c.getContext('webgl'))}catch{return false}});useEffect(()=>{if(!available)onFailure()},[available,onFailure]);if(!available)return null;return <div className="campus-canvas" data-testid="campus-canvas"><div ref={labelPortal} className="scene-html-layer"/><Canvas orthographic camera={{position:[30,30,30],zoom:22,near:.1,far:400}} shadows="soft" dpr={[1,1.5]} frameloop="demand" gl={{antialias:true,alpha:false,powerPreference:'high-performance'}} onCreated={({camera})=>{camera.lookAt(0,0,0);camera.updateProjectionMatrix()}} onPointerMissed={()=>{}}><Suspense fallback={null}><LabelPortal.Provider value={labelPortal}><Scene cases={cases} onFailure={onFailure} supplierRecipients={supplierRecipients}/></LabelPortal.Provider></Suspense></Canvas></div>}
+function Connection({route,from,to,overview}:{route:ProcessRoute;from:ProcessStage|undefined;to:ProcessStage|undefined;overview:boolean}){
+  const curve=useMemo(()=>new THREE.CatmullRomCurve3(route.points.map(point=>new THREE.Vector3(...point)),false,'centripetal'),[route]);
+  const lightCurve=useMemo(()=>new THREE.CatmullRomCurve3(route.points.map(point=>new THREE.Vector3(point[0],point[1]+.19,point[2])),false,'centripetal'),[route]);
+  const body=useMemo(()=>new THREE.TubeGeometry(curve,32,.23,10,false),[curve]);
+  const light=useMemo(()=>new THREE.TubeGeometry(lightCurve,32,.068,8,false),[lightCurve]);
+  useEffect(()=>()=>{body.dispose();light.dispose();},[body,light]);
+  const reached=from?.status==='complete',complete=reached&&to?.status==='complete',active=reached&&to?.status==='active';
+  const attention=reached&&to?.status==='attention';
+  const color=overview||complete||active?'#299a75':attention?'#bb8248':'#becbc2';
+  const arrows=useMemo(()=>[.35,.69].map(progress=>{
+    const position=lightCurve.getPointAt(progress);position.y+=.055;
+    const tangent=lightCurve.getTangentAt(progress).normalize();
+    return {position,quaternion:new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),tangent)};
+  }),[lightCurve]);
+  return <group>
+    <mesh geometry={body} castShadow receiveShadow><meshStandardMaterial color="#fbfdf9" roughness={.64}/></mesh>
+    <mesh geometry={light}><meshStandardMaterial color={color} emissive={color} emissiveIntensity={(overview||active||complete)?0.45:0.08} roughness={.35}/></mesh>
+    {arrows.map((arrow,index)=><mesh key={index} position={arrow.position} quaternion={arrow.quaternion}><coneGeometry args={[.16,.36,3]}/><meshStandardMaterial color={color} emissive={color} emissiveIntensity={.15}/></mesh>)}
+    {!overview&&(complete||active)&&<DirectedParticles curve={curve} color={color}/>}
+  </group>;
+}
+
+function Scene({stages,selectedStage,onSelectStage,onFailure,overview=false,portal}:CampusProps&{portal:RefObject<HTMLDivElement|null>}){
+  const {gl,invalidate,camera,size}=useThree();
+  const layout=getProcessLayout(size.width<600);
+  const alive=useRef(true),renderedFrames=useRef(0);
+  useFrame(()=>{
+    const frame=++renderedFrames.current;
+    // Read diagnostics after Three has rendered this frame, including a static first frame.
+    queueMicrotask(()=>{if(alive.current)gl.domElement.dataset.camera=JSON.stringify({frame,position:camera.position.toArray(),rotation:camera.rotation.toArray().slice(0,3),zoom:camera.zoom,drawCalls:gl.info.render.calls,orthographic:camera instanceof THREE.OrthographicCamera});});
+  });
+  useEffect(()=>{
+    alive.current=true;const canvas=gl.domElement;
+    const lost=(event:Event)=>{event.preventDefault();onFailure();};
+    const visible=()=>{if(!document.hidden)invalidate();};
+    canvas.addEventListener('webglcontextlost',lost);document.addEventListener('visibilitychange',visible);
+    invalidate();
+    return()=>{alive.current=false;canvas.removeEventListener('webglcontextlost',lost);document.removeEventListener('visibilitychange',visible);canvas.style.cursor='auto';};
+  },[gl,invalidate,onFailure]);
+  return <>
+    <color attach="background" args={['#eaf0e9']}/>
+    <ambientLight intensity={.8}/><hemisphereLight args={['#fffef5','#b9cbc1',.55]}/>
+    <directionalLight position={[-12,26,18]} color="#fffdf4" intensity={2} castShadow shadow-mapSize={[2048,2048]} shadow-camera-left={-26} shadow-camera-right={26} shadow-camera-top={24} shadow-camera-bottom={-24} shadow-camera-near={1} shadow-camera-far={80} shadow-normalBias={.035} shadow-bias={-.00008} shadow-radius={5}/>
+    <ProcessCamera selectedStage={selectedStage}/>
+    <mesh rotation={[-Math.PI/2,0,0]} position={[0,.025,0]} receiveShadow><planeGeometry args={[240,240]}/><meshStandardMaterial color="#eaf0e8" roughness={1}/></mesh>
+    {layout.routes.map(route=><Connection key={`${size.width<600?'portrait':'landscape'}-${route.from}-${route.to}`} route={route} from={stages.find(stage=>stage.id===route.from)} to={stages.find(stage=>stage.id===route.to)} overview={overview}/>)}
+    {PROCESS_STAGE_ORDER.map((id,index)=>{const stage=stages.find(value=>value.id===id);return stage?<Station key={id} stage={stage} position={layout.positions[id]} index={index} selected={selectedStage===id} onSelectStage={onSelectStage} portal={portal} overview={overview}/>:null;})}
+  </>;
+}
+
+export default function CampusCanvas(props:CampusProps){
+  const labelPortal=useRef<HTMLDivElement>(null);
+  const [available]=useState(()=>{try{const probe=document.createElement('canvas'),context=probe.getContext('webgl2')||probe.getContext('webgl');const supported=!!context;context?.getExtension('WEBGL_lose_context')?.loseContext();return supported;}catch{return false;}});
+  useEffect(()=>{if(!available)props.onFailure();},[available,props.onFailure]);
+  if(!available)return null;
+  return <div className="campus-canvas pm-canvas" data-testid="campus-canvas"><div ref={labelPortal} className="scene-html-layer"/><Canvas orthographic camera={{position:PROCESS_HOME_POSITION,zoom:20,near:.1,far:400}} shadows="soft" dpr={[1,1.5]} frameloop="demand" gl={{antialias:true,alpha:false,powerPreference:'high-performance'}} onCreated={({camera})=>{camera.lookAt(...PROCESS_HOME_TARGET);camera.updateProjectionMatrix();}}><Suspense fallback={null}><Scene {...props} portal={labelPortal}/></Suspense></Canvas></div>;
+}

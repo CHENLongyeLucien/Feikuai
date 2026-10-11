@@ -228,18 +228,16 @@ test('the optional operations campus keeps real geometry and clear overlays insi
   const canvas = page.getByTestId('campus-canvas').locator('canvas');
   await expect(canvas).toBeVisible();
   await page.waitForTimeout(1200);
-  for (const label of await page.locator('.scene-label').all()) {
-    const box = await label.boundingBox(); expect(box?.width).toBeLessThan(260); expect(box?.height).toBeLessThan(50);
+  for (const label of await page.locator('.pm-node').all()) {
+    const box = await label.boundingBox(); expect(box?.width).toBeLessThan(260); expect(box?.height).toBeLessThan(65);
   }
   const diagnostics = JSON.parse(await canvas.getAttribute('data-camera') || '{}');
   expect(diagnostics.drawCalls).toBeGreaterThan(50);
   for (const viewport of [{width:1440,height:900},{width:1280,height:800}]) {
     await page.setViewportSize(viewport); await page.waitForTimeout(400); await noHorizontalOverflow(page);
-    const inspector = await page.getByTestId('entity-inspector').boundingBox();
-    const timeline = await page.getByTestId('case-timeline').boundingBox();
-    const table = await page.getByTestId('entity-table').boundingBox();
-    expect(inspector!.y + inspector!.height).toBeLessThan(table!.y);
-    expect(timeline!.x + timeline!.width).toBeLessThanOrEqual(table!.x);
+    await expect(page.getByRole('navigation',{name:'Process stages'}).getByRole('button')).toHaveCount(6);
+    const controls=await page.getByRole('button',{name:'Fit map',exact:true}).boundingBox();
+    expect(controls!.x).toBeGreaterThanOrEqual(0);
     await capture(page,`docs/qa/redesign-operations-${viewport.width}.png`,false);
   }
   await page.getByRole('button', {name: 'Pause scene motion', exact: true}).click();
