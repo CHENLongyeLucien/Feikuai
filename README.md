@@ -1,5 +1,7 @@
 # Secure Finance — Implementation README
 
+> AgentGuard update (11 October 2026): the supplied proposal has been integrated as compact authority/provenance explanations, reviewer PDF incident drafts, DORA decision support, Merkle evidence tools and a separately tested optional payment-firewall contract. **AgentGuard is not deployed or connected to the existing payment routes.** See [implementation and activation boundaries](docs/AGENTGUARD.md) and the [original French proposal](docs/references/AgentGuard_Solutions_FR.md).
+
 > Current experience (11 October 2026): open the live Avalanche C-Chain globe, press **Start**, and manage intake, recorded checks, decisions, payments and PDF reports in one workspace. The left navigation has been removed. [Connected workspace guide](docs/CONNECTED_WORKSPACE.md), [demo and limitations](docs/EXPERIENCE_DEMO.md), [track alignment](docs/TRACK_ALIGNMENT.md), [build log](docs/BUILD_STATUS.md). The original implementation specification below is retained as history; the latest user direction adds multichannel intake and a separate, explicitly registered automatic-payment policy.
 
 ```sh

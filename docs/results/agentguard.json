@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-11",
+  "scope": "AgentGuard additive integration; no deployment or live payment execution",
+  "unit_api": {
+    "passed": 316,
+    "failed": 0,
+    "files": 25
+  },
+  "contracts": {
+    "passed": 79,
+    "failed": 0,
+    "skipped": 0,
+    "new_unit_fuzz": 32,
+    "new_invariant_runs": 64,
+    "new_invariant_calls": 2048
+  },
+  "synthetic_contract_scenarios": {
+    "normal": 500,
+    "normal_executed": 500,
+    "attack_or_escalation": 50,
+    "rejected": 30,
+    "pending_owner_review": 20,
+    "executed": 0,
+    "budget_only_control_executed": 50,
+    "scope": "Authored policy comparison, not production fraud accuracy or latency"
+  },
+  "browser": {
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "engines": [
+      "Chrome",
+      "Firefox",
+      "WebKit"
+    ],
+    "widths": [
+      1440,
+      390,
+      320
+    ],
+    "scope": "Intercepted UI fixtures; PDF request intercepted; no real API mutations"
+  },
+  "pdf": {
+    "samples": 2,
+    "pages_rendered_and_visually_inspected": 12,
+    "out_of_page_text_blocks": 0,
+    "source": "Actual API-generated synthetic PDFs"
+  },
+  "checks": {
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "production_build": "PASS",
+    "build_warning": "Existing approver chunk exceeds500kB",
+    "offline_proof_cli": "VALID original; INVALID tampered with exit1",
+    "live_online_anchor": "NOT_RUN",
+    "agentguard_deployment": "NOT_PERFORMED",
+    "live_payment": "NOT_RUN",
+    "regulatory_submission": "NOT_PERFORMED"
+  },
+  "earlier_browser_runs": [
+    {
+      "passed": 15,
+      "failed": 3,
+      "cause": "Exact select label included option text; fixed stable accessible labels"
+    },
+    {
+      "passed": 18,
+      "failed": 3,
+      "cause": "Exact textarea label changed with entered text; fixed stable accessible label"
+    }
+  ],
+  "notes": [
+    "Original environments and saved demo data were not used for test writes.",
+    "Evidence online verification used mocked chain observations in unit tests, not a new anchor.",
+    "Contract limitations explicitly tested: dishonest runtime origin; same obligation with fresh nonces can pay twice within caps."
+  ]
+}

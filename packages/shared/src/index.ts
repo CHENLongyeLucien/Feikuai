@@ -1,4 +1,5 @@
 import { z } from 'zod';
+export {DORA_RULES_VERSION,DORA_SOURCES,doraImpactSchema,doraTimelineSchema,classifyDoraImpact,doraReportingDeadlines,type DoraImpact,type DoraTimeline} from './agentguard-dora.js';
 export type {NetworkActivity, NetworkTransaction} from './network.js';
 
 export type Address = `0x${string}`;

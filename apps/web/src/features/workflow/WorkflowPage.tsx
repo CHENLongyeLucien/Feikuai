@@ -13,6 +13,7 @@ import {deriveProcessJourney,type ProcessStageId} from '../../scene/process';
 import {normalizeLocation,readWorkflowLocation,workflowUrl} from './location';
 import {workflowReviewQueue} from './review-queue';
 import WorkflowMap from './WorkflowMap';
+import AuthoritySummary from './AuthoritySummary';
 import './workflow.css';
 const EvidenceVerifier=lazy(()=>import('../evidence/EvidenceVerifier'));
 const clean=(text:string)=>text.replace(/0x[a-fA-F0-9]{8,64}/g,'[reference]');
@@ -85,6 +86,7 @@ export default function WorkflowPage(props:Props){
     <div className="wf-content" ref={reviewRef} data-testid="workflow-review">
      {selected&&<div className="wf-selected-heading"><div><span className="wf-eyebrow">FOLLOWING THIS ITEM</span><h2>{clean(title)}</h2></div><button onClick={()=>{reviewRef.current?.querySelector('.wf-review-body')?.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});}} aria-label="Go to review"><ArrowDown size={18}/></button></div>}
      <WorkflowMap key={`${state.itemId||''}:${state.caseId||''}`} journey={journey} onOpenStage={openStage}/>
+     {selected&&<AuthoritySummary key={`authority-${state.itemId||state.caseId}`} itemId={state.itemId} caseId={caseId||state.caseId}/>}
      {selected?<div className="wf-review-body">
       {state.itemId&&<InboxDetail key={state.itemId} id={state.itemId} authenticated={authenticated} navigate={navigateInside} onLogin={onLogin} onNotice={onNotice} embedded paymentEmbedded={!!caseId}/> }
       {caseId&&<section className="wf-payment-review" ref={paymentRef} aria-label="Payment review"><div className="wf-section-label"><ShieldCheck size={16}/><h2>Payment review</h2><span>DEMO test tokens</span></div><CaseWorkspace key={caseId} id={caseId} onNotice={onNotice} navigate={navigateInside}/></section>}

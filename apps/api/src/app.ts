@@ -13,6 +13,7 @@ import {AutomationService} from './automation/index.js';
 import {registerInboxWebhook} from './integrations/webhook.js';
 import {registerApi} from './routes/api.js';
 import {registerNetworkActivity} from './network/activity.js';
+import {registerAgentGuard} from './agentguard/index.js';
 import {Service} from './domain/service.js';
 import {ChainService} from './jobs/chain.js';
 import {WorkerLoop} from './jobs/worker.js';
@@ -28,6 +29,7 @@ export async function buildApp(options:{config?:Config;worker?:boolean;logger?:b
  const inbox=await registerInbox(app,service,db,config,{startWorker:options.worker!==false});
  await registerInboxWebhook(app,db,config,inbox.service);
  const automation=new AutomationService(db,config,inbox.service,service);inbox.service.options.paymentFor=(itemId,tenantId)=>automation.project(itemId,tenantId);
+ await registerAgentGuard(app,db,config,service,inbox.service);
  app.addHook('preClose',async()=>automation.stop());
  if(options.worker!==false){worker.start();automation.start();}app.addHook('onClose',async()=>{await worker.stop();db.close();});return {app,db,orm,service,chain,worker,inbox,automation,config};
 }
