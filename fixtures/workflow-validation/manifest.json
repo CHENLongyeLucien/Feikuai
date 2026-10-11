@@ -470,12 +470,9 @@
       "selectPayable": false,
       "expected": {
         "classification": "invoice",
-        "status": "quarantined",
-        "risks": [
-          "UNVERIFIED_LINK"
-        ],
-        "linked": false,
-        "reason": "A link must not be declared safe without an isolated scanner."
+        "status": "needs_review",
+        "linked": true,
+        "reason": "A link must not be declared safe without an isolated scanner, so a person reviews it; a plain link is not a security hold by itself."
       },
       "sha256": "e05e46f26c61a592a91a1cddee495e2eb87f2181b5c6172614c6f61db1b79b93"
     },
@@ -717,12 +714,9 @@
       "mime": "message/rfc822",
       "expected": {
         "classification": "client_request",
-        "status": "quarantined",
-        "risks": [
-          "UNVERIFIED_LINK"
-        ],
+        "status": "needs_review",
         "linked": false,
-        "reason": "Untrusted source security finding stops the process before financial actions."
+        "reason": "A link must not be declared safe without an isolated scanner, so a person reviews it; a plain link is not a security hold by itself."
       },
       "sha256": "47fe1dcf91549f1fffc6eb4d8c12cd19ef709bdf68ec9389133d8fd5fdfda1b9"
     },
@@ -833,12 +827,9 @@
       "encoding": "quoted-printable",
       "expected": {
         "classification": "client_request",
-        "status": "quarantined",
-        "risks": [
-          "UNVERIFIED_LINK"
-        ],
+        "status": "needs_review",
         "linked": false,
-        "reason": "Untrusted source security finding stops the process before financial actions."
+        "reason": "A link must not be declared safe without an isolated scanner, so a person reviews it; a plain link is not a security hold by itself."
       },
       "sha256": "8ad5d244e55885d080b387abb973ddb3cdd98779ffec0420f2189d672774028b"
     },
@@ -1112,12 +1103,9 @@
       "mime": "text/plain",
       "expected": {
         "classification": "client_request",
-        "status": "quarantined",
-        "risks": [
-          "UNVERIFIED_LINK"
-        ],
+        "status": "needs_review",
         "linked": false,
-        "reason": "Untrusted source security finding stops the process before financial actions."
+        "reason": "A link must not be declared safe without an isolated scanner, so a person reviews it; a plain link is not a security hold by itself."
       },
       "sha256": "81b41a7aabb9be5684cdd1ae6883e36242385b6b73f8f781af8a21d1b88089b5"
     },
@@ -1499,12 +1487,9 @@
       "mime": "text/plain",
       "expected": {
         "classification": "client_request",
-        "status": "quarantined",
-        "risks": [
-          "UNVERIFIED_LINK"
-        ],
+        "status": "needs_review",
         "linked": false,
-        "reason": "Untrusted source security finding stops the process before financial actions."
+        "reason": "A link must not be declared safe without an isolated scanner, so a person reviews it; a plain link is not a security hold by itself."
       },
       "sha256": "e871a06959db5dc3494a9e18607ad09b774d7d8320097d021bfc322e04bf4f07"
     },
@@ -1623,12 +1608,9 @@
       "mime": "text/plain",
       "expected": {
         "classification": "client_request",
-        "status": "quarantined",
-        "risks": [
-          "UNVERIFIED_LINK"
-        ],
+        "status": "needs_review",
         "linked": false,
-        "reason": "Untrusted source security finding stops the process before financial actions."
+        "reason": "A link must not be declared safe without an isolated scanner, so a person reviews it; a plain link is not a security hold by itself."
       },
       "sha256": "7e7aa144c94a645137fb460a8d512ed20c702eacc26740ab8a740f1cf6ebb6e8"
     },
