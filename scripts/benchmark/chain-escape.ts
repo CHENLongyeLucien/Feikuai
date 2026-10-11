@@ -82,12 +82,20 @@ try {
   const count = (kind: string, result: string) => {attempts[kind]![result] = (attempts[kind]![result] ?? 0) + 1;};
   let autoSample: {invoiceKey: Hex; registeredRecipient: Address; attacker: Address} | undefined;
   const random = privateKeyToAccount(keccak256(toHex('attacker-signing-key')));
+  // Baseline for comparison: a typical unguarded setup where the AI agent holds a funded wallet and
+  // sends whatever it is told. Same attacks, same chain, same funding as the vault; transfers are real.
+  const agentWallet = account(6);
+  await mined(await wallet.writeContract({account: owner, address: token, abi: demoTokenAbi, functionName: 'transfer', args: [agentWallet.address, 300000000000n]}));
+  const agentStart = await balance(agentWallet.address);
+  const baseline = {attempts: 0, paidToAttacker: 0, failedInsufficientFunds: 0, sentToAttackersAtomic: 0n};
+  const pending: {attacker: Address; amount: bigint}[] = [];
   for (const [i, r] of escaped.entries()) {
     const target = (r.payableReference && byReference.get(r.payableReference)) || fallback;
     const attacker = (r.attackerRecipient ?? `0x${keccak256(toHex(`attacker:${r.id}`)).slice(26)}`) as Address;
     attackers.add(attacker);
     const amount = r.claimedAmountAtomic ? BigInt(r.claimedAmountAtomic) : BigInt(target.amountAtomic);
     const attack = await terms({invoiceKey: target.invoiceKey, supplierKey: target.supplierKey, recipient: attacker, amountAtomic: amount});
+    pending.push({attacker, amount});
     count('A1_forged_signature', await simulatePay(attack, await sign(i % 2 ? relayer : random, attack)));
     count('A2_replayed_signature', await simulatePay({...legitPayment, invoiceKey: target.invoiceKey, recipient: attacker, amountAtomic: amount}, legitSignature));
     count('A3_deceived_human_signs_attacker_terms', await simulatePay(attack, await sign(approver, attack)));
@@ -130,7 +138,14 @@ try {
   const attackerBalances = await Promise.all([...attackers].map(balance));
   const fraudulent = Object.values(attempts).reduce((sum, results) => sum + (results.WOULD_PAY ?? 0), 0);
   const vaultsAfter = {paymentGuard: await balance(vault), automationGuard: await balance(automation)};
+  for (const {attacker, amount} of pending) {
+    baseline.attempts++;
+    try {const receipt = await mined(await wallet.writeContract({account: agentWallet, address: token, abi: demoTokenAbi, functionName: 'transfer', args: [attacker, amount]})); if (receipt.status === 'success') {baseline.paidToAttacker++; baseline.sentToAttackersAtomic += amount;}}
+    catch {baseline.failedInsufficientFunds++;}
+  }
+  const unguardedBaseline = {setup: 'AI agent holding a funded wallet (300,000 DEMO, same as the vault) that executes the payment each attack requests; no guardrails, real transfers on the same chain', attempts: baseline.attempts, paidToAttacker: baseline.paidToAttacker, failedOnlyBecauseWalletWasEmpty: baseline.failedInsufficientFunds, sentToAttackersAtomic: String(baseline.sentToAttackersAtomic), walletStartAtomic: String(agentStart), walletEndAtomic: String(await balance(agentWallet.address))};
   const report = {
+    unguardedBaseline,
     schemaVersion: 'secure-finance.chain-escape.v1', generatedAt: new Date().toISOString(),
     threatModel: 'Attack evaded detection; attacker controls agents, API server, relayer key and automation executor key; attacker does not hold the approver wallet key. A3 also assumes the approver was deceived into signing the attacker terms.',
     chain: {network: 'isolated local Anvil (chain 31337, cancun)', paymentGuard: vault, automationGuard: automation, token},

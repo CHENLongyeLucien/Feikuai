@@ -51,6 +51,7 @@ Measured on 11 October 2026 through the real pipeline, with no live LLM (determi
 | Time to detect, real worker, steady traffic | median **0.63 s**, p95 0.96 s; under a burst of 100: median 12.5 s | |
 | Time to respond | Same moment as detection: the hold or quarantine and the alert are written with the decision | |
 | Payment authority created by an attack | **0**, in every test and in 79 contract tests | |
+| Before vs after (same 474 attacks that evaded detection, real local chain) | Unguarded agent with a funded wallet: **474 of 474 paid the attacker, 4,896.1 DEMO lost** | Feikuai: **0 of 1,896 worst-case attempts paid the attacker** ([chain-escape.json](results/chain-escape.json)) |
 
 Real Fuji payments through the full flow (upload → checks → Approve & pay → MetaMask signature → contract → verified receipt): NS-TEST10-0005 [tx 0xeabc41cd…6d88](https://testnet.snowtrace.io/tx/0xeabc41cd969c6792f3fed6e4c2b7c993c7fcbef66b0eefea21923b0c67616d88) and NS-TEST10-0009 [tx 0xdf73e231…9888](https://testnet.snowtrace.io/tx/0xdf73e2310e0c0f8be105e7e5f83943237b61fc4cc9234826a7f0efe238699888), 11 October 2026, both status 1 on PaymentGuard `0x667ef97b213cfbe3f89ed2fe835c16d11acf6914`. Re-submitting either invoice is blocked as *already paid*.
 
