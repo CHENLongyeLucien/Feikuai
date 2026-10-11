@@ -1,0 +1,23 @@
+# API image for hosted deployment (Render). Same build as the root Dockerfile, ending on the API stage.
+FROM node:24.14.0-bookworm-slim AS build
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN npm install -g pnpm@10.32.1
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY packages ./packages
+COPY apps ./apps
+COPY scripts ./scripts
+COPY fixtures ./fixtures
+COPY deployments ./deployments
+COPY tsconfig.json ./
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
+
+FROM node:24.14.0-bookworm-slim AS api
+WORKDIR /app
+ENV NODE_ENV=production API_HOST=0.0.0.0 API_PORT=10000 DATABASE_PATH=/data/secure-finance.sqlite ARTIFACT_ROOT=/data/artifacts
+COPY --from=build /app /app
+RUN mkdir -p /data && chown -R node:node /data /app/fixtures
+USER node
+EXPOSE 10000
+CMD ["node","apps/api/dist/index.js"]

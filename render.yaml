@@ -1,0 +1,36 @@
+# Render Blueprint for the Feikuai API (Fuji test network).
+# Dashboard: New > Blueprint > pick this repository. Then fill the two "sync: false" values.
+services:
+  - type: web
+    name: feikuai-api
+    runtime: docker
+    dockerfilePath: ./deploy/Dockerfile.api
+    dockerContext: .
+    plan: starter            # a persistent disk needs a paid plan; free instances lose data and sleep
+    healthCheckPath: /health
+    autoDeploy: false
+    disk:
+      name: feikuai-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - {key: NODE_ENV, value: production}
+      - {key: APP_ENV, value: fuji}
+      - {key: CHAIN_ID, value: "43113"}
+      - {key: RPC_URL, value: https://api.avax-test.network/ext/bc/C/rpc}
+      - {key: API_HOST, value: 0.0.0.0}
+      - {key: API_PORT, value: "10000"}
+      - {key: PORT, value: "10000"}
+      - {key: DATABASE_PATH, value: /data/secure-finance.sqlite}
+      - {key: ARTIFACT_ROOT, value: /data/artifacts}
+      - {key: DEPLOYMENT_MANIFEST_PATH, value: deployments/fuji.json}
+      - {key: TRUSTED_REGISTRY_PATH, value: fixtures/trusted-registry.fuji.json}
+      - {key: SEED_ON_START, value: "true"}
+      - {key: ENABLE_DEMO_ROUTES, value: "false"}
+      - {key: AGENT_MODE, value: fixture}
+      - {key: SESSION_SECRET, generateValue: true}
+      # Public URLs of the two Vercel apps (exact https origins, no trailing slash):
+      - {key: WEB_ORIGIN, value: https://feikuai-web.vercel.app}
+      - {key: APPROVER_ORIGIN, value: https://feikuai-approve.vercel.app}
+      # Secret: the dedicated Fuji relayer key (test AVAX for gas only). Set it in the dashboard; never commit it.
+      - {key: RELAYER_PRIVATE_KEY, sync: false}
