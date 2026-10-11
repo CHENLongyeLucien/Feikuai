@@ -1,5 +1,7 @@
 # Secure Finance — Implementation README
 
+> Integration API (11 October 2026): ERPs and accounting systems can use the same engine server to server. They import payables, submit invoices and read decisions and payment status with a per-tenant token. A person still signs every payment. [Guide](docs/INTEGRATION_API.md), [OpenAPI](docs/integration/openapi.yaml), [français](docs/API_README.fr.md).
+
 > Reset-brief repairs (11 October 2026): finance-agent holds now block payment, duplicate invoice submissions are held, and a final pre-execution audit runs before every payment. **100/100 correct outcomes on a second set of 100 new inputs** (95/100 before the rule fixes). [Repairs](docs/WORKFLOW_REPAIR.md#reset-brief-repairs-11-october-2026-second-pass), [v2 results](docs/workflow-validation-v2/README.md).
 
 > Workflow repair and dashboard (11 October 2026): MIME/email and PDF intake, invoice matching and worker recovery have been corrected. **100/100 authored inputs pass** through the actual isolated API/worker workflow. Open **Dashboard** in the workspace for recorded finances and activity graphs. [What changed and how to use it](docs/WORKFLOW_REPAIR.md), [actual results](docs/workflow-validation/README.md), [100 organized test documents](fixtures/workflow-validation/README.md). Repeat with `pnpm test:workflow`; it consumes no DEMO and preserves saved state.

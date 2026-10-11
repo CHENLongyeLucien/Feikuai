@@ -11,6 +11,7 @@ import {registerDemoAuth} from './security/demo.js';
 import {registerInbox} from './inbox/index.js';
 import {AutomationService} from './automation/index.js';
 import {registerInboxWebhook} from './integrations/webhook.js';
+import {registerIntegrationApi} from './integrations/api.js';
 import {registerApi} from './routes/api.js';
 import {registerNetworkActivity} from './network/activity.js';
 import {registerAgentGuard} from './agentguard/index.js';
@@ -29,6 +30,7 @@ export async function buildApp(options:{config?:Config;worker?:boolean;logger?:b
  const chain=new ChainService(db,config),service=new Service(db,config,chain);chain.preExecutionAudit=(tenantId,caseId,packet,executionId)=>service.preExecutionAudit(tenantId,caseId,packet,executionId);const worker=new WorkerLoop(db,service,chain);await registerAuth(app,db,config);await registerDemoAuth(app,db,config);await registerApi(app,service,db,config,{automationAvailable:()=>automation.available});
  const inbox=await registerInbox(app,service,db,config,{startWorker:options.worker!==false});
  await registerInboxWebhook(app,db,config,inbox.service);
+ await registerIntegrationApi(app,service,db,config);
  const automation=new AutomationService(db,config,inbox.service,service);inbox.service.options.paymentFor=(itemId,tenantId)=>automation.project(itemId,tenantId);
  await registerAgentGuard(app,db,config,service,inbox.service);
  await registerDashboard(app,db,config);

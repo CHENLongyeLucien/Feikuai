@@ -1,0 +1,147 @@
+openapi: 3.1.0
+info:
+  title: Feikuai integration API
+  version: 1.0.0
+  summary: Supplier-payment controls for ERPs and accounting systems.
+  description: |
+    The same engine as the Feikuai Workspace, called server to server. An ERP imports payables, submits
+    supplier invoices and reads decisions and payment status. The API can never authorize a payment:
+    every payment needs a human wallet signature in the approval application (`approval.approvalUrl`).
+    DEMO is a synthetic, valueless test token with 6 decimals (10 DEMO = "10000000").
+servers:
+  - url: http://localhost:3001/api/v1/integrations
+    description: Local / Fuji test workspace
+security:
+  - bearerToken: []
+paths:
+  /payables:
+    post:
+      summary: Import a payable from the ERP
+      description: Creates the trusted obligation (supplier, wallet, exact amount). Identity and terms are immutable after import.
+      parameters: [{$ref: '#/components/parameters/IdempotencyKey'}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PayableInput'}
+            example:
+              externalId: payable-1
+              sourceSystem: acme-erp
+              invoiceReference: INV-1
+              supplier: {externalId: sup-1, name: Atlas Cloud Services, recipient: '0x5d99ddf74ec01f61e37ecae561e60d72bfb81ce4', version: '1'}
+              amount: {atomic: '10000000', token: DEMO}
+      responses:
+        '201': {description: Imported (or the earlier response for the same Idempotency-Key and body), content: {application/json: {schema: {$ref: '#/components/schemas/Payable'}}}}
+        '409': {$ref: '#/components/responses/Conflict'}
+        default: {$ref: '#/components/responses/Error'}
+  /payables/{sourceSystem}/{externalId}:
+    get:
+      summary: Look up a payable by the ERP's own identifier
+      parameters:
+        - {name: sourceSystem, in: path, required: true, schema: {type: string}}
+        - {name: externalId, in: path, required: true, schema: {type: string}}
+      responses:
+        '200': {description: Payable, content: {application/json: {schema: {$ref: '#/components/schemas/Payable'}}}}
+        default: {$ref: '#/components/responses/Error'}
+  /cases:
+    post:
+      summary: Submit the supplier's invoice for checks
+      description: Stores the original, extracts it and starts the security and finance checks in the background.
+      parameters: [{$ref: '#/components/parameters/IdempotencyKey'}]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: {type: string, format: binary, description: 'Text-based PDF or plain-text invoice, at most 10 MiB'}
+                payableId: {type: string, format: uuid}
+                sourceSystem: {type: string}
+                payableExternalId: {type: string}
+      responses:
+        '201': {description: Case created, content: {application/json: {schema: {$ref: '#/components/schemas/Case'}}}}
+        default: {$ref: '#/components/responses/Error'}
+  /cases/{id}/analysis:
+    post:
+      summary: Run the analysis again
+      parameters: [{$ref: '#/components/parameters/IdempotencyKey'}, {$ref: '#/components/parameters/Id'}]
+      responses:
+        '202': {description: Accepted; poll the case, content: {application/json: {schema: {type: object, properties: {caseId: {type: string}, status: {const: ACCEPTED}, statusUrl: {type: string}}}}}}
+        default: {$ref: '#/components/responses/Error'}
+  /cases/{id}:
+    get:
+      summary: Read the decision, checks, proposal and payment state
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '200': {description: Case, content: {application/json: {schema: {$ref: '#/components/schemas/Case'}}}}
+        default: {$ref: '#/components/responses/Error'}
+  /executions/{id}:
+    get:
+      summary: Follow a payment execution until CONFIRMED
+      description: CONFIRMED only after the chain receipt and payment event are verified. UNKNOWN or INCONSISTENT must be reconciled, never resent.
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '200': {description: Execution, content: {application/json: {schema: {$ref: '#/components/schemas/Execution'}}}}
+        default: {$ref: '#/components/responses/Error'}
+components:
+  securitySchemes:
+    bearerToken: {type: http, scheme: bearer, description: 'Per-tenant token issued with `pnpm integration:token issue`. The token alone determines the tenant.'}
+  parameters:
+    IdempotencyKey: {name: Idempotency-Key, in: header, required: true, schema: {type: string, maxLength: 150}, description: Same key and body returns the first response; same key with a different body returns 409 IDEMPOTENCY_CONFLICT.}
+    Id: {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+  responses:
+    Error: {description: 'Error, always {"error":{"code","message"}}', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    Conflict: {description: 'IDEMPOTENCY_CONFLICT, PAYABLE_EXISTS, INVOICE_REFERENCE_EXISTS or SUPPLIER_VERSION_CONFLICT', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  schemas:
+    Error:
+      type: object
+      properties: {error: {type: object, properties: {code: {type: string, examples: [UNAUTHENTICATED, NOT_FOUND, SCHEMA_INVALID, IDEMPOTENCY_REQUIRED, IDEMPOTENCY_CONFLICT]}, message: {type: string}}}}
+    PayableInput:
+      type: object
+      required: [externalId, sourceSystem, invoiceReference, supplier, amount]
+      properties:
+        externalId: {type: string}
+        sourceSystem: {type: string}
+        invoiceReference: {type: string}
+        supplier:
+          type: object
+          required: [externalId, name, recipient, version]
+          properties:
+            externalId: {type: string}
+            name: {type: string}
+            recipient: {type: string, pattern: '^0x[0-9a-fA-F]{40}$'}
+            version: {type: string}
+            supplierKey: {type: string, description: Optional on-chain supplier key; payments only execute for suppliers registered in the deployed PaymentGuard.}
+        amount: {type: object, required: [atomic, token], properties: {atomic: {type: string, pattern: '^[1-9][0-9]*$'}, token: {const: DEMO}}}
+    Payable:
+      type: object
+      properties:
+        id: {type: string}
+        externalId: {type: string}
+        sourceSystem: {type: string}
+        invoiceReference: {type: string}
+        invoiceKey: {type: string}
+        supplier: {type: object}
+        amount: {type: object}
+    Case:
+      type: object
+      properties:
+        id: {type: string}
+        status: {type: string, enum: [PROCESSING, NEEDS_INFORMATION, NEEDS_REVIEW, READY_FOR_APPROVAL, AUTHORIZED, PAYMENT_PENDING, PAID, OUTCOME_UNKNOWN]}
+        nextAction: {type: string}
+        holdReason: {type: [string, 'null']}
+        checks: {type: array, items: {type: object, properties: {code: {type: string}, passed: {type: boolean}, severity: {type: string}, summary: {type: string}}}}
+        proposal: {type: [object, 'null']}
+        execution: {type: [object, 'null']}
+        settlement: {type: [object, 'null']}
+        approval: {type: object, properties: {required: {const: true}, approvalUrl: {type: string}}}
+    Execution:
+      type: object
+      properties:
+        id: {type: string}
+        caseId: {type: string}
+        status: {type: string, enum: [PREPARING, PREPARED, SUBMITTED, PENDING, CONFIRMED, REVERTED, UNKNOWN, INCONSISTENT]}
+        txHash: {type: [string, 'null']}
+        settlement: {type: [object, 'null']}
