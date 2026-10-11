@@ -31,10 +31,11 @@ test.afterEach(async({page},testInfo)=>{
 
 for(const size of sizes){
  test(`welcome and navigation fit ${size.name} ${size.width}px`,async({page},testInfo)=>{
-  await page.setViewportSize(size);await page.goto('/');await expect(page.getByRole('heading',{level:1,name:/A little clarity goes a long way/})).toBeVisible();await expect(page.getByRole('button',{name:'Explore the demo',exact:true})).toBeVisible();await noOverflow(page);
+  await page.setViewportSize(size);await page.goto('/');await expect(page.getByRole('heading',{level:1,name:/^Inbox$/})).toBeVisible();await expect(page.getByRole('button',{name:'Explore the demo',exact:true})).toBeVisible();await noOverflow(page);
   const nav=navigation(page);await expect(nav).toBeVisible();
-  const destinations=[['Inbox','/'],['Payments','/workspace'],['Alerts','/notifications'],['History & reports','/evidence'],['Operations campus','/operations'],['Connections','/connections'],['Agents','/agents'],['Business overview','/business'],['Settings','/settings']];
+  const destinations=[['Inbox','/'],['Payments','/workspace'],['Alerts','/notifications'],['History & reports','/evidence'],['Operations campus','/operations'],['Agents','/agents'],['Business overview','/business'],['Settings','/settings']];
   await expect(nav.getByRole('link')).toHaveCount(destinations.length);
+  await expect(nav.getByRole('link',{name:'Connections',exact:true})).toHaveCount(0);
   await expect(page.getByRole('button',{name:/More (navigation|workspace tools)/})).toHaveCount(0);
   for(const [label,url] of destinations){
    const link=nav.getByRole('link',{name:label,exact:true});await expect(link).toHaveCount(1);await expect(link).toBeVisible();await expect(link).toHaveAttribute('href',url);
@@ -50,8 +51,8 @@ for(const size of sizes){
   await expect(page.locator('.sf-inbox-row')).toHaveCount(0);await noOverflow(page);await screenshot(page,testInfo,'filtered');
  });
  test(`payments add invoice opens an unsubmitted form at ${size.name} ${size.width}px`,async({page},testInfo)=>{
-  await page.setViewportSize(size);await login(page,'/workspace');await expect(page.getByRole('heading',{level:1,name:'A clearer view of every payment.'})).toBeVisible();await noOverflow(page);await screenshot(page,testInfo,'payments');
-  await page.getByRole('button',{name:'Add invoice',exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog.getByRole('heading',{name:'A new invoice',exact:true})).toBeVisible();await expect(dialog.getByRole('button',{name:'Add & review',exact:true})).toBeDisabled();await noOverflow(page);await screenshot(page,testInfo,'invoice-form');await dialog.getByRole('button',{name:'Close add to inbox',exact:true}).click();await expect(dialog).not.toBeVisible();
+  await page.setViewportSize(size);await login(page,'/workspace');await expect(page.getByRole('heading',{level:1,name:'Payments'})).toBeVisible();await noOverflow(page);await screenshot(page,testInfo,'payments');
+  await page.getByRole('button',{name:'Add invoice',exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog.getByRole('heading',{name:'Add to inbox',exact:true})).toBeVisible();await expect(dialog.getByRole('button',{name:'Add & review',exact:true})).toBeDisabled();await noOverflow(page);await screenshot(page,testInfo,'invoice-form');await dialog.getByRole('button',{name:'Close add to inbox',exact:true}).click();await expect(dialog).not.toBeVisible();
  });
  test(`settings toggles change the campus preference at ${size.name} ${size.width}px`,async({page},testInfo)=>{
   await page.setViewportSize(size);await login(page,'/settings');await expect(page.getByRole('heading',{level:1,name:'Workspace settings.'})).toBeVisible();const pause=page.getByRole('checkbox',{name:/Pause campus animation/}),reduce=page.getByRole('checkbox',{name:/Reduce motion/});await pause.check();await reduce.check();await expect(pause).toBeChecked();await expect(reduce).toBeChecked();await noOverflow(page);await screenshot(page,testInfo,'settings');

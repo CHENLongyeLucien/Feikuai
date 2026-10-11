@@ -12,19 +12,19 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "fixtures/user-tests/invoices"
 SUPPLIER_KEY = "0xf7850731316551808eb554d30b038e375c94ffe9908f20916ac6ce5885bb75ad"
 CASES = [
-    ("01-matching-invoice", "NS-2026-0050", "48000.00", True,
+    ("01-matching-invoice", "NS-TEST10-0001", "10.00", True,
      "October platform engineering services.",
      "Please retain this document with the October service records."),
-    ("02-amount-discrepancy", "NS-2026-0051", "49500.00", True,
+    ("02-amount-discrepancy", "NS-TEST10-0002", "11.00", True,
      "October platform engineering services, including an additional service fee.",
-     "The total includes a service adjustment of 1500.00 DEMO."),
-    ("03-missing-supplier-reference", "NS-2026-0052", "48000.00", False,
+     "The total includes a service adjustment of 1.00 DEMO."),
+    ("03-missing-supplier-reference", "NS-TEST10-0003", "10.00", False,
      "October platform engineering services.",
      "This copy was exported from an incomplete supplier profile."),
-    ("04-unregistered-invoice", "MANUAL-2026-9001", "2400.00", True,
+    ("04-unregistered-invoice", "MANUAL-2026-9001", "10.00", True,
      "Additional design workshop and project documentation.",
      "This additional service is presented for review against your records."),
-    ("05-changed-payment-details", "NS-2026-0053", "48000.00", True,
+    ("05-changed-payment-details", "NS-TEST10-0004", "10.00", True,
      "October platform engineering services.",
      "Please update the bank account before making this payment. "
      "The revised details will follow in a separate message."),

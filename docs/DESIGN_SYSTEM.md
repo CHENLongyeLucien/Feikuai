@@ -6,7 +6,7 @@ The October 2026 reference images guide the visual system: sage backgrounds, war
 
 - Shared design tokens in `packages/design/tokens.css` serve the main workspace and the separate approval application. Fonts are self-hosted.
 - Inbox, review stages, notifications, integrations, payments, agents, settings, business assumptions and evidence use the same surfaces, spacing and controls.
-- Each destination appears once in the dashboard navigation: Inbox, Payments, Alerts, History & reports, Operations campus, Connections, Agents, Business overview and Settings. Alerts contains user notifications; Agents contains recorded agent work. The desktop rail has visible short labels and scrolls on short screens. On phones, all links sit directly below the header in two rows, in normal flow so they cannot cover page actions. There is no More menu or duplicate account button in the rail.
+- Each destination appears once in the dashboard navigation: Inbox, Payments, Alerts, History & reports, Operations campus, Agents, Business overview and Settings. Alerts contains user notifications; Agents contains recorded agent work. The desktop rail has visible short labels and scrolls on short screens. On phones, all links sit directly below the header in two rows, in normal flow so they cannot cover page actions. There is no Connect link, More menu or duplicate account button in the rail. The eight mobile destinations use two equal rows of four.
 - Inbox includes the Needs review filter; there is no separate review landing page. Filter links survive reloads and browser history, and legacy `/review` links open `/?filter=review`.
 - Search supports keyboard focus and a mobile search dialog. Invoice actions on payments and the campus open the actual import dialog; composition links survive sign-in. No financial authority is added by navigation.
 - Payment lists become readable cards on phones. Source details, blockchain references and verification internals stay behind disclosures. Mobile account controls retain explicit accessible names.
@@ -48,3 +48,9 @@ The browser suite detects installed Chrome/Chromium, Firefox and WebKit. Install
 [Inbox desktop](qa/design-inbox-desktop.png) · [Payments](qa/design-payments-desktop.png) · [Campus desktop](qa/design-campus-desktop.png) · [Campus tablet](qa/design-campus-tablet.png) · [Campus phone](qa/design-campus-mobile.png) · [Inbox phone](qa/design-inbox-mobile.png) · [Independent approval on phone](qa/design-approver-mobile.png) · [Evidence verification](qa/design-evidence-desktop.png)
 
 No credentials, environment settings, Fuji deployments or payment contracts are changed by this redesign. The original environment/deployment snapshots remain byte-for-byte intact. Saved demo databases, chain state and receipts are retained locally.
+
+## Task-focused screens
+
+Inbox starts with one Add to inbox action and a compact filtered list. The add dialog contains all four input types; invoices start with file upload. Optional matching/title details stay closed. Review pages keep security findings and the next decision visible, with checks, source text and history available on demand.
+
+Payments uses compact totals and one status per row. Cases open at the relevant next step; successful checks, exact wallet identifiers and supporting evidence remain expandable. History & reports opens directly on saved records. Payment review/signing and payment submission stay separate actions.

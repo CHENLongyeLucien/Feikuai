@@ -2,6 +2,7 @@ import {test, expect, type Page} from '@playwright/test';
 import {mkdirSync, readFileSync, writeFileSync} from 'node:fs';
 import {createPublicClient,http,parseEventLogs} from 'viem';
 import {demoTokenAbi,automationGuardAbi} from '../../packages/chain/src/index.js';
+import {fixtureText} from '../../apps/api/src/db/seed';
 
 test.describe.configure({mode: 'serial'});
 const jsonItem = (page: Page) => page.request.get(`/api/v1/inbox/${new URL(page.url()).pathname.split('/')[2]}`).then(response => response.json());
@@ -11,9 +12,17 @@ async function enterDemo(page: Page) {
   await expect(page.getByRole('button', {name: /Northstar team/})).toBeVisible();
   await expect(page.getByText('Reconnecting to live updates. We are checking for changes in the background.',{exact:true})).toHaveCount(0,{timeout:5000});
 }
-async function submitText(page: Page, channel: 'Email' | 'Voice' | 'Text', title: string, text: string) {
-  await page.getByRole('button', {name: channel, exact: true}).click();
+async function openSource(page: Page, channel: 'Invoice' | 'Email' | 'Voice' | 'Text', method: 'text' | 'file' = 'text') {
+  await page.getByRole('button', {name: 'Add to inbox', exact: true}).click();
   const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('heading', {name: 'Add to inbox', exact: true})).toBeVisible();
+  await dialog.getByRole('radio', {name: channel, exact: true}).check();
+  if (channel !== 'Text') await dialog.getByRole('button', {name: method === 'file' ? 'Upload file' : channel === 'Voice' ? 'Paste transcript' : 'Paste text', exact: true}).click();
+  return dialog;
+}
+async function submitText(page: Page, channel: 'Email' | 'Voice' | 'Text', title: string, text: string) {
+  const dialog = await openSource(page, channel);
+  await dialog.getByText('Optional details', {exact: true}).click();
   await dialog.getByLabel('Title', {exact: false}).fill(title);
   await dialog.getByRole('textbox', {name: channel === 'Voice' ? 'Transcript' : channel === 'Email' ? 'Email message' : 'Source text', exact: false}).fill(text);
   await dialog.getByRole('button', {name: 'Add & review'}).click();
@@ -33,7 +42,7 @@ async function noHorizontalOverflow(page: Page) {
 test('inbox is the welcoming default, local demo needs no wallet, and navigation fits mobile', async ({page}) => {
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   await page.goto('/');
-  await expect(page.getByRole('heading', {name: /A little clarity goes a long way/})).toBeVisible();
+  await expect(page.getByRole('heading', {level: 1, name: 'Inbox', exact: true})).toBeVisible();
   await expect(page.getByRole('button', {name: 'Explore the demo', exact: true})).toBeVisible();
   await expect(page.locator('canvas')).toHaveCount(0);
   expect(await page.locator('body').innerText()).not.toMatch(/0x[a-fA-F0-9]{40}/);
@@ -41,10 +50,11 @@ test('inbox is the welcoming default, local demo needs no wallet, and navigation
   mkdirSync('docs/qa', {recursive: true});
   await capture(page, 'docs/qa/redesign-welcome.png');
   await page.setViewportSize({width: 390, height: 844});
-  await expect(page.locator('.sf-sidebar')).toBeHidden();
+  await expect(page.getByRole('navigation', {name: 'Primary navigation', exact: true})).toBeHidden();
   await noHorizontalOverflow(page);
   await capture(page, 'docs/qa/redesign-mobile.png', false);
-  await page.getByRole('navigation', {name: 'Mobile navigation', exact: true}).getByRole('link', {name: 'Connections', exact: true}).click();
+  await expect(page.getByRole('navigation', {name: 'Mobile navigation', exact: true}).getByRole('link', {name: 'Connections', exact: true})).toHaveCount(0);
+  await page.goto('/connections');
   await expect(page.getByRole('heading', {name: /Your sources/})).toBeVisible();
   await expect(page.getByText('Sign in to check', {exact: true}).first()).toBeVisible();
   await expect(page.getByRole('button', {name: /^Connect(?: Gmail| Outlook)?$/})).toHaveCount(0);
@@ -52,22 +62,32 @@ test('inbox is the welcoming default, local demo needs no wallet, and navigation
   await page.setViewportSize({width: 1440, height: 1000});
   await enterDemo(page);
   await expect(page.locator('.sf-welcome-state')).toHaveCount(0);
-  await expect(page.locator('.sf-list-heading')).toBeVisible();
+  await expect(page.getByRole('button', {name: /^All items\b/})).toBeVisible();
   expect(errors).toEqual([]);
 });
 
 test('a synthetic invoice completes five checks and reports an actual registered-policy settlement', async ({page}, testInfo) => {
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   await enterDemo(page);
-  await page.getByRole('button', {name: 'Demo walkthrough', exact: false}).click();
-  await page.locator('.sf-example-grid').getByRole('button', {name: /Synthetic invoice ready to check/}).click();
-  const dialog = page.getByRole('dialog');
-  await expect(dialog.getByLabel('Match to a registered invoice', {exact: false})).not.toHaveValue('');
-  const payableId=await dialog.getByLabel('Match to a registered invoice',{exact:false}).inputValue();
-  const payable=(await (await page.request.get('/api/v1/payables')).json()).payables.find((p:any)=>p.id===payableId);
+  // The everyday demo example uses the 10-DEMO wallet route. Standing-policy
+  // coverage explicitly selects an independently registered isolated obligation.
   const manifest=JSON.parse(readFileSync('var/experience-demo/automation.json','utf8'));
   const chain=createPublicClient({transport:http('http://127.0.0.1:18545')});
   expect(await chain.getChainId()).toBe(31337);
+  const payables=(await (await page.request.get('/api/v1/payables')).json()).payables;
+  const existingCases=(await (await page.request.get('/api/v1/cases')).json()).cases;
+  const usedInvoices=new Set(existingCases.map((entry:any)=>entry.invoiceKey));
+  let payable:any;
+  for(const candidate of payables.filter((entry:any)=>manifest.approvedPayableIds.includes(entry.id)&&!usedInvoices.has(entry.invoiceKey))){
+    const obligation=await chain.readContract({address:manifest.vault,abi:automationGuardAbi,functionName:'obligations',args:[candidate.invoiceKey]});
+    if(obligation[3]==='0x'+'0'.repeat(64)){payable=candidate;break;}
+  }
+  if(!payable)throw new Error('No unused registered standing-policy fixture remains in the isolated demo. This test will not reset state or reuse a settled invoice.');
+  const dialog=await openSource(page,'Invoice','text');
+  await dialog.getByText('Optional details',{exact:true}).click();
+  await dialog.getByLabel('Title',{exact:true}).fill('Synthetic invoice ready to check');
+  await dialog.getByLabel('Match to a registered invoice',{exact:false}).selectOption(payable.id);
+  await dialog.getByRole('textbox',{name:'Source text',exact:true}).fill(fixtureText(payable));
   const before=await chain.readContract({address:manifest.token,abi:demoTokenAbi,functionName:'balanceOf',args:[payable.recipient]});
   await dialog.getByRole('button', {name: 'Add & review'}).click();
   await expect(page).toHaveURL(/\/inbox\/[a-f0-9-]+$/);
@@ -86,6 +106,7 @@ test('a synthetic invoice completes five checks and reports an actual registered
   writeFileSync('docs/qa/automatic-payment-result.json',JSON.stringify({observedAt:new Date().toISOString(),environment:'isolated local chain 31337',invoiceReference:payable.invoiceReference,transactionHash:receipt.transactionHash,receiptStatus:receipt.status,blockNumber:receipt.blockNumber.toString(),recipientDeltaAtomic:(after-before).toString(),authorityModel:actual.payment.authorityModel,walletSignatureRequired:false},null,2)+'\n');
   await expect(page.getByText('A payment receipt has been verified.', {exact: true})).toBeVisible();
   expect(await page.locator('body').innerText()).not.toMatch(/0x[a-fA-F0-9]{40}/);
+  await page.getByText('Review checks', {exact: true}).click();
   for (const name of ['Classification','Security review','Client & finance','Approval policy','Independent final audit']) {
     await page.locator('.sf-pipeline').getByRole('button', {name: new RegExp(name.replace('&', '\\&'))}).click();
     await expect(page.locator('.sf-stage-detail').getByRole('heading', {name, exact: true})).toBeVisible();
@@ -111,7 +132,7 @@ test('phishing is quarantined with evidence, no approval button, no fetched link
   await page.getByRole('button', {name: 'Demo walkthrough', exact: false}).click();
   await page.locator('.sf-example-grid').getByRole('button', {name: /Suspicious payment update/}).click();
   await page.getByRole('dialog').getByRole('button', {name: 'Add & review'}).click();
-  await expect(page.getByText('Paused before anything proceeds', {exact: true})).toBeVisible();
+  await expect(page.getByText('Security hold', {exact: true})).toBeVisible();
   await expect(page.getByRole('button', {name: 'Approve workflow', exact: true})).toHaveCount(0);
   await expect(page.getByRole('heading', {name: 'Sensitive credential request', exact: true})).toBeVisible();
   await expect(page.getByRole('heading', {name: 'Payment destination change requested', exact: true})).toBeVisible();
@@ -124,7 +145,7 @@ test('phishing is quarantined with evidence, no approval button, no fetched link
   expect(readFileSync(saved).subarray(0,5).toString()).toBe('%PDF-');
   expect(item.risks.length).toBeGreaterThan(1);
   await capture(page, 'docs/qa/redesign-security-review.png');
-  await page.getByRole('link', {name: 'Activity', exact: false}).click();
+  await page.getByRole('link', {name: 'Alerts', exact: true}).click();
   const notice = page.locator('.sf-activity-list article').filter({hasText: 'Security review required'}).first();
   await expect(notice).toBeVisible(); await notice.getByRole('button', {name: 'Mark read'}).click();
   await expect(notice.getByRole('button', {name: 'Mark read'})).toHaveCount(0);
@@ -135,34 +156,34 @@ test('phishing is quarantined with evidence, no approval button, no fetched link
 test('voice financial requests need human context and record requests for information without sending messages', async ({page}) => {
   await enterDemo(page);
   await submitText(page, 'Voice', 'Recorded supplier question', 'Please review a supplier payment request and confirm the agreed amount before anyone proceeds.');
-  await expect(page.getByText('A careful look is needed', {exact: true})).toBeVisible();
+  await expect(page.getByText('Your review is needed', {exact: true})).toBeVisible();
   await expect.poll(async () => (await jsonItem(page)).status).toBe('needs_review');
   await page.getByRole('button', {name: 'Request information', exact: true}).click();
-  await expect(page.getByRole('dialog').getByText('This records what is missing. It does not send an email or contact the sender.', {exact: true})).toBeVisible();
+  await expect(page.getByRole('dialog').getByText('Record what is missing. This does not send a message to the sender.', {exact: true})).toBeVisible();
   await page.getByRole('dialog').getByRole('textbox', {name: 'Reason for your decision'}).fill('Please provide the supplier invoice and confirm its amount using our trusted records.');
   await page.getByRole('dialog').getByRole('button', {name: 'Record decision'}).click();
-  await expect(page.getByRole('heading', {name: 'Human review history'})).toBeVisible();
+  await page.getByText('Review history', {exact: true}).click();
+  await expect(page.getByText('Please provide the supplier invoice and confirm its amount using our trusted records.', {exact: true})).toBeVisible();
   const item = await jsonItem(page); expect(item.source.transcription.mode).toBe('manual'); expect(item.reviewHistory.at(-1).decision).toBe('request_information'); expect(item.payment).toBeNull();
   await page.getByRole('button', {name: 'Back to inbox'}).click();
-  await page.getByRole('button', {name: 'Needs review', exact: true}).click();
+  await page.getByRole('button', {name: /^Needs review\b/}).click();
   await expect(page.locator('.sf-inbox-row').filter({hasText:'Recorded supplier question'}).first()).toBeVisible();
   await expect(page.locator('.sf-inbox-row').filter({hasText: 'Synthetic invoice ready to check'})).toHaveCount(0);
   await page.getByRole('textbox', {name: 'Search your workspace'}).fill('Recorded supplier');
   await expect.poll(async () => {const texts = await page.locator('.sf-inbox-row').allTextContents();return texts.length > 0 && texts.every(text => text.includes('Recorded supplier'));}).toBe(true);
   await page.getByRole('textbox', {name: 'Search your workspace'}).fill('');
-  await page.getByRole('button', {name: 'All items', exact: true}).click();
+  await page.getByRole('button', {name: /^All items\b/}).click();
   await page.getByRole('combobox', {name: 'Filter by source'}).selectOption('voice');
   await expect.poll(async () => {const rows = await page.locator('.sf-inbox-row').count();return rows > 0 && await page.locator('.sf-inbox-row .sf-channel-voice').count() === rows;}).toBe(true);
 });
 
 test('email files import safely, modal close resets input and a failed attachment can be corrected', async ({page}) => {
   await enterDemo(page);
-  await page.getByRole('button', {name: 'Email', exact: true}).click();
-  let dialog = page.getByRole('dialog');
+  let dialog = await openSource(page, 'Email', 'file');
   const eml = {name:'client-request.eml',mimeType:'message/rfc822',buffer:Buffer.from('From: client@example.invalid\nSubject: Quarterly planning\n\nCould you schedule a meeting next week to review our milestones?')};
   await dialog.locator('input[type=file]').setInputFiles(eml);
   await page.keyboard.press('Escape'); await expect(dialog).toHaveCount(0);
-  await page.getByRole('button', {name: 'Email', exact: true}).click(); dialog = page.getByRole('dialog');
+  dialog = await openSource(page, 'Email', 'file');
   await expect(dialog.locator('input[type=file]')).toHaveValue('');
   await dialog.locator('input[type=file]').setInputFiles({name:'unsupported.bin',mimeType:'application/octet-stream',buffer:Buffer.from('not supported')});
   await dialog.getByRole('button', {name: 'Add & review'}).click(); await expect(dialog.getByRole('alert')).toBeVisible();
@@ -173,7 +194,7 @@ test('email files import safely, modal close resets input and a failed attachmen
   const actual = await jsonItem(page); expect(actual.source.filename).toBe(eml.name); expect(actual.source.senderAuthentication).toBe('not_verified'); expect(actual.source.extraction).toBe('rfc822-untrusted-utf8-text-v1');
   await page.getByText('Read original source', {exact: true}).click(); await expect(page.locator('.sf-source-text')).toContainText('client@example.invalid');
   await page.getByRole('button', {name: 'Back to inbox'}).click();
-  await page.getByRole('button', {name: 'Email', exact: true}).click(); dialog = page.getByRole('dialog');
+  dialog = await openSource(page, 'Email', 'file');
   await dialog.locator('input[type=file]').setInputFiles({name:'plain-request.txt',mimeType:'text/plain',buffer:Buffer.from('Please schedule a customer support meeting next Tuesday.')});
   await dialog.getByRole('button', {name: 'Add & review'}).click();
   await expect(page.getByRole('heading', {name:'plain-request.txt',exact:true})).toBeVisible();
@@ -186,14 +207,15 @@ test('populated inbox, review and connections stay readable on desktop and mobil
   await expect(page.locator('.sf-inbox-row').first()).toBeVisible();
   expect(await page.locator('body').innerText()).not.toMatch(/0x[a-fA-F0-9]{40}/);
   await noHorizontalOverflow(page); await capture(page,'docs/qa/redesign-inbox.png');
-  await page.getByRole('button', {name:'Needs review',exact:true}).click();
-  await expect(page.getByRole('button', {name:'Needs review',exact:true})).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', {name:/^Needs review\b/}).click();
+  await expect(page.getByRole('button', {name:/^Needs review\b/})).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('.sf-inbox-row').filter({hasText:'Synthetic invoice ready to check'})).toHaveCount(0);
-  await page.setViewportSize({width:390,height:844}); await expect(page.locator('.sf-sidebar')).toBeHidden(); await noHorizontalOverflow(page);
+  await page.setViewportSize({width:390,height:844}); await expect(page.getByRole('navigation', {name: 'Primary navigation', exact: true})).toBeHidden(); await noHorizontalOverflow(page);
   await page.locator('.sf-inbox-row').filter({hasText:'Recorded supplier question'}).first().click();
-  await expect(page.locator('.sf-pipeline-step')).toHaveCount(5); await noHorizontalOverflow(page);
+  await page.getByText('Review checks', {exact: true}).click();
+  await expect(page.locator('.sf-pipeline-step')).toHaveCount(5); await expect(page.locator('.sf-pipeline-step').first()).toBeVisible(); await noHorizontalOverflow(page);
   await capture(page,'docs/qa/redesign-mobile-review.png',false);
-  await page.getByRole('navigation', {name: 'Mobile navigation', exact: true}).getByRole('link',{name:'Connections',exact:true}).click();
+  await page.goto('/connections');
   await noHorizontalOverflow(page); await expect(page.locator('.sf-provider-status').getByText('Not configured',{exact:true})).toHaveCount(2);
   expect(errors).toEqual([]);
 });
@@ -223,6 +245,6 @@ test('the optional operations campus keeps real geometry and clear overlays insi
   await page.getByRole('button', {name: 'Pause scene motion', exact: true}).click();
   await expect(page.getByRole('button', {name: 'Resume scene motion'})).toBeVisible();
   await page.getByRole('link', {name: 'Inbox', exact: true}).click();
-  await expect(page.getByRole('heading', {name: /A little clarity goes a long way/})).toBeVisible();
+  await expect(page.getByRole('heading', {level: 1, name: 'Inbox', exact: true})).toBeVisible();
   expect(errors).toEqual([]);
 });

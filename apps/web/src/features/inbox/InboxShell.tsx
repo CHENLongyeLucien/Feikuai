@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState, type ReactNode} from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import {Activity, ArrowDownLeft, ArrowRight, Bell, Boxes, ChartNoAxesCombined, ChevronDown, FileCheck2, Inbox, Landmark, Leaf, LogOut, PlugZap, Search, Settings2, X} from 'lucide-react';
+import {Activity, ArrowDownLeft, ArrowRight, Bell, Boxes, ChartNoAxesCombined, ChevronDown, FileCheck2, Inbox, Landmark, Leaf, LogOut, Search, Settings2, X} from 'lucide-react';
 import './inbox.css';
 
 export type InboxShellProps = {
@@ -23,7 +23,6 @@ export function InboxShell({children, path, navigate, authenticated, localDemo, 
   ];
   const tools = [
     {url: '/operations', label: 'Operations campus', short: 'Campus', icon: Boxes},
-    {url: '/connections', label: 'Connections', short: 'Connect', icon: PlugZap},
     {url: '/agents', label: 'Agents', short: 'Agents', icon: Activity},
     {url: '/business', label: 'Business overview', short: 'Business', icon: ChartNoAxesCombined},
     {url: '/settings', label: 'Settings', short: 'Settings', icon: Settings2},

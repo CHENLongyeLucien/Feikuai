@@ -70,3 +70,6 @@ h1{font-weight:500;letter-spacing:-1.7px;font-size:clamp(30px,3.3vw,46px);line-h
 @media(min-width:901px) and (max-width:1200px){.sf-campus-view{--campus-scene-height:580px}.sf-campus-view .campus-caption h1{font-size:34px;max-width:450px}.sf-campus-view .campus-caption p{max-width:400px}.sf-campus-view .entity-inspector{max-width:100%}}
 
 .sf-legacy-view .case-workspace{background:var(--sf-glass);border-radius:var(--sf-radius);border-color:#ffffffb8}.sf-legacy-view .case-workspace .button.primary{background:var(--sf-accent);border-color:transparent;color:var(--sf-forest);box-shadow:none}
+
+/* Everyday payment views keep totals compact and the action list in focus. */
+.finance-totals{display:flex;flex-wrap:wrap;gap:12px 28px;margin:0 0 22px;color:var(--sf-muted);font-size:13px}.finance-totals strong{color:var(--sf-ink);font-weight:600;font-variant-numeric:tabular-nums}.finance-page .page-title h1{font-size:32px;letter-spacing:-1px}.agent-constraints summary{cursor:pointer;font-size:13px;min-height:44px;display:flex;align-items:center}.agent-constraints[open] summary{margin-bottom:10px}

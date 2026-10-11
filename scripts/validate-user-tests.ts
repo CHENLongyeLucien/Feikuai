@@ -40,6 +40,20 @@ const registry = JSON.parse(await readFile(resolve(root,'fixtures/trusted-regist
 for (const [folder, extension] of [['invoices','.pdf'],['emails','.eml'],['voice','.txt'],['voice','.wav'],['text','.txt']]) {
   assert.equal((await readdir(resolve(directory,folder!))).filter(file=>file.endsWith(extension!)).length,5,`${folder}: five ${extension} examples`);
 }
+const smallFiles=(await readdir(resolve(directory,'small-payments'))).filter(file=>file.endsWith('.txt'));
+assert.equal(smallFiles.length,20);
+for(const file of smallFiles){
+  const {pages}=await extract(await readFile(resolve(directory,'small-payments',file)),'text/plain');
+  const facts=fixtureIntake(pages),payable=registry.payables.find(row=>row.invoiceReference===facts.invoiceReference);
+  assert.ok(payable,`${file}: trusted payable required`);
+  assert.equal(payable.amountAtomic,'10000000');
+  assert.equal(parseAmount(facts.amountDecimalCandidate!),payable.amountAtomic);
+  assert.equal(facts.supplierReference,payable.supplierKey);
+  assert.deepEqual(facts.missingFields,[]);
+  assert.equal(facts.claimedRecipient,null);
+  assert.equal(file,`${facts.invoiceReference}.txt`);
+}
+console.log('20/20 clean small-payment sources match distinct 10 DEMO trusted records.');
 for (const sample of samples) {
   const bytes = await readFile(resolve(directory,sample.file));
   assert.ok(bytes.length>0 && bytes.length<=10*1024*1024, sample.file);

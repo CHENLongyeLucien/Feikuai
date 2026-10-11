@@ -4,7 +4,7 @@
 
 | Check | Actual result |
 | --- | --- |
-| Source counts | Five invoice PDFs, five EML messages, five voice transcripts, five text messages; five additional WAVs match the transcripts. |
+| Source counts | Five invoice PDFs, five EML messages, five voice transcripts, five text messages; five additional WAVs match the transcripts. Twenty additional clean text invoices each match a separate 10 DEMO payable. |
 | PDF extraction | All five pass the application's bounded PDF.js extractor and fixture invoice-field extraction. Each has one selectable-text page. |
 | Invoice facts | Matching invoice, amount mismatch, missing supplier reference and unknown reference produce the intended comparisons against the committed local registry. |
 | Security rules | Expected security codes match exactly across all 20 source samples. Links use reserved `.invalid` domains. No link was fetched. |
@@ -18,3 +18,7 @@ Audio lengths: support call 13.6 seconds; urgent transfer 13.3 seconds; claimed 
 The initial email fixtures included an explicit `Content-Transfer-Encoding: 8bit` header. The raw-text importer classified its word `Transfer` as financial scope. The final fixtures use valid default 7bit encoding and the routine email now clears the offline rule check. The underlying importer limitation is documented in the guide; application code was not changed.
 
 The reproducible validator is `scripts/validate-user-tests.ts`. It reads only the fixture files and committed public local registry, invokes the existing extraction/classification/security/finance functions and compares expected outcomes. It does not read `.env`, open a database, call an API, contact a model provider, or connect to a chain. Rendered previews and raw logs remain under ignored `var/user-tests-qa/` and `var/user-tests-validation.log`.
+
+## Small-value update
+
+All five invoice PDFs were regenerated with new references at 10 DEMO (11 DEMO only in the intentional amount-mismatch source), rendered, and visually inspected. The 20 clean `small-payments/` files use distinct invoice identities at exactly 10 DEMO. Old workspace records retain their original amounts. Private application checks confirmed registry/database additions are idempotent, and all pre-existing database tables and public registry records were unchanged. No payment was submitted.

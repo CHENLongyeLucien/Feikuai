@@ -3,6 +3,7 @@ import {mkdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {createPublicClient,http,decodeEventLog,type Address,type Hex} from 'viem';
 import {deploymentSchema,paymentGuardAbi,demoTokenAbi,automationGuardAbi} from '../../packages/chain/src/index';
 import {fixtureText} from '../../apps/api/src/db/seed';
+import {formatAmount} from '../../packages/shared/src/index';
 
 test('guided human approval returns its wallet signature across origins and settles the exact registered payable',async({page},testInfo)=>{
  const deployment=deploymentSchema.parse(JSON.parse(readFileSync('var/experience-demo/deployment.json','utf8')));
@@ -18,7 +19,7 @@ test('guided human approval returns its wallet signature across origins and sett
  const casesResponse=await page.request.get('/api/v1/cases');expect(casesResponse.ok()).toBe(true);
  const existingCases=(await casesResponse.json()).cases as Array<{invoiceKey:string}>;
  const usedInvoices=new Set(existingCases.map(entry=>entry.invoiceKey));
- const candidates=registry.payables.filter(entry=>/^BENIGN-/.test(entry.scenarioId)&&!/^BENIGN-0[1-5]$/.test(entry.scenarioId)&&!automation.approvedPayableIds.includes(entry.id)&&!usedInvoices.has(entry.invoiceKey));
+ const candidates=registry.payables.filter(entry=>(/^SMALL-10-/.test(entry.scenarioId)||/^BENIGN-/.test(entry.scenarioId)&&!/^BENIGN-0[1-5]$/.test(entry.scenarioId))&&!automation.approvedPayableIds.includes(entry.id)&&!usedInvoices.has(entry.invoiceKey)).sort((a,b)=>Number(!a.scenarioId.startsWith('SMALL-10-'))-Number(!b.scenarioId.startsWith('SMALL-10-')));
  let payable:typeof registry.payables[number]|undefined;
  for(const candidate of candidates){
   const [consumed,registered]=await Promise.all([
@@ -27,10 +28,15 @@ test('guided human approval returns its wallet signature across origins and sett
   ]);
   if(consumed==='0x'+'0'.repeat(64)&&registered[3]==='0x'+'0'.repeat(64)){payable=candidate;break;}
  }
- if(!payable)throw new Error('No unused benign human-payment fixture remains in the preserved isolated demo. All candidates already have cases, settlements or registered automatic authority. Prepare another reviewed synthetic payable; this test will not reset state or replay a paid invoice.');
- expect(payable.amountAtomic,'The approval scenario must transfer exactly 48,000 DEMO').toBe('48000000000');
- await page.getByRole('button',{name:'Invoice',exact:true}).click();
+ if(!payable)throw new Error('No unused human-payment fixture remains in the preserved isolated demo. All candidates already have cases, settlements or registered automatic authority. Prepare another reviewed synthetic payable; this test will not reset state or replay a paid invoice.');
+ const expectedAmount=BigInt(payable.amountAtomic);
+ expect(expectedAmount,'Use the exact positive amount recorded for this payable').toBeGreaterThan(0n);
+ if(payable.scenarioId.startsWith('SMALL-10-'))expect(expectedAmount,'New small-invoice fixtures must be exactly 10 DEMO').toBe(10_000_000n);
+ await page.getByRole('button',{name:'Add to inbox',exact:true}).click();
  const intake=page.getByRole('dialog');
+ await intake.getByRole('radio',{name:'Invoice',exact:true}).check();
+ await intake.getByRole('button',{name:'Paste text',exact:true}).click();
+ await intake.getByText('Optional details',{exact:true}).click();
  await intake.getByLabel('Title',{exact:false}).fill('Invoice with human payment review');
  await intake.getByLabel('Match to a registered invoice',{exact:false}).selectOption(payable.id);
  await intake.getByRole('textbox',{name:'Source text',exact:false}).fill(fixtureText(payable));
@@ -52,8 +58,9 @@ test('guided human approval returns its wallet signature across origins and sett
  await expect(approval.getByRole('heading',{name:'Exact payment terms',exact:true})).toBeVisible();
  await expect(approval.getByText('Evidence verified',{exact:true})).toBeVisible();
  await expect(approval.locator('.supplier-name')).toHaveText(payable.supplierName);
- await expect(approval.locator('.essential-terms')).toContainText(`${payable.amountAtomic} atomic units`);
+ await expect(approval.locator('.essential-terms')).toContainText(`${formatAmount(payable.amountAtomic)} DEMO`);
  await approval.getByText('All signed fields and payment policy',{exact:true}).click();
+ await expect(approval.locator('.payment-review')).toContainText(payable.amountAtomic);
  await expect(approval.locator('.payment-review')).toContainText(deployment.vault);
  await expect(approval.locator('.payment-review')).toContainText(payable.recipient);
  await approval.getByText('All signed fields and payment policy',{exact:true}).click();
@@ -78,9 +85,9 @@ test('guided human approval returns its wallet signature across origins and sett
  const payment=decoded.find(log=>log.eventName==='PaymentExecuted');expect(payment).toBeTruthy();
  if(payment?.eventName!=='PaymentExecuted')throw new Error('Verified receipt lacks payment event');
  expect(payment.args.invoiceKey).toBe(payable.invoiceKey);expect(payment.args.recipient.toLowerCase()).toBe(payable.recipient);
- expect(payment.args.amountAtomic).toBe(BigInt(payable.amountAtomic));
+ expect(payment.args.amountAtomic).toBe(expectedAmount);
  const after=await rpc.readContract({address:deployment.token,abi:demoTokenAbi,functionName:'balanceOf',args:[payable.recipient]});
- expect(after-before).toBe(BigInt(payable.amountAtomic));
+ expect(after-before).toBe(expectedAmount);
  await page.screenshot({path:'docs/qa/guided-approval-settled.png',fullPage:true});
  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download PDF report',exact:true}).click();
  await (await downloadPromise).saveAs(testInfo.outputPath('guided-payment-report.pdf'));

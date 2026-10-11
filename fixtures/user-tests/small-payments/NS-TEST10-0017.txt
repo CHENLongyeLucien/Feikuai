@@ -1,0 +1,8 @@
+NORTHSTAR LABS — SYNTHETIC TEST INVOICE
+Supplier: Atlas Cloud Services
+Invoice reference: NS-TEST10-0017
+Supplier reference: 0xf7850731316551808eb554d30b038e375c94ffe9908f20916ac6ce5885bb75ad
+Invoice date: 2026-10-11
+Amount: 10.00 DEMO
+Service: Small-value platform engineering test services.
+Terms: Synthetic demonstration data. DEMO has no monetary value.

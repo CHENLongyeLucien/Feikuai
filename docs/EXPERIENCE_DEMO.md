@@ -29,7 +29,7 @@ The five automatic invoices are finite obligations, payable once. The launcher n
 | Internal system | Signed, replay-resistant inbound webhook | Intake-only; a connector cannot approve or pay |
 | Links | Retain evidence and halt for independent verification | No isolated browser/scanner is configured; links are not fetched or declared safe |
 
-Connections reports actual configured availability. Model mode is shown in the stage evidence: the current local demo uses deterministic rules and fixture agents. Existing live intake/finance adapters require `OPENAI_API_KEY` and `OPENAI_MODEL`; audio additionally requires `INBOX_TRANSCRIPTION_MODEL`. Configure credentials privately in the appropriate environment, never through the UI or Git.
+The legacy `/connections` page remains available by direct URL for technical inspection; Connect is no longer in navigation. Model mode is shown in the stage evidence: the current local demo uses deterministic rules and fixture agents. Existing live intake/finance adapters require `OPENAI_API_KEY` and `OPENAI_MODEL`; audio additionally requires `INBOX_TRANSCRIPTION_MODEL`. Configure credentials privately in the appropriate environment, never through the UI or Git.
 
 ## Internal intake connector
 
@@ -55,3 +55,9 @@ The sender signs RFC8785 canonical JSON bytes of the complete envelope with HMAC
 An agent's confidence is never authority. Human payments retain the existing PaymentGuard signature path. Local automatic payments use a separate AutomationGuard with immutable token/owner/executor, allowed suppliers, payment/budget caps and exact obligations registered by the owner. The executor cannot invent recipients or amounts. Durable assignments exclude a second authorization path through the other vault. Before broadcast, current source integrity, checks and chain policy must agree; afterward, settlement requires matching receipt, event, token transfer and consumed commitment.
 
 Automatic execution is deliberately disabled on Fuji. The existing Fuji PaymentGuard deployment and credentials are preserved; this update does not claim a new Fuji payment or redeploy its contracts. Further Fuji use requires a privately configured funded relayer, the actual approver's wallet action, and sufficient testnet AVAX/test token balance. Live provider usage additionally needs API credentials. No passwords, private keys or tokens should be sent in chat.
+
+## Small-value manual payment tests
+
+Use Inbox → Add to inbox → Invoice and upload an unused file from `fixtures/user-tests/small-payments/`. Each trusted test invoice is **10 DEMO**. Start with NS-TEST10-0005 if you have already tried the PDF review scenarios. Follow the review result, open payment review, sign in the independent approval window, then submit the approved payment. A verified receipt confirms payment. Use the next unused invoice for another test.
+
+The added batch is prepared in the existing Fuji, local and saved experience-demo registries/databases. Existing historical invoice amounts, signatures and receipts are preserved. New local demo suggestions select only unused 10-DEMO invoices and require separate wallet approval; previously registered automatic obligations keep their original terms. See `fixtures/user-tests/README.md` for the negative review scenarios and idempotent preparation command.

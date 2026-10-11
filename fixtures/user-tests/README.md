@@ -1,13 +1,13 @@
 # SecureFinance manual test pack
 
-Twenty fictional scenarios: five invoices, five emails, five voice requests and five text requests. Each voice request has both a spoken WAV recording and its matching transcript. All content is synthetic. Email addresses and links use reserved `.invalid` domains.
+Twenty fictional review scenarios, plus twenty clean 10 DEMO invoices for repeated payment tests: five invoices, five emails, five voice requests and five text requests. Each voice request has both a spoken WAV recording and its matching transcript. All content is synthetic. Email addresses and links use reserved `.invalid` domains.
 
 ## Start here
 
 1. Sign in and open **Inbox**.
-2. Choose the matching input button below. Test one file at a time.
-3. Leave the optional title and sender fields unchanged or blank for your first run. Added wording can change the classification.
-4. Click **Add & review**, then inspect the stages and **Your next step**.
+2. Click **Add to inbox**, choose Invoice, Email, Voice or Text, then upload or paste one source.
+3. Leave **Optional details** closed for your first run. Added wording can change the classification.
+4. Click **Add & review**, then follow **Your next step**. Expand **Review checks** when you need the details.
 5. Record your observation in [TEST_CHECKLIST.csv](TEST_CHECKLIST.csv), which opens in a spreadsheet application.
 6. Choose **Download PDF report** if you want to keep the application's review.
 
@@ -26,13 +26,33 @@ For **Voice**, uploading audio without a transcript requires a configured transc
 
 | File | Scenario | Expected initial review |
 | --- | --- | --- |
-| [01-matching-invoice.pdf](invoices/01-matching-invoice.pdf) | Atlas Cloud Services, NS-2026-0050, 48000.00 DEMO | Workflow can clear when the matching payable is available, unpaid and has no unresolved attempt. Payment still needs its separate authorization. |
-| [02-amount-discrepancy.pdf](invoices/02-amount-discrepancy.pdf) | NS-2026-0051 claims 49500.00 DEMO; trusted amount is 48000.00 | Needs review; inspect the exact amount failure. |
-| [03-missing-supplier-reference.pdf](invoices/03-missing-supplier-reference.pdf) | NS-2026-0052 omits the supplier's record identifier | Needs review; required facts and supplier identity cannot be established from the name alone. |
+| [01-matching-invoice.pdf](invoices/01-matching-invoice.pdf) | Atlas Cloud Services, NS-TEST10-0001, 10.00 DEMO | Workflow can clear when the matching payable is available, unpaid and has no unresolved attempt. Payment still needs its separate authorization. |
+| [02-amount-discrepancy.pdf](invoices/02-amount-discrepancy.pdf) | NS-TEST10-0002 claims 11.00 DEMO; trusted amount is 10.00 | Needs review; inspect the exact amount failure. |
+| [03-missing-supplier-reference.pdf](invoices/03-missing-supplier-reference.pdf) | NS-TEST10-0003 omits the supplier's record identifier | Needs review; required facts and supplier identity cannot be established from the name alone. |
 | [04-unregistered-invoice.pdf](invoices/04-unregistered-invoice.pdf) | MANUAL-2026-9001 is absent from the bundled trusted registry | Needs review; no matching trusted payable. Leave the optional invoice selector blank. |
-| [05-changed-payment-details.pdf](invoices/05-changed-payment-details.pdf) | NS-2026-0053 asks to change bank details | Blocked for review; inspect the payment destination change finding. |
+| [05-changed-payment-details.pdf](invoices/05-changed-payment-details.pdf) | NS-TEST10-0004 asks to change bank details | Blocked for review; inspect the payment destination change finding. |
 
 The small supplier reference at the bottom is a public record identifier used by the current invoice extractor. It is not a wallet address, private key or credential. These PDFs contain selectable text and no active content, clickable links or attachments.
+
+## More 10 DEMO payment tests
+
+The `small-payments/` folder contains twenty clean text invoices, **NS-TEST10-0001 through NS-TEST10-0020**, each for **10.00 DEMO**. In **Add to inbox → Invoice**, upload a `.txt` or paste its contents. These workspaces now have matching trusted records: Fuji, original local, and saved experience demo. A fresh installation must prepare the records below first.
+
+Use `NS-TEST10-0005.txt` onward after trying the five PDF scenarios; references 0001–0004 are shared with those scenarios. Each invoice can be paid once. To test another payment, use the next unused reference. Re-uploading a paid invoice does not create a second payment. These small-value invoices use the human approval route; existing standing-policy obligations are unchanged.
+
+The discrepancy PDF deliberately claims **11.00 DEMO** against a **10.00 DEMO** record. It should fail the amount check. The other PDFs show 10.00 DEMO, including the deliberately unregistered invoice.
+
+For another existing workspace, run the preparation script first without `--apply` to inspect the proposed additions, then with `--apply` to save them. Pass that workspace's public registry, deployment and existing database paths. Example for Fuji:
+
+```sh
+node --import tsx scripts/prepare-small-payables.ts \
+  --registry fixtures/trusted-registry.fuji.json \
+  --deployment deployments/fuji.json \
+  --database var/fuji/secure-finance.sqlite \
+  --sources-dir fixtures/user-tests/small-payments --apply
+```
+
+The script adds new identities, backs up existing registry/database privately, rejects conflicts, and does not deploy or pay. Reload the independent approver after its pinned registry changes; rebuild it if serving a production build. Historical invoices keep their original amounts.
 
 ## The five email messages
 
@@ -75,7 +95,7 @@ These expectations use the exact transcripts. A live transcription may produce d
 
 The registered references in this pack exist in the repository's local and Fuji registries. They deliberately avoid the five obligations selected for the local demo's automatic payment policy. Actual results also depend on your workspace records, configured agent mode, previous decisions and payment history. A previously paid invoice cannot become a new payable by uploading it again. Keep existing demonstration records intact.
 
-These are source-review tests. Creating this pack did not import any item, create any trusted payable, sign an approval or submit a payment. In the current Fuji workspace, payment requires the authorized wallet flow. You can stop after inspecting the review and exporting its PDF.
+These are source-review tests. The 10 DEMO update added new trusted payables to the existing workspaces. It did not import an inbox item, sign an approval or submit a payment. In the current Fuji workspace, payment requires the authorized wallet flow. You can stop after inspecting the review and exporting its PDF.
 
 The email importer currently scans raw `.eml` text, including headers. These samples use simple plain-text MIME with default 7bit encoding. Real transport headers such as `Content-Transfer-Encoding` can trigger an extra financial-review finding. This is an existing importer limitation, not proof that an email is malicious. Gmail/Outlook synchronization and isolated URL scanning remain separate implementation work.
 
@@ -83,7 +103,8 @@ The email importer currently scans raw `.eml` text, including headers. These sam
 
 ```text
 fixtures/user-tests/
-  invoices/   5 PDF invoices
+  invoices/   5 PDF review scenarios
+  small-payments/  20 clean text invoices at 10 DEMO each
   emails/     5 EML messages
   voice/      5 transcripts + 5 matching WAV recordings
   text/       5 pasted-text samples

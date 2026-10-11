@@ -69,6 +69,7 @@ for(const size of sizes){
   const item=items.find(value=>value.status==='quarantined'&&value.stages.length===5)||items.find(value=>value.stages.length===5);
   expect(item,'An existing source with five recorded stages is required; no source is submitted by this suite').toBeTruthy();
   await page.goto(`/inbox/${item!.id}`);await expect(page.getByRole('heading',{level:1,name:item!.title,exact:true})).toBeVisible();
+  await page.getByText('Review checks',{exact:true}).click();
   const stages=page.getByRole('group',{name:'Review stages'}).or(page.locator('.sf-pipeline'));
   await expect(stages.locator('.sf-pipeline-step')).toHaveCount(5);
   for(let index=0;index<item!.stages.length;index++){
@@ -76,12 +77,14 @@ for(const size of sizes){
    await expect(page.locator('.sf-stage-detail').getByRole('heading',{name:item!.stages[index]!.name,exact:true})).toBeVisible();await fit(page);
   }
   if(item!.status==='quarantined')await expect(page.getByRole('button',{name:'Approve workflow',exact:true})).toHaveCount(0);
-  const source=page.locator('.sf-source-disclosure');await source.locator('summary').click();
+  const source=page.locator('details').filter({has:page.locator('summary').filter({hasText:'Read original source'})});await source.locator('summary').click();
   await expect(source.locator('pre')).toHaveText(item!.text);await fit(page);await source.locator('summary').click();
   await expect(source).not.toHaveAttribute('open','');
   await page.locator('.sf-pipeline-step').nth(1).click();await capture(page,info,'saved-source-review');
   const saved=await existingCase(page);await page.goto(`/cases/${saved.id}`);
   const workspace=page.getByTestId('case-workspace');await expect(workspace.getByRole('heading',{name:saved.invoiceReference,exact:true})).toBeVisible();
+  await expect(workspace.getByRole('heading',{name:'Verified onchain settlement',exact:true})).toBeVisible();
+  await workspace.getByRole('button',{name:'Source & checks',exact:true}).click();
   await expect(workspace.getByRole('heading',{name:'Review outcome',exact:true})).toBeVisible();
   const original=workspace.locator('details').filter({has:page.locator('summary',{hasText:'Read original source'})});
   await original.locator('summary').click();await expect(original.locator('pre')).toBeVisible();await fit(page);await original.locator('summary').click();
