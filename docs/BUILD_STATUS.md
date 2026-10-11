@@ -1,5 +1,13 @@
 # Secure Finance build status
 
+## Vercel deployment preparation and approval app — 11 October 2026
+
+Created `feikuai-web` and `feikuai-approve` in the authenticated Vercel account. Published the independent Fuji approval app at **https://feikuai-approve.vercel.app**; Vercel reports production deployment `dpl_6MBDtAg3cezP7UfeEaMaQvrZMwui` as **READY**. Its policy/registry pin remains chain 43113 and its trusted workspace origin is the assigned `https://feikuai-web.vercel.app` domain.
+
+The main workspace build is prepared locally but **not deployed**: no hosted API origin is configured or supplied. The existing API uses persistent SQLite and continuous workers, so its prepared Render service (or an equivalent persistent host) must be available before workspace sign-in, uploads and processing can work. The temporary `.invalid` API origin was used only for an unpublished build check. No local API was exposed publicly, and no paid backend was provisioned.
+
+Updated the deployment script to support the existing Vercel CLI login, optional private tokens, pinned CLI 63.1.2, independent app deployment, validated project/origin arguments and restoration of build environment values. Both app builds, TypeScript and scoped ESLint passed. The published approval homepage, deep route and assets return HTTP 200 with security headers. Desktop/mobile browser checks found no JavaScript/CSP errors, no mobile overflow and no writes; screenshots were inspected. Staged approval files contained no configured secret values or forbidden private files. No wallet connection, payment signing or end-to-end payment flow was tested. Existing local environments, database and receipts remain untouched.
+
 ## Track 1 evaluation-grid audit — 11 October 2026
 
 Checked against the official candidate guide (Track 1 grid and deliverables).
