@@ -1,0 +1,23 @@
+From: Sender <sender@example.invalid>
+To: Northstar Accounts Payable <ap@northstar.example.invalid>
+Subject: Email with a ZIP attachment
+Date: Mon, 12 Oct 2026 09:00:00 +0000
+Message-ID: <manual-g2@example.invalid>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="manual-G2"
+
+--manual-G2
+Content-Type: text/plain; charset=utf-8
+
+Hello,
+
+Please see the attached archive with our updated documents.
+
+Regards
+--manual-G2
+Content-Type: application/zip; name="documents.zip"
+Content-Disposition: attachment; filename="documents.zip"
+Content-Transfer-Encoding: base64
+
+UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==
+--manual-G2--

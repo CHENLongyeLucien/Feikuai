@@ -1,0 +1,15 @@
+From: Sender <sender@example.invalid>
+To: Northstar Accounts Payable <ap@northstar.example.invalid>
+Subject: Phishing: mailbox login
+Date: Mon, 12 Oct 2026 09:00:00 +0000
+Message-ID: <manual-e4@example.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Dear user,
+
+Your mailbox storage is almost full and incoming emails are on hold. Click here to verify your account within 24 hours:
+https://m365-mail-verify.top/login
+
+IT Service Desk

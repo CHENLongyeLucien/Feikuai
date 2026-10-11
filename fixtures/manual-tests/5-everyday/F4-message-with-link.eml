@@ -1,0 +1,14 @@
+From: Sender <sender@example.invalid>
+To: Northstar Accounts Payable <ap@northstar.example.invalid>
+Subject: Ordinary message with a link
+Date: Mon, 12 Oct 2026 09:00:00 +0000
+Message-ID: <manual-f4@example.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+Please review https://docs.example.invalid/agenda/42 before our meeting on Thursday.
+
+Thanks
