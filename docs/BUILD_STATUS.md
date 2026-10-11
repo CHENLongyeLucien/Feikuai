@@ -1,5 +1,13 @@
 # Secure Finance build status
 
+## Direct dashboard navigation — 11 October 2026
+
+Removed the More / “…” button and dialog. Each of the nine destinations now appears once in the navigation, including direct access to Agents, Business and Settings. The desktop rail includes short visible labels; Alerts and Agents have distinct names. Removed the extra rail account button while retaining the header account controls. On phones, all links appear below the header in two rows, in normal flow so navigation cannot cover review or payment actions. Short desktop rails scroll, with keyboard focus kept visible.
+
+Validation: **36 focused browser scenarios passed** across Chrome, Firefox and WebKit at 1440×1000, 1024×900, 390×844 and 320×740. They exercise every direct route, the active destination, search, settings and campus preferences. **Nine additional keyboard/layout checks passed** at 1024×500, 768×420 and 760×420, including 44px minimum targets, visible-label/accessibility-name correspondence and short-rail scrolling. The initial WebKit keyboard check expected plain Tab to visit links; the final check uses macOS WebKit's Alt+Tab link-navigation shortcut. Initial and final logs remain under ignored `var/navigation-qa/`. Inspected desktop and narrow-phone screenshots. TypeScript, focused ESLint and the production build passed; existing chunk-size warnings remain.
+
+The preview used a copied demo database, with workers and seeding disabled. Browser checks blocked data mutations other than local demo sign-in. No financial execution or contract suite was rerun. Original environments, saved demo chain/database/receipts and unrelated Fuji work remain unchanged. Updated existing navigation tests and the design guide; legacy inbox assertions were adapted but the full inbox acceptance suite was not rerun for this navigation-only change.
+
 ## Readable PDF reports — 11 October 2026
 
 Replaced everyday report downloads with PDFs in the unified History & reports library, inbox review and payment review. Users can search saved records, read a review and download its PDF with progress and retry feedback. Original evidence exports and offline verification remain available inside a closed Advanced verification section; wallet-signing interchange remains unchanged.

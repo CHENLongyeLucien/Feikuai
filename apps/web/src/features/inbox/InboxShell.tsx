@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState, type ReactNode} from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import {Activity, ArrowDownLeft, ArrowRight, ArrowUpRight, Bell, Boxes, ChartNoAxesCombined, ChevronDown, FileCheck2, Inbox, Landmark, Leaf, LogOut, MoreHorizontal, PlugZap, Search, Settings2, ShieldCheck, X} from 'lucide-react';
+import {Activity, ArrowDownLeft, ArrowRight, Bell, Boxes, ChartNoAxesCombined, ChevronDown, FileCheck2, Inbox, Landmark, Leaf, LogOut, PlugZap, Search, Settings2, X} from 'lucide-react';
 import './inbox.css';
 
 export type InboxShellProps = {
@@ -11,25 +11,26 @@ export type InboxShellProps = {
 };
 
 export function InboxShell({children, path, navigate, authenticated, localDemo, onLogin, onLogout, onSearch, search = '', unreadCount = 0}: InboxShellProps) {
-  const [moreOpen, setMoreOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const accountRef = useRef<HTMLDivElement>(null);
-  const go = (url: string) => {navigate(url); setMoreOpen(false); setAccountOpen(false);};
+  const go = (url: string) => {navigate(url); setAccountOpen(false);};
   const links = [
     {url: '/', label: 'Inbox', short: 'Inbox', icon: Inbox, match: path === '/' || path.startsWith('/inbox')},
     {url: '/workspace', label: 'Payments', short: 'Payments', icon: Landmark, match: path === '/workspace' || path.startsWith('/cases') || path === '/payments'},
-    {url: '/notifications', label: 'Activity', short: 'Activity', icon: Bell, match: path === '/notifications'},
+    {url: '/notifications', label: 'Alerts', short: 'Alerts', icon: Bell, match: path === '/notifications'},
     {url: '/evidence', label: 'History & reports', short: 'Reports', icon: FileCheck2, match: path === '/evidence'},
   ];
   const tools = [
-    {url: '/operations', label: 'Operations campus', icon: Boxes, description: 'Explore the live finance campus'},
-    {url: '/connections', label: 'Connections', icon: PlugZap, description: 'Manage your sources and integrations'},
-    {url: '/agents', label: 'Agent activity', icon: Activity, description: 'See recorded agent work'},
-    {url: '/business', label: 'Business overview', icon: ChartNoAxesCombined, description: 'Review the business assumptions'},
-    {url: '/settings', label: 'Settings', icon: Settings2, description: 'Workspace and technical settings'},
+    {url: '/operations', label: 'Operations campus', short: 'Campus', icon: Boxes},
+    {url: '/connections', label: 'Connections', short: 'Connect', icon: PlugZap},
+    {url: '/agents', label: 'Agents', short: 'Agents', icon: Activity},
+    {url: '/business', label: 'Business overview', short: 'Business', icon: ChartNoAxesCombined},
+    {url: '/settings', label: 'Settings', short: 'Settings', icon: Settings2},
   ];
-  const currentPage = path.startsWith('/inbox/') ? 'Message review' : path.startsWith('/cases/') ? 'Payment review' : links.find(link => link.match)?.label || tools.find(tool => tool.url === path)?.label || 'Workspace';
+  const destinations = [...links, ...tools.map(tool => ({...tool, match: path === tool.url}))];
+  const currentPage = path.startsWith('/inbox/') ? 'Message review' : path.startsWith('/cases/') ? 'Payment review' : destinations.find(link => link.match)?.label || 'Workspace';
+  const navigationLinks = destinations.map(({url, label, short, icon: Icon, match}) => <a key={url} href={url} aria-label={label} title={label} className={match ? 'is-active' : ''} aria-current={match ? 'page' : undefined} onClick={event => {event.preventDefault(); go(url);}}><span className="sf-nav-icon"><Icon size={21} strokeWidth={1.75}/>{url === '/notifications' && unreadCount > 0 && <span className="sf-nav-count" aria-hidden="true">{unreadCount > 99 ? '99+' : unreadCount}</span>}</span><small>{short}</small></a>);
   useEffect(() => {
     if (!accountOpen) return;
     const closeOutside = (event: PointerEvent) => {if (!accountRef.current?.contains(event.target as Node)) setAccountOpen(false);};
@@ -50,12 +51,9 @@ export function InboxShell({children, path, navigate, authenticated, localDemo, 
 
   return <div className="sf-shell">
     <aside className="sf-sidebar sf-floating-rail" aria-label="Workspace navigation">
-      <a className="sf-brand sf-rail-brand" href="/" aria-label="SecureFinance home" onClick={event => {event.preventDefault(); go('/');}}><span className="sf-brand-icon"><Leaf size={27} strokeWidth={1.65}/></span><span className="sf-nav-tooltip" aria-hidden="true">SecureFinance</span></a>
+      <a className="sf-brand sf-rail-brand" href="/" aria-label="SecureFinance home" onClick={event => {event.preventDefault(); go('/');}}><span className="sf-brand-icon"><Leaf size={27} strokeWidth={1.65}/></span></a>
       <span className="sf-rail-divider"/>
-      <nav aria-label="Primary navigation">{links.map(({url, label, icon: Icon, match}) => <a key={url} href={url} aria-label={label} className={match ? 'is-active' : ''} aria-current={match ? 'page' : undefined} onClick={event => {event.preventDefault(); go(url);}}><Icon size={22} strokeWidth={1.65}/><span className="sf-nav-tooltip" aria-hidden="true">{label}</span>{url === '/notifications' && unreadCount > 0 && <span className="sf-nav-count" aria-hidden="true">{unreadCount > 99 ? '99+' : unreadCount}</span>}</a>)}</nav>
-      <span className="sf-rail-divider"/>
-      <nav aria-label="Tools">{tools.slice(0, 2).map(({url, label, icon: Icon}) => <a key={url} href={url} aria-label={label} className={path === url ? 'is-active' : ''} aria-current={path === url ? 'page' : undefined} onClick={event => {event.preventDefault(); go(url);}}><Icon size={22} strokeWidth={1.65}/><span className="sf-nav-tooltip" aria-hidden="true">{label}</span></a>)}<button className={moreOpen ? 'is-active' : ''} aria-label="More workspace tools" aria-haspopup="dialog" onClick={() => setMoreOpen(true)}><MoreHorizontal size={23}/><span className="sf-nav-tooltip" aria-hidden="true">More tools</span></button></nav>
-      <div className="sf-rail-bottom"><a href="/settings" aria-label="Settings" className={path === '/settings' ? 'is-active' : ''} onClick={event => {event.preventDefault(); go('/settings');}}><Settings2 size={21}/><span className="sf-nav-tooltip" aria-hidden="true">Settings</span></a><button className="sf-rail-account" aria-label={authenticated ? 'Open workspace account' : 'Sign in'} onClick={authenticated ? () => go('/settings') : onLogin}>{authenticated ? 'N' : <ArrowDownLeft size={20}/>}<span className="sf-nav-tooltip" aria-hidden="true">{authenticated ? 'Northstar Labs' : 'Sign in'}</span></button></div>
+      <nav aria-label="Primary navigation">{navigationLinks}</nav>
     </aside>
 
     <div className="sf-main">
@@ -67,12 +65,9 @@ export function InboxShell({children, path, navigate, authenticated, localDemo, 
         <button className="sf-icon-btn sf-notification-button" aria-label="View activity" onClick={() => go('/notifications')}><Bell size={21}/>{unreadCount > 0 && <i/>}</button>
         <div className="sf-account" ref={accountRef}><button className="sf-account-button" aria-label={authenticated ? 'Northstar team account' : 'Sign in to your workspace'} aria-expanded={accountOpen} aria-haspopup={authenticated ? 'menu' : undefined} onClick={authenticated ? () => setAccountOpen(!accountOpen) : onLogin}><span className="sf-account-avatar">{authenticated ? 'NL' : <ArrowDownLeft size={19}/>}</span><span>{authenticated ? 'Northstar team' : 'Sign in'}<small>{authenticated ? 'Workspace member' : 'Open your workspace'}</small></span><ChevronDown size={14}/></button>{accountOpen && <div className="sf-account-menu" role="menu"><span>YOUR WORKSPACE</span><button role="menuitem" onClick={() => go('/settings')}><Settings2 size={16}/>Workspace settings</button>{onLogout && <button role="menuitem" onClick={() => {setAccountOpen(false); onLogout();}}><LogOut size={16}/>Sign out</button>}</div>}</div>
       </header>
+      <nav className="sf-mobile-nav" aria-label="Mobile navigation">{navigationLinks}</nav>
       {children}
     </div>
-
-    <nav className="sf-bottom-nav" aria-label="Mobile navigation">{links.slice(0, 4).map(({url, label, short, icon: Icon, match}) => <a key={url} href={url} aria-label={label} className={match ? 'is-active' : ''} aria-current={match ? 'page' : undefined} onClick={event => {event.preventDefault(); go(url);}}><span><Icon size={21} strokeWidth={1.75}/>{url === '/notifications' && unreadCount > 0 && <i/>}</span><small>{short}</small></a>)}<button className={moreOpen ? 'is-active' : ''} onClick={() => setMoreOpen(true)} aria-label="More navigation" aria-haspopup="dialog"><span><MoreHorizontal size={23}/></span><small>More</small></button></nav>
-
-    <Dialog.Root open={moreOpen} onOpenChange={setMoreOpen}><Dialog.Portal><Dialog.Overlay className="sf-more-overlay"/><Dialog.Content className="sf-more-sheet" onCloseAutoFocus={event => {event.preventDefault(); document.querySelector<HTMLButtonElement>(window.matchMedia('(max-width: 760px)').matches ? '.sf-bottom-nav button' : '.sf-floating-rail button[aria-label="More workspace tools"]')?.focus();}}><div className="sf-sheet-handle"/><div className="sf-more-heading"><div><span className="sf-label">NORTHSTAR LABS</span><Dialog.Title>A little more room to explore.</Dialog.Title><Dialog.Description>Your tools, records and workspace settings.</Dialog.Description></div><Dialog.Close className="sf-icon-btn" aria-label="Close navigation"><X size={20}/></Dialog.Close></div><div className="sf-more-links"><a href="/evidence" onClick={event => {event.preventDefault(); go('/evidence');}}><span><FileCheck2 size={21}/></span><div><strong>History &amp; reports</strong><small>Read a review or download its PDF report</small></div><ArrowUpRight size={16}/></a>{tools.map(({url, label, icon: Icon, description}) => <a key={url} href={url} onClick={event => {event.preventDefault(); go(url);}}><span><Icon size={21}/></span><div><strong>{label}</strong><small>{description}</small></div><ArrowUpRight size={16}/></a>)}</div><div className="sf-more-footer"><ShieldCheck size={17}/><span>{localDemo ? 'Synthetic data. No real funds.' : 'Your decisions stay within your approved policy.'}</span></div></Dialog.Content></Dialog.Portal></Dialog.Root>
 
     <Dialog.Root open={searchOpen} onOpenChange={setSearchOpen}><Dialog.Portal><Dialog.Overlay className="sf-dialog-overlay"/><Dialog.Content className="sf-dialog sf-search-dialog"><div className="sf-dialog-heading"><div><span className="sf-label">FIND YOUR NEXT STEP</span><Dialog.Title>Search your workspace</Dialog.Title><Dialog.Description>Search inbox subjects, messages and suppliers.</Dialog.Description></div><Dialog.Close className="sf-icon-btn" aria-label="Close search"><X size={20}/></Dialog.Close></div><form onSubmit={event => {event.preventDefault();setSearchOpen(false);go('/');}}><label className="sf-mobile-search-field"><Search size={21}/><input autoFocus value={search} onChange={event => onSearch?.(event.target.value)} aria-label="Search your workspace" placeholder="What are you looking for?"/></label><button className="sf-btn sf-btn-primary" type="submit">Search inbox<ArrowRight size={17}/></button></form></Dialog.Content></Dialog.Portal></Dialog.Root>
   </div>;

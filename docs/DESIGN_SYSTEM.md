@@ -6,7 +6,7 @@ The October 2026 reference images guide the visual system: sage backgrounds, war
 
 - Shared design tokens in `packages/design/tokens.css` serve the main workspace and the separate approval application. Fonts are self-hosted.
 - Inbox, review stages, notifications, integrations, payments, agents, settings, business assumptions and evidence use the same surfaces, spacing and controls.
-- Desktop navigation uses a narrow floating rail with text tooltips. Mobile navigation keeps Inbox, Payments, Activity and Reports available, with remaining tools in an accessible More dialog.
+- Each destination appears once in the dashboard navigation: Inbox, Payments, Alerts, History & reports, Operations campus, Connections, Agents, Business overview and Settings. Alerts contains user notifications; Agents contains recorded agent work. The desktop rail has visible short labels and scrolls on short screens. On phones, all links sit directly below the header in two rows, in normal flow so they cannot cover page actions. There is no More menu or duplicate account button in the rail.
 - Inbox includes the Needs review filter; there is no separate review landing page. Filter links survive reloads and browser history, and legacy `/review` links open `/?filter=review`.
 - Search supports keyboard focus and a mobile search dialog. Invoice actions on payments and the campus open the actual import dialog; composition links survive sign-in. No financial authority is added by navigation.
 - Payment lists become readable cards on phones. Source details, blockchain references and verification internals stay behind disclosures. Mobile account controls retain explicit accessible names.

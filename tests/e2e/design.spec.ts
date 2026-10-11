@@ -1,6 +1,6 @@
 import {test,expect,chromium,firefox,webkit,type Page,type BrowserContext,type Cookie,type TestInfo} from '@playwright/test';
 import {existsSync,mkdirSync,readFileSync,writeFileSync} from 'node:fs';
-import {join} from 'node:path';
+import {dirname,join} from 'node:path';
 
 const sizes=[{name:'desktop',width:1440,height:1000},{name:'tablet',width:1024,height:900},{name:'mobile',width:390,height:844},{name:'narrow',width:320,height:740}];
 const runId=process.env.SF_DESIGN_RUN_ID||new Date().toISOString();
@@ -15,15 +15,15 @@ async function login(page:Page,path='/'){
  await page.goto(path);await expect(page.getByRole('button',{name:/Northstar team/})).toBeVisible();
 }
 async function noOverflow(page:Page){expect(await page.evaluate(()=>({document:document.documentElement.scrollWidth,viewport:innerWidth}))).toEqual(expect.objectContaining({document:expect.any(Number),viewport:expect.any(Number)}));expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Document should fit without horizontal scrolling').toBe(true);}
-async function more(page:Page){const name=(page.viewportSize()?.width||1440)<=760?'More navigation':'More workspace tools';await page.getByRole('button',{name,exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();return page.getByRole('dialog');}
-async function navigateTool(page:Page,name:string){const dialog=await more(page);await dialog.getByRole('link',{name:new RegExp(`^${name}`)}).click();await expect(dialog).not.toBeVisible();}
+function navigation(page:Page){return page.getByRole('navigation',{name:(page.viewportSize()?.width||1440)<=760?'Mobile navigation':'Primary navigation',exact:true});}
+async function navigateTool(page:Page,name:string){await navigation(page).getByRole('link',{name,exact:true}).click();}
 async function screenshot(page:Page,testInfo:TestInfo,label:string){const directory=join('var/design-qa',testInfo.project.name);mkdirSync(directory,{recursive:true});await page.screenshot({path:join(directory,`${slug(testInfo.title)}-${label}.png`),fullPage:true,animations:'disabled'});}
 async function readOnlyGuard(context:BrowserContext){await context.route('**/api/v1/**',async route=>{const request=route.request(),path=new URL(request.url()).pathname;if(!['GET','HEAD','OPTIONS'].includes(request.method())&&!(request.method()==='POST'&&path==='/api/v1/auth/demo')){blockedWrites.push(`${request.method()} ${path.replace(/[0-9a-f]{8}-[0-9a-f-]{27,}/g,':id')}`);await route.abort('blockedbyclient');return;}await route.continue();});}
 
 test.beforeEach(async({page,context})=>{blockedWrites=[];pageErrors=[];observations={};await readOnlyGuard(context);page.on('pageerror',error=>pageErrors.push(error.name));});
 test.afterEach(async({page},testInfo)=>{
  expect.soft(blockedWrites,'No application data mutation is permitted in design QA').toEqual([]);expect.soft(pageErrors,'No uncaught browser errors').toEqual([]);
- const reportPath='docs/qa/design-results.json';mkdirSync('docs/qa',{recursive:true});let previous:any={runId,results:[]};if(existsSync(reportPath)){const read=JSON.parse(readFileSync(reportPath,'utf8'));if(read.runId===runId)previous=read;}
+ const reportPath=process.env.SF_DESIGN_REPORT_PATH||'docs/qa/design-results.json';mkdirSync(dirname(reportPath),{recursive:true});let previous:any={runId,results:[]};if(existsSync(reportPath)){const read=JSON.parse(readFileSync(reportPath,'utf8'));if(read.runId===runId)previous=read;}
  const result={project:testInfo.project.name,title:testInfo.title,status:testInfo.status,expectedStatus:testInfo.expectedStatus,durationMs:testInfo.duration,viewport:page.viewportSize(),blockedMutationCount:blockedWrites.length,uncaughtErrorTypes:pageErrors,...observations};
  const results=previous.results.filter((old:any)=>old.project!==result.project||old.title!==result.title);results.push(result);
  writeFileSync(reportPath,JSON.stringify({runId,observedAt:new Date().toISOString(),scope:'Read-only interface checks; only local demo sign-in may create a session. No intake, invoice, approval, payment, cancellation or notification writes.',installedBrowsers:installed,unavailableBrowsers:Object.entries(installed).filter(([,available])=>!available).map(([name])=>name),results},null,2)+'\n');
@@ -32,8 +32,15 @@ test.afterEach(async({page},testInfo)=>{
 for(const size of sizes){
  test(`welcome and navigation fit ${size.name} ${size.width}px`,async({page},testInfo)=>{
   await page.setViewportSize(size);await page.goto('/');await expect(page.getByRole('heading',{level:1,name:/A little clarity goes a long way/})).toBeVisible();await expect(page.getByRole('button',{name:'Explore the demo',exact:true})).toBeVisible();await noOverflow(page);
-  const nav=page.getByRole('navigation',{name:size.width<=760?'Mobile navigation':'Primary navigation',exact:true});await expect(nav).toBeVisible();await expect(nav.getByRole('link',{name:'Payments',exact:true})).toBeVisible();
-  const sheet=await more(page);await expect(sheet.getByRole('heading',{name:'A little more room to explore.'})).toBeVisible();await expect(sheet.getByRole('link',{name:/^Operations campus/})).toBeVisible();await noOverflow(page);await screenshot(page,testInfo,'more');await page.keyboard.press('Escape');await expect(sheet).not.toBeVisible();
+  const nav=navigation(page);await expect(nav).toBeVisible();
+  const destinations=[['Inbox','/'],['Payments','/workspace'],['Alerts','/notifications'],['History & reports','/evidence'],['Operations campus','/operations'],['Connections','/connections'],['Agents','/agents'],['Business overview','/business'],['Settings','/settings']];
+  await expect(nav.getByRole('link')).toHaveCount(destinations.length);
+  await expect(page.getByRole('button',{name:/More (navigation|workspace tools)/})).toHaveCount(0);
+  for(const [label,url] of destinations){
+   const link=nav.getByRole('link',{name:label,exact:true});await expect(link).toHaveCount(1);await expect(link).toBeVisible();await expect(link).toHaveAttribute('href',url);
+   await link.click();await expect.poll(()=>new URL(page.url()).pathname).toBe(url);await expect(link).toHaveAttribute('aria-current','page');await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);await noOverflow(page);
+  }
+  await navigateTool(page,'Inbox');await page.evaluate(()=>window.scrollTo(0,0));
   await screenshot(page,testInfo,'welcome');
  });
  test(`workspace search works at ${size.name} ${size.width}px`,async({page},testInfo)=>{

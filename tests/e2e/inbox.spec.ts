@@ -41,11 +41,10 @@ test('inbox is the welcoming default, local demo needs no wallet, and navigation
   mkdirSync('docs/qa', {recursive: true});
   await capture(page, 'docs/qa/redesign-welcome.png');
   await page.setViewportSize({width: 390, height: 844});
-  await expect.poll(async () => {const box=await page.locator('.sf-sidebar').boundingBox();return box!.x+box!.width;}).toBeLessThanOrEqual(0);
+  await expect(page.locator('.sf-sidebar')).toBeHidden();
   await noHorizontalOverflow(page);
   await capture(page, 'docs/qa/redesign-mobile.png', false);
-  await page.getByRole('button', {name: 'Open navigation'}).click();
-  await page.getByRole('link', {name: 'Connections', exact: true}).click();
+  await page.getByRole('navigation', {name: 'Mobile navigation', exact: true}).getByRole('link', {name: 'Connections', exact: true}).click();
   await expect(page.getByRole('heading', {name: /Your sources/})).toBeVisible();
   await expect(page.getByText('Sign in to check', {exact: true}).first()).toBeVisible();
   await expect(page.getByRole('button', {name: /^Connect(?: Gmail| Outlook)?$/})).toHaveCount(0);
@@ -190,11 +189,11 @@ test('populated inbox, review and connections stay readable on desktop and mobil
   await page.getByRole('button', {name:'Needs review',exact:true}).click();
   await expect(page.getByRole('button', {name:'Needs review',exact:true})).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('.sf-inbox-row').filter({hasText:'Synthetic invoice ready to check'})).toHaveCount(0);
-  await page.setViewportSize({width:390,height:844}); await expect.poll(async () => {const box=await page.locator('.sf-sidebar').boundingBox();return box!.x+box!.width;}).toBeLessThanOrEqual(0); await noHorizontalOverflow(page);
+  await page.setViewportSize({width:390,height:844}); await expect(page.locator('.sf-sidebar')).toBeHidden(); await noHorizontalOverflow(page);
   await page.locator('.sf-inbox-row').filter({hasText:'Recorded supplier question'}).first().click();
   await expect(page.locator('.sf-pipeline-step')).toHaveCount(5); await noHorizontalOverflow(page);
   await capture(page,'docs/qa/redesign-mobile-review.png',false);
-  await page.getByRole('button', {name:'Open navigation'}).click(); await page.getByRole('link',{name:'Connections',exact:true}).click();
+  await page.getByRole('navigation', {name: 'Mobile navigation', exact: true}).getByRole('link',{name:'Connections',exact:true}).click();
   await noHorizontalOverflow(page); await expect(page.locator('.sf-provider-status').getByText('Not configured',{exact:true})).toHaveCount(2);
   expect(errors).toEqual([]);
 });
