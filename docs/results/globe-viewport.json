@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-11",
+  "scope": "Fullscreen landing globe zoom; synthetic read-only UI fixtures; no payment or runtime configuration changes",
+  "browser": {
+    "passed": 33,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "engines": [
+      "Chrome",
+      "Firefox",
+      "WebKit"
+    ],
+    "overview_widths": [
+      1440,
+      1024,
+      390,
+      320
+    ],
+    "fullscreen_widths": [
+      1440,
+      390
+    ],
+    "retries": 0
+  },
+  "checks": {
+    "typecheck": "PASS",
+    "scoped_eslint": "PASS",
+    "production_build": "PASS",
+    "build_warning": "Existing approver chunk exceeds 500 kB"
+  },
+  "regressions": [
+    "Viewport-sized canvas during manual zoom and Start",
+    "Further zoom remains inward after mobile fullscreen resize",
+    "Close zoom survives viewport resize",
+    "Escape, Reset and Cancel restore overview and page scrolling",
+    "Existing reduced motion, WebGL fallback and stale/offline activity behavior"
+  ],
+  "earlier_runs": [
+    {
+      "passed": 32,
+      "failed": 1,
+      "cause": "Canvas resize measurement delay; CSS canvas dimensions now follow the viewport immediately and manual resize checks allow renderer update time"
+    },
+    {
+      "passed": 30,
+      "failed": 3,
+      "cause": "Portrait fullscreen refit reversed mobile zoom; preserve absolute camera distance while expanded"
+    }
+  ],
+  "limitations": [
+    "Browser viewport checks, not physical-device performance measurements",
+    "Public activity is intercepted with synthetic fixtures; no new live network observation claimed"
+  ],
+  "preserved": [
+    "Existing environment files, saved demo database, Anvil state and receipts",
+    "Unrelated local Fuji deployment files and script edits"
+  ]
+}

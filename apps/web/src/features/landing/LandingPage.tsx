@@ -1,6 +1,6 @@
 import {Component,lazy,Suspense,useCallback,useEffect,useRef,useState,type ReactNode} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import {ArrowDown,ArrowRight,ArrowUpRight,Check,ChevronLeft,ChevronRight,Globe2,Leaf,Pause,Play,RefreshCw,RotateCcw} from 'lucide-react';
+import {ArrowDown,ArrowRight,ArrowUpRight,Check,ChevronLeft,ChevronRight,Globe2,Leaf,Minus,Pause,Play,Plus,RefreshCw,RotateCcw} from 'lucide-react';
 import type {NetworkActivity} from '@secure-finance/shared';
 import {request} from '../../app/api';
 import {useUI} from '../../app/store';
@@ -28,18 +28,20 @@ function clockTime(timestamp:string){const date=new Date(timestamp);return Numbe
 export default function LandingPage({onStart}:{onStart:()=>void}){
   const reduced=useUI(state=>state.reduced),paused=useUI(state=>state.paused),setPaused=useUI(state=>state.setPaused);
   const [failed,setFailed]=useState(webglUnavailable),[entering,setEntering]=useState(false),[highlight,setHighlight]=useState<string|null>(null);
+  const [expanded,setExpanded]=useState(false);
   const [command,setCommand]=useState<GlobeCommand>({kind:'reset',nonce:0});
   const [clientNow,setClientNow]=useState(Date.now),[online,setOnline]=useState(()=>navigator.onLine);
   const timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),entryLock=useRef(false),globeRegion=useRef<HTMLDivElement>(null);
-  const fail=useCallback(()=>setFailed(true),[]);
+  const fail=useCallback(()=>{setFailed(true);setExpanded(false);},[]);
+  const expand=useCallback(()=>setExpanded(true),[]);
   const network=useQuery({queryKey:['public-network-activity'],queryFn:({signal})=>request<NetworkActivity>('/network/activity',{signal}),retry:1,refetchInterval:query=>Math.max(10000,query.state.data?.nextRefreshAfterMs??10000),refetchIntervalInBackground:false});
   const data=network.data,transactions=data?.transactions??[];
   const clientAge=typeof data?.ageMs==='number'?data.ageMs+Math.max(0,clientNow-network.dataUpdatedAt):Infinity;
   const fresh=!!data&&data.status==='fresh'&&!network.isError&&online&&clientAge<=30000;
   const stale=!!data&&!fresh&&!!data.fetchedAt;
   const stateLabel=fresh?'Live network':stale?'Last recorded activity':network.isPending?'Connecting to network':'Network unavailable';
-  const turn=(kind:GlobeCommand['kind'])=>setCommand(current=>({kind,nonce:current.nonce+1}));
-  const cancel=useCallback(()=>{clearTimeout(timer.current);entryLock.current=false;setEntering(false);setCommand(current=>({kind:'reset',nonce:current.nonce+1}));},[]);
+  const turn=(kind:GlobeCommand['kind'])=>{if(kind==='reset')setExpanded(false);setCommand(current=>({kind,nonce:current.nonce+1}));};
+  const cancel=useCallback(()=>{clearTimeout(timer.current);entryLock.current=false;setEntering(false);setExpanded(false);setCommand(current=>({kind:'reset',nonce:current.nonce+1}));globeRegion.current?.focus({preventScroll:true});},[]);
   useEffect(()=>()=>clearTimeout(timer.current),[]);
   useEffect(()=>{
     const update=()=>{setClientNow(Date.now());setOnline(navigator.onLine);};
@@ -47,7 +49,7 @@ export default function LandingPage({onStart}:{onStart:()=>void}){
     document.addEventListener('visibilitychange',update);window.addEventListener('online',update);window.addEventListener('offline',update);
     return()=>{clearInterval(tick);document.removeEventListener('visibilitychange',update);window.removeEventListener('online',update);window.removeEventListener('offline',update);};
   },[]);
-  useEffect(()=>{if(!entering)return;const escape=(event:KeyboardEvent)=>{if(event.key==='Escape')cancel();};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape);},[entering,cancel]);
+  useEffect(()=>{if(!entering&&!expanded)return;const escape=(event:KeyboardEvent)=>{if(event.key==='Escape')cancel();};window.addEventListener('keydown',escape);const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{window.removeEventListener('keydown',escape);document.body.style.overflow=previous;};},[entering,expanded,cancel]);
   const start=()=>{
     if(entryLock.current)return;
     entryLock.current=true;
@@ -56,7 +58,7 @@ export default function LandingPage({onStart}:{onStart:()=>void}){
   };
   const currentHashes=transactions.slice(0,7).map(transaction=>transaction.hash);
 
-  return <main className={`sg-landing ${entering?'sg-entering':''}`} data-testid="landing-page" data-network-state={fresh?'fresh':stale?'stale':'unavailable'}>
+  return <main className={`sg-landing ${expanded?'sg-expanded':''} ${entering?'sg-entering':''}`} data-testid="landing-page" data-expanded={expanded} data-network-state={fresh?'fresh':stale?'stale':'unavailable'}>
     <header className="sg-header">
       <a className="sg-brand" href="/" aria-label="SecureFinance home"><span><Leaf size={23} strokeWidth={1.6}/></span>SecureFinance</a>
       <span className="sg-header-note">A wider view. A clearer decision.</span>
@@ -68,17 +70,18 @@ export default function LandingPage({onStart}:{onStart:()=>void}){
         <p className="sg-eyebrow"><span/>FINANCE, IN PERSPECTIVE</p>
         <h1 id="landing-title">Every payment.<br/>A clearer<br/><em>picture.</em></h1>
         <p className="sg-introduction">Bring the message, the checks and the decision into one calm workspace.</p>
-        <div className="sg-start-group"><button className="sg-start" onClick={start} disabled={entering} data-testid="landing-start"><span>{entering?'Opening workspace':'Start'}</span><span className="sg-start-arrow"><ArrowUpRight size={23} strokeWidth={1.6}/></span></button>{entering?<button className="sg-cancel" onClick={cancel}>Cancel</button>:<span className="sg-start-note">Your workspace starts here.</span>}</div>
+        <div className="sg-start-group"><button className="sg-start" onClick={start} disabled={entering} data-testid="landing-start"><span>{entering?'Opening workspace':'Start'}</span><span className="sg-start-arrow"><ArrowUpRight size={23} strokeWidth={1.6}/></span></button><span className="sg-start-note">Your workspace starts here.</span></div>
         <div className="sg-promise"><span><Check size={13}/>Understand the source</span><span><Check size={13}/>Keep the decision</span></div>
       </div>
 
       <div className="sg-world">
         <div className="sg-world-coordinate" aria-hidden="true"><span>GLOBAL CONTEXT</span><span>DRAG TO ROTATE</span></div>
-        <div ref={globeRegion} className="sg-globe-region" role="group" tabIndex={0} aria-label="Interactive Earth. Drag to rotate, or use the arrow keys. Home resets the view." onKeyDown={event=>{if(entering)return;const keys:Record<string,GlobeCommand['kind']>={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',Home:'reset'};const action=keys[event.key];if(action){event.preventDefault();turn(action);}}}>
+        <div ref={globeRegion} className="sg-globe-region" role="group" tabIndex={0} aria-label="Interactive Earth. Drag to rotate, or use the arrow keys. Plus and minus zoom. Home or Escape returns to the overview." onKeyDown={event=>{if(entering)return;const keys:Record<string,GlobeCommand['kind']>={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down','+':'in','=':'in','-':'out',Home:'reset'};const action=keys[event.key];if(action){event.preventDefault();turn(action);}}}>
           <div className="sg-earth-shadow"/>
-          {failed?<div className="sg-globe-fallback" data-testid="globe-fallback"><Globe2 size={100} strokeWidth={.5}/><p>Interactive globe unavailable</p></div>:<GlobeBoundary onFailure={fail}><Suspense fallback={<div className="sg-globe-loading"><Globe2 size={42} strokeWidth={.7}/><span>Opening the world…</span></div>}><GlobeCanvas hashes={currentHashes} activityLive={fresh} highlight={highlight} paused={paused} reduced={reduced} entering={entering} command={command} onFailure={fail}/></Suspense></GlobeBoundary>}
+          {failed?<div className="sg-globe-fallback" data-testid="globe-fallback"><Globe2 size={100} strokeWidth={.5}/><p>Interactive globe unavailable</p></div>:<GlobeBoundary onFailure={fail}><Suspense fallback={<div className="sg-globe-loading"><Globe2 size={42} strokeWidth={.7}/><span>Opening the world…</span></div>}><GlobeCanvas hashes={currentHashes} activityLive={fresh} highlight={highlight} paused={paused} reduced={reduced} entering={entering} expanded={expanded} command={command} onFailure={fail} onZoomIn={expand}/></Suspense></GlobeBoundary>}
         </div>
         <div className="sg-globe-controls" aria-label="Globe controls">
+          <button aria-label="Zoom in on globe" title="Zoom in" disabled={failed||entering} onClick={()=>turn('in')}><Plus size={17}/></button><button aria-label="Zoom out of globe" title="Zoom out" disabled={failed||entering} onClick={()=>turn('out')}><Minus size={17}/></button>
           <span>Drag to explore</span><button aria-label="Rotate globe left" title="Rotate left" disabled={failed||entering} onClick={()=>turn('left')}><ChevronLeft size={17}/></button><button aria-label="Rotate globe right" title="Rotate right" disabled={failed||entering} onClick={()=>turn('right')}><ChevronRight size={17}/></button><button aria-label="Reset globe view" title="Reset view" disabled={failed||entering} onClick={()=>turn('reset')}><RotateCcw size={15}/></button><i/><button aria-label={reduced?'Globe motion reduced in Settings':paused?'Resume globe motion':'Pause globe motion'} title={reduced?'Reduced motion enabled':paused?'Resume motion':'Pause motion'} disabled={reduced||failed||entering} onClick={()=>setPaused(!paused)}>{paused&&!reduced?<Play size={15}/>:<Pause size={15}/>}</button>
         </div>
       </div>
@@ -95,6 +98,9 @@ export default function LandingPage({onStart}:{onStart:()=>void}){
         <p className="sg-activity-disclaimer">Block inclusion only. <br/>Transaction outcomes are not checked.</p>
       </aside>
     </section>
+
+    {expanded&&!entering&&<div className="sg-explore-actions"><button className="sg-overview" onClick={cancel}><ChevronLeft size={16}/>Overview</button><button className="sg-explore-start" onClick={start}>Start<ArrowUpRight size={17}/></button></div>}
+    {entering&&<button className="sg-entry-cancel" onClick={cancel}>Cancel</button>}
 
     <footer className="sg-footer"><div className="sg-footer-story"><span className="sg-footer-icon"><Globe2 size={19} strokeWidth={1.4}/></span><p>A live network.<br/><strong>A deliberate decision.</strong></p></div><p className="sg-placement-note">Arcs illustrate real transaction records. <br/>Positions are illustrative, never sender locations.</p><p className="sg-workspace-note">Public mainnet activity is separate from <br/>your synthetic, test-token workspace.</p></footer>
     {entering&&<div className="sg-entry-wash" aria-hidden="true"/>}

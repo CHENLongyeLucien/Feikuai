@@ -2,6 +2,8 @@
 
 The opening page at `/` shows a geographic Earth with a read-only public Avalanche **C-Chain** activity sample. **Start** moves the camera toward Earth and opens `/workflow`. Reduced motion, paused animation, or unavailable WebGL enters immediately. Escape or Cancel stops the transition.
 
+Zooming with the wheel, pinch gesture or **+** expands Earth across the full viewport. Drag to explore and use **−** to zoom out. **Overview**, **Reset**, **Home** or **Escape** restores the landing layout. **Start** also uses the full viewport for its zoom transition. On phones, page scrolling resumes when you return to the overview.
+
 ## Everyday use
 
 1. Press **Start**, then sign in. The isolated local demonstration offers **Explore the demo**; Fuji uses an enrolled wallet for login.

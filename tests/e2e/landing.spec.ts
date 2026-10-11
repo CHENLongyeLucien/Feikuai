@@ -16,6 +16,7 @@ async function open(page:Page,status:'fresh'|'stale'|'unavailable'='fresh'){
 }
 async function state(page:Page){return JSON.parse(await page.getByTestId('landing-globe').locator('canvas').getAttribute('data-globe')||'{}') as {frame:number;drawCalls:number;rotation:number[];distance:number;transactionCount:number;arcMotion:boolean};}
 async function rendered(page:Page){await expect.poll(async()=>(await state(page)).drawCalls||0).toBeGreaterThan(2);}
+async function fillsViewport(page:Page,timeout=3000){await expect.poll(async()=>{const box=await page.getByTestId('landing-globe').locator('canvas').boundingBox(),viewport=page.viewportSize()!;return !!box&&Math.abs(box.x)<2&&Math.abs(box.y)<2&&Math.abs(box.width-viewport.width)<2&&Math.abs(box.height-viewport.height)<2;},{intervals:[30,50,100],timeout}).toBe(true);}
 async function capture(page:Page,info:TestInfo,name:string){
  const fit=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:innerWidth}));expect(fit.scroll).toBeLessThanOrEqual(fit.width+1);
  await page.evaluate(()=>{const marker=document.createElement('div');marker.textContent='UI QA · synthetic RPC fixture';marker.style.cssText='position:fixed;right:12px;bottom:10px;z-index:1000;padding:5px 8px;background:#ffffffd9;color:#657769;font:9px sans-serif;border-radius:4px;pointer-events:none';document.body.append(marker);});
@@ -35,10 +36,34 @@ test('keyboard rotation, reset, pause and cancellable Start use the actual globe
  await expect.poll(async()=>(await state(page)).rotation[1]).toBeGreaterThan(before.rotation[1]!+.1);
  await page.getByRole('button',{name:'Reset globe view'}).click();await expect.poll(async()=>Math.abs((await state(page)).rotation[1]!-.42)).toBeLessThan(.02);
  await page.getByRole('button',{name:'Resume globe motion'}).click();const distance=(await state(page)).distance;
- await page.getByRole('button',{name:'Start',exact:true}).click();await expect.poll(async()=>(await state(page)).distance,{intervals:[40,70,100],timeout:900}).toBeLessThan(distance-.2);
+ await page.getByRole('button',{name:'Start',exact:true}).click();await fillsViewport(page,900);await expect.poll(async()=>(await state(page)).distance,{intervals:[40,70,100],timeout:900}).toBeLessThan(distance-.2);
  await page.getByRole('button',{name:'Cancel',exact:true}).click();await expect(page.getByRole('button',{name:'Start',exact:true})).toBeEnabled();await expect.poll(async()=>(await state(page)).distance).toBeGreaterThan(distance-.1);
  await page.waitForTimeout(1150);expect(new URL(page.url()).pathname).toBe('/');
  await capture(page,info,'cancelled-entry-qa-fixture');await page.getByRole('button',{name:'Start',exact:true}).click();await expect(page).toHaveURL(/\/workflow$/);await expect(page.getByRole('heading',{name:'One clear path.'})).toBeVisible();
+});
+for(const size of [{name:'desktop',width:1440,height:1000},{name:'mobile',width:390,height:844}])test(`manual globe zoom fills the viewport and returns to overview ${size.name}`,async({page},info)=>{
+ await page.setViewportSize(size);await open(page);await rendered(page);
+ const canvas=page.getByTestId('landing-globe').locator('canvas'),landing=page.getByTestId('landing-page');
+ await canvas.scrollIntoViewIfNeeded();const scroll=await page.evaluate(()=>scrollY);const box=(await canvas.boundingBox())!;
+ await page.mouse.move(box.x+box.width*.48,box.y+box.height*.43);await page.mouse.wheel(0,-650);
+ await expect(landing).toHaveAttribute('data-expanded','true');await fillsViewport(page);
+ const distance=(await state(page)).distance;
+ await page.mouse.move(size.width*.45,size.height*.5);await page.mouse.wheel(0,-650);
+ await expect.poll(async()=>(await state(page)).distance).toBeLessThan(distance-.2);
+ for(let zoom=0;zoom<8;zoom++)await page.getByRole('button',{name:'Zoom in on globe',exact:true}).click();
+ await expect.poll(async()=>(await state(page)).distance).toBeLessThan(3.2);await fillsViewport(page);
+ const directory=join('var/landing-qa',info.project.name);mkdirSync(directory,{recursive:true});await page.screenshot({path:join(directory,`${size.name}-fullscreen-zoom-qa-fixture.png`)});
+ await page.setViewportSize({width:size.width+40,height:size.height-30});await fillsViewport(page);
+ await expect.poll(async()=>(await state(page)).distance).toBeLessThan(4);
+ await page.setViewportSize(size);await fillsViewport(page);
+ await page.keyboard.press('Escape');await expect(landing).toHaveAttribute('data-expanded','false');
+ await expect.poll(async()=>await page.evaluate(()=>document.body.style.overflow)).not.toBe('hidden');expect(Math.abs((await page.evaluate(()=>scrollY))-scroll)).toBeLessThan(2);
+ await expect.poll(async()=>Math.round((await canvas.boundingBox())?.width||0)).not.toBe(size.width);
+ await page.getByRole('button',{name:'Zoom in on globe',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','true');await fillsViewport(page);
+ await page.getByRole('button',{name:'Reset globe view',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','false');
+ await page.getByRole('button',{name:'Zoom in on globe',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','true');
+ await page.getByRole('button',{name:'Start',exact:true}).click();await fillsViewport(page,900);await page.getByRole('button',{name:'Cancel',exact:true}).click();await expect(landing).toHaveAttribute('data-expanded','false');
+ await page.waitForTimeout(1150);expect(new URL(page.url()).pathname).toBe('/');
 });
 test('reduced motion enters directly and pauses automatic globe motion',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await open(page);await rendered(page);await expect(page.getByRole('button',{name:'Globe motion reduced in Settings'})).toBeDisabled();

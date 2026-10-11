@@ -1,5 +1,15 @@
 # Secure Finance build status
 
+## Fullscreen globe zoom — 11 October 2026
+
+Zooming now expands the existing globe renderer to the full viewport instead of clipping it inside the hero column. Wheel/pinch and the new +/− controls support exploration; Overview, Reset, Home and Escape restore the landing layout. Start uses the same full viewport for its cancellable camera transition. Background content is hidden while exploring, and page scrolling is restored afterward. Camera distance and orbit survive fullscreen resizing, including the landscape-to-portrait change on phones.
+
+Actual validation: **33/33 browser checks passed** without retries across Chrome, Firefox and WebKit. Checks cover 1440/1024/390/320px overview layouts, desktop/phone fullscreen bounds, continued inward zoom, close zoom through resizing, reset/escape/cancel, Start navigation, reduced motion, WebGL fallback and stale/offline feeds. No uncaught browser errors or prohibited application writes were recorded. TypeScript, scoped ESLint and production build pass; the existing approver chunk-size warning remains. Desktop and phone screenshots were visually inspected. See [results](results/globe-viewport.json) and [browser output](results/globe-viewport-browser.log).
+
+Earlier full runs passed 32/33 and 30/33. The first caught a canvas resize timing mismatch, corrected with CSS canvas dimensions and an appropriate renderer-resize wait. The second exposed a genuine mobile zoom reversal: refitting a portrait viewport moved the camera outward. Fullscreen now preserves camera distance, and the second-wheel regression remains in the final passing suite. Nine focused interaction checks also passed after the correction.
+
+Browser checks use intercepted synthetic activity fixtures and block application writes. These are browser viewport checks, not physical-device performance measurements or new live network/payment verification. Existing environments, saved demo state and unrelated Fuji deployment changes were preserved. Raw QA data remains in ignored `var/globe-viewport-qa/` and `var/landing-qa/`.
+
 ## AgentGuard proposal integration — 11 October 2026
 
 Read the complete supplied `AgentGuard_Solutions_FR.md`, retained an unchanged reference copy and added an [implementation/activation guide](AGENTGUARD.md). Its claims are treated as proposals, not proof of active controls. Added compact payment-authority/provenance details to the unified workflow and reviewer-requested PDF incident drafts. The authenticated, tenant-scoped API separates current authority, recorded checks, source-origin uncertainty and verified receipt observations. Drafts preserve unknown impact facts, validate reporting chronology and source version, and perform no database writes, contract actions, external messaging or regulatory submissions. No extra navigation section was added.

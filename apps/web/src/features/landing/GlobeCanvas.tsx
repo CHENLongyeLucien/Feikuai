@@ -1,11 +1,11 @@
-import {useEffect,useMemo,useRef} from 'react';
+import {useEffect,useLayoutEffect,useMemo,useRef} from 'react';
 import {Canvas,useFrame,useThree} from '@react-three/fiber';
 import {OrbitControls} from '@react-three/drei';
 import {BackSide,DoubleSide,Group,Mesh,PerspectiveCamera,TubeGeometry,Vector3} from 'three';
 import {createLandGeometry,illustrativeRoute} from './globe-geometry';
 
-export type GlobeCommand={kind:'left'|'right'|'up'|'down'|'reset';nonce:number};
-type Props={hashes:string[];activityLive:boolean;highlight:string|null;paused:boolean;reduced:boolean;entering:boolean;command:GlobeCommand;onFailure:()=>void};
+export type GlobeCommand={kind:'left'|'right'|'up'|'down'|'in'|'out'|'reset';nonce:number};
+type Props={hashes:string[];activityLive:boolean;highlight:string|null;paused:boolean;reduced:boolean;entering:boolean;expanded:boolean;command:GlobeCommand;onFailure:()=>void;onZoomIn:()=>void};
 
 function ActivityArc({hash,highlighted,moving}:{hash:string;highlighted:boolean;moving:boolean}){
   const pulse=useRef<Mesh>(null),progress=useRef((parseInt(hash.slice(-4),16)%100)/100);
@@ -30,8 +30,9 @@ function ActivityArc({hash,highlighted,moving}:{hash:string;highlighted:boolean;
   </group>;
 }
 
-function GlobeScene({hashes,activityLive,highlight,paused,reduced,entering,command,onFailure}:Props){
+function GlobeScene({hashes,activityLive,highlight,paused,reduced,entering,expanded,command,onFailure,onZoomIn}:Props){
   const planet=useRef<Group>(null),frames=useRef(0),entryTime=useRef(0),entryDistance=useRef(8.5);
+  const fittedDistance=useRef<number|null>(null);
   const {camera,size,gl,invalidate}=useThree();
   const land=useMemo(createLandGeometry,[]);
   const moving=!paused&&!reduced;
@@ -40,14 +41,24 @@ function GlobeScene({hashes,activityLive,highlight,paused,reduced,entering,comma
     return 2.72/Math.sin(Math.atan(Math.tan(fov/2)*Math.min(1,aspect)));
   },[size.width,size.height]);
   useEffect(()=>()=>land.dispose(),[land]);
-  useEffect(()=>{camera.position.set(0,0,cameraDistance);camera.lookAt(0,0,0);camera.updateProjectionMatrix();invalidate();},[camera,cameraDistance,invalidate]);
+  useLayoutEffect(()=>{
+    const previous=fittedDistance.current;
+    // Fit the overview responsively; fullscreen exploration keeps the user's
+    // camera distance even when a landscape canvas becomes a portrait viewport.
+    if(!entering&&!expanded){
+      if(previous)camera.position.setLength(Math.max(3.05,camera.position.length()*cameraDistance/previous));
+      else camera.position.set(0,0,cameraDistance);
+    }
+    fittedDistance.current=cameraDistance;camera.lookAt(0,0,0);camera.updateProjectionMatrix();invalidate();
+  },[camera,cameraDistance,entering,expanded,invalidate]);
   useEffect(()=>{
     if(!planet.current)return;
-    if(command.kind==='reset'){planet.current.rotation.set(0,.42,-.14);camera.position.set(0,0,cameraDistance);camera.lookAt(0,0,0);}
+    if(command.kind==='reset'){planet.current.rotation.set(0,.42,-.14);camera.position.set(0,0,fittedDistance.current??8.8);camera.lookAt(0,0,0);}
+    else if(command.kind==='in'||command.kind==='out'){camera.position.setLength(Math.max(3.05,Math.min((fittedDistance.current??8.8)*1.7,camera.position.length()*(command.kind==='in'?.8:1.25))));}
     else if(command.kind==='left'||command.kind==='right')planet.current.rotation.y+=(command.kind==='left'?-1:1)*.3;
     else planet.current.rotation.x+=(command.kind==='up'?-1:1)*.2;
     invalidate();
-  },[command,camera,cameraDistance,invalidate]);
+  },[command,camera,invalidate]);
   useEffect(()=>{if(entering){entryTime.current=0;entryDistance.current=camera.position.length();}invalidate();},[entering,camera,invalidate]);
   useEffect(()=>{
     const canvas=gl.domElement;
@@ -63,7 +74,7 @@ function GlobeScene({hashes,activityLive,highlight,paused,reduced,entering,comma
       if(entering){
         entryTime.current=Math.min(1,entryTime.current+Math.min(delta,.05)/.95);
         const ease=entryTime.current*entryTime.current*(3-2*entryTime.current);
-        camera.position.setLength(entryDistance.current+(2.15-entryDistance.current)*ease);
+        camera.position.setLength(entryDistance.current+(2.62-entryDistance.current)*ease);
         invalidate();
       }else if(moving){planet.current.rotation.y+=Math.min(delta,.05)*.023;invalidate();}
     }
@@ -78,7 +89,7 @@ function GlobeScene({hashes,activityLive,highlight,paused,reduced,entering,comma
       <mesh><sphereGeometry args={[2.559,72,48]}/><meshBasicMaterial color="#e8f6ed" side={BackSide} transparent opacity={.16} depthWrite={false}/></mesh>
       {hashes.map(hash=><ActivityArc key={hash} hash={hash} highlighted={highlight===hash} moving={moving&&activityLive&&!entering}/>) }
     </group>
-    <OrbitControls makeDefault enabled={!entering} enablePan={false} enableDamping={moving} dampingFactor={.09} rotateSpeed={.65} minDistance={3.6} maxDistance={cameraDistance*1.7} minPolarAngle={.15} maxPolarAngle={Math.PI-.15}/>
+    <OrbitControls makeDefault enabled={!entering} enablePan={false} enableDamping={moving} dampingFactor={.09} rotateSpeed={.65} minDistance={3.05} maxDistance={cameraDistance*1.7} minPolarAngle={.15} maxPolarAngle={Math.PI-.15} onChange={()=>{if(!expanded&&!entering&&fittedDistance.current&&camera.position.length()<fittedDistance.current*.97)onZoomIn();}}/>
   </>;
 }
 
